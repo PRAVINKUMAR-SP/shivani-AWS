@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #1d4ed8; /* blue-700 */
+    --primary-hover: #1e40af; /* blue-800 */
+    --secondary: #fbbf24; /* amber-400 */
+    --bg-light: #f8fafc;
+    --text-dark: #0f172a;
+    --text-light: #64748b;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+}
