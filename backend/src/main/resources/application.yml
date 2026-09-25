@@ -1,8 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:jobportal}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: jdbc:postgresql://shivani-db.cn4k6qwks3p5.ap-south-1.rds.amazonaws.com:5432/shivani
+    username: postgres
+    password: Opffarmy007
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,10 +15,19 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 5MB
   
 server:
-  port: 8080
+  port: 8081
+  compression:
+    enabled: true
+    mime-types: application/json,text/css,application/javascript,text/html,text/xml,text/plain
+    min-response-size: 1024
 
 jwt:
-  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  secret: ${JWT_SECRET}
   expiration: 86400000 # 1 day in ms

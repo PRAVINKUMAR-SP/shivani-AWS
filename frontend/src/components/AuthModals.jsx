@@ -25,7 +25,11 @@ const AuthModals = ({ isOpen, onClose }) => {
         return;
       }
       onClose();
-      navigate(redirect);
+      let finalRedirect = redirect;
+      if (data.role === 'ADMIN') {
+        finalRedirect = '/admin-dashboard';
+      }
+      navigate(finalRedirect);
     } catch (err) {
       setError(err.response?.data || 'Login failed. Please check your credentials.');
     }
@@ -56,8 +60,8 @@ const AuthModals = ({ isOpen, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div className="card w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 shadow-xl">
         
         {/* Header */}
         <div className="flex justify-end p-4">
@@ -114,7 +118,7 @@ const AuthModals = ({ isOpen, onClose }) => {
                     placeholder="Email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)} 
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     required
                   />
                 </div>
@@ -124,12 +128,12 @@ const AuthModals = ({ isOpen, onClose }) => {
                     placeholder="••••••" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} 
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     required
                   />
                 </div>
                 
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-md">
+                <button type="submit" className="btn-primary w-full">
                   Sign In
                 </button>
               </form>
@@ -152,15 +156,15 @@ const AuthModals = ({ isOpen, onClose }) => {
 
               <form onSubmit={(e) => handleRegister(e, 'SEEKER', 'login-seeker')} className="space-y-4">
                 <div>
-                  <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-md">Sign Up</button>
+                <button type="submit" className="btn-primary w-full">Sign Up</button>
               </form>
             </div>
           )}
@@ -177,12 +181,12 @@ const AuthModals = ({ isOpen, onClose }) => {
 
               <form onSubmit={(e) => handleLogin(e, 'EMPLOYER', '/employer-dashboard')} className="space-y-4">
                 <div>
-                  <input type="email" placeholder="company@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="email" placeholder="company@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-md">Sign In</button>
+                <button type="submit" className="btn-primary w-full">Sign In</button>
               </form>
               <div className="text-center text-sm text-slate-600 mt-6">
                 New company? <button onClick={() => changeStep('register-employer')} className="text-blue-600 font-semibold hover:underline">Register here</button>
@@ -202,15 +206,15 @@ const AuthModals = ({ isOpen, onClose }) => {
 
               <form onSubmit={(e) => handleRegister(e, 'EMPLOYER', 'login-employer')} className="space-y-4">
                 <div>
-                  <input type="text" placeholder="Company Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="text" placeholder="Company Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="email" placeholder="Work Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="email" placeholder="Work Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-blue-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-md">Register</button>
+                <button type="submit" className="btn-primary w-full">Register</button>
               </form>
             </div>
           )}
@@ -221,3 +225,4 @@ const AuthModals = ({ isOpen, onClose }) => {
 };
 
 export default AuthModals;
+

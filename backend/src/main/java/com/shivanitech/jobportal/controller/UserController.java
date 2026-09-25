@@ -37,6 +37,9 @@ public class UserController {
         if (request.getResumeUrl() != null) user.setResumeUrl(request.getResumeUrl());
         if (request.getCompanyName() != null) user.setCompanyName(request.getCompanyName());
         if (request.getCompanyDescription() != null) user.setCompanyDescription(request.getCompanyDescription());
+        if (request.getSkills() != null) user.setSkills(request.getSkills());
+        if (request.getJobRole() != null) user.setJobRole(request.getJobRole());
+        if (request.getLocation() != null) user.setLocation(request.getLocation());
 
         userRepository.save(user);
         return ResponseEntity.ok(user);

@@ -7,33 +7,28 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "applications", indexes = {
-    @Index(name = "idx_app_job_id", columnList = "job_id"),
-    @Index(name = "idx_app_seeker_id", columnList = "seeker_id")
-})
+@Table(name = "saved_jobs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Application {
+public class SavedJob {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_id", nullable = false)
-    private Job job;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seeker_id", nullable = false)
     private User seeker;
     
-    private String status = "PENDING"; // PENDING, ACCEPTED, REJECTED
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id", nullable = false)
+    private Job job;
     
-    private LocalDateTime appliedAt;
+    private LocalDateTime savedAt;
     
     @PrePersist
     protected void onCreate() {
-        appliedAt = LocalDateTime.now();
+        savedAt = LocalDateTime.now();
     }
 }

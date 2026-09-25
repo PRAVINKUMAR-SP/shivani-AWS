@@ -9,4 +9,7 @@ public class ProfileUpdateRequest {
     private String resumeUrl;
     private String companyName;
     private String companyDescription;
+    private String skills;
+    private String jobRole;
+    private String location;
 }

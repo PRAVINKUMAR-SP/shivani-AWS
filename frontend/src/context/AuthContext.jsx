@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const res = await axios.post('http://localhost:8080/api/auth/login', { email, password });
+    const res = await axios.post('/api/auth/login', { email, password });
     if (res.data.token) {
       setToken(res.data.token);
       localStorage.setItem('token', res.data.token);
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password, role) => {
-    const res = await axios.post('http://localhost:8080/api/auth/register', { name, email, password, role });
+    const res = await axios.post('/api/auth/register', { name, email, password, role });
     return res.data;
   };
 
@@ -58,9 +58,11 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem('token');
     delete axios.defaults.headers.common['Authorization'];
+    window.location.href = '/';
   };
 
   const value = { user, token, login, register, logout, loading };
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
+
