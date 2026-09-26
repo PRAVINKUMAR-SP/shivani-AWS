@@ -65,7 +65,7 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, appli
           appStatus === 'REJECTED' ? 'bg-red-50 text-red-600' :
           'bg-gray-100 text-gray-700'
         }`}>
-          {appStatus || 'Applied'} {appStatus === 'PENDING' || !appStatus ? '⌛' : appStatus === 'REJECTED' ? '✕' : '✓'}
+          {appStatus || 'Applied'} {appStatus === 'REJECTED' ? '✕' : (appStatus && appStatus !== 'PENDING' ? '✓' : '')}
         </span>
       ) : (
         <button 
@@ -115,17 +115,19 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
   if (loading) return <div>Loading profile...</div>;
 
   return (
-    <div className="max-w-2xl card p-8">
+    <div className="max-w-4xl w-full card p-8">
       <h2 className="text-2xl font-bold text-slate-900 mb-6">Profile Settings</h2>
       {message && <div className="mb-6 p-4 bg-blue-50 text-blue-700 rounded-xl border border-blue-100">{message}</div>}
       <form onSubmit={handleSave} className="space-y-6">
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">Full Name</label>
-          <input type="text" value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" required />
-        </div>
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-          <input type="tel" value={profile.phoneNo} onChange={e => setProfile({...profile, phoneNo: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="+1 (555) 000-0000" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Full Name</label>
+            <input type="text" value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" required />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
+            <input type="tel" value={profile.phoneNo} onChange={e => setProfile({...profile, phoneNo: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="+1 (555) 000-0000" />
+          </div>
         </div>
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-2">Resume Document (PDF, DOC)</label>
@@ -150,7 +152,7 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
         
         <div className="pt-4 border-t border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-4">Job Matching Preferences</h3>
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Desired Job Role</label>
               <input type="text" value={profile.jobRole} onChange={e => setProfile({...profile, jobRole: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. Java Developer" />
@@ -159,13 +161,49 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
               <label className="block text-sm font-semibold text-slate-700 mb-2">Location</label>
               <input type="text" value={profile.location} onChange={e => setProfile({...profile, location: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. Chennai" />
             </div>
-            <div>
+            <div className="col-span-1 md:col-span-2">
               <label className="block text-sm font-semibold text-slate-700 mb-2">Skills (comma separated)</label>
               <input type="text" value={profile.skills} onChange={e => setProfile({...profile, skills: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. React, Java, SQL" />
               <p className="text-[13px] text-slate-500 mt-2">These skills will be used to automatically find matching jobs for you.</p>
             </div>
           </div>
         </div>
+
+        <div className="pt-4 border-t border-slate-100">
+          <h3 className="text-lg font-bold text-slate-900 mb-4">Education Details</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">College Name</label>
+              <input type="text" value={profile.collegeName} onChange={e => setProfile({...profile, collegeName: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. ABC Institute of Technology" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Course</label>
+              <input type="text" value={profile.course} onChange={e => setProfile({...profile, course: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. B.Tech" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Department</label>
+              <input type="text" value={profile.department} onChange={e => setProfile({...profile, department: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. Computer Science" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">CGPA</label>
+              <input type="text" value={profile.cgpa} onChange={e => setProfile({...profile, cgpa: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. 8.5" />
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-slate-100">
+          <h3 className="text-lg font-bold text-slate-900 mb-4">About Me</h3>
+          <div>
+            <textarea 
+              value={profile.aboutMe} 
+              onChange={e => setProfile({...profile, aboutMe: e.target.value})} 
+              className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" 
+              placeholder="Write a brief summary about yourself, your goals, and what you're looking for..." 
+              rows="4"
+            ></textarea>
+          </div>
+        </div>
+        
         <button type="submit" className="btn-primary w-full sm:w-auto mt-4">
           Save Changes
         </button>
@@ -288,17 +326,40 @@ const ViewProfileSection = ({ profile, user, onEdit }) => {
               )}
             </div>
           </div>
+
+          <div className="mt-8">
+            <h3 className="font-bold text-slate-900 dark:text-white mb-3 border-b border-slate-100 dark:border-slate-700 pb-2">Education</h3>
+            {(profile?.collegeName || profile?.course) ? (
+              <div className="text-slate-600 dark:text-slate-400 text-sm space-y-1">
+                {profile?.collegeName && <p><span className="font-medium text-slate-700 dark:text-slate-300">College:</span> {profile.collegeName}</p>}
+                {profile?.course && <p><span className="font-medium text-slate-700 dark:text-slate-300">Course:</span> {profile.course}</p>}
+                {profile?.department && <p><span className="font-medium text-slate-700 dark:text-slate-300">Department:</span> {profile.department}</p>}
+                {profile?.cgpa && <p><span className="font-medium text-slate-700 dark:text-slate-300">CGPA:</span> {profile.cgpa}</p>}
+              </div>
+            ) : (
+              <span className="text-slate-400 italic">No education details added yet.</span>
+            )}
+          </div>
           
           <div className="mt-8">
             <h3 className="font-bold text-slate-900 dark:text-white mb-3 border-b border-slate-100 dark:border-slate-700 pb-2">About</h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-              {profile?.resumeUrl ? (
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-wrap">
+              {profile?.aboutMe ? (
+                <>
+                  {profile.aboutMe}
+                  {profile.resumeUrl && (
+                    <span className="block mt-2">
+                      <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">View my resume here.</a>
+                    </span>
+                  )}
+                </>
+              ) : profile?.resumeUrl ? (
                 <span>
                   Ready to work and actively seeking opportunities. 
                   <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">View my resume here.</a>
                 </span>
               ) : (
-                <span className="text-slate-400 italic">Add your resume in settings to display your about section.</span>
+                <span className="text-slate-400 italic">Add your summary and resume in settings to display your about section.</span>
               )}
             </p>
           </div>
@@ -326,7 +387,7 @@ const JobSeekerDashboard = () => {
   const { logout, user } = useAuth();
   
   // Profile state for completeness tracking
-  const [profile, setProfile] = useState({ name: '', phoneNo: '', resumeUrl: '', jobRole: '', location: '', skills: '' });
+  const [profile, setProfile] = useState({ name: '', phoneNo: '', resumeUrl: '', jobRole: '', location: '', skills: '', collegeName: '', course: '', department: '', cgpa: '', aboutMe: '' });
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileMessage, setProfileMessage] = useState('');
 
@@ -348,7 +409,12 @@ const JobSeekerDashboard = () => {
         resumeUrl: res.data.resumeUrl || '',
         jobRole: res.data.jobRole || '',
         location: res.data.location || '',
-        skills: res.data.skills || ''
+        skills: res.data.skills || '',
+        collegeName: res.data.collegeName || '',
+        course: res.data.course || '',
+        department: res.data.department || '',
+        cgpa: res.data.cgpa || '',
+        aboutMe: res.data.aboutMe || ''
       });
     } catch (err) {
       console.error(err);
@@ -471,7 +537,12 @@ const JobSeekerDashboard = () => {
     if (profile.skills) filled++;
     if (profile.jobRole) filled++;
     if (profile.location) filled++;
-    return Math.round((filled / 7) * 100);
+    if (profile.collegeName) filled++;
+    if (profile.course) filled++;
+    if (profile.department) filled++;
+    if (profile.cgpa) filled++;
+    if (profile.aboutMe) filled++;
+    return Math.round((filled / 12) * 100);
   };
 
   const completionPercentage = calculateCompletion();
@@ -511,7 +582,18 @@ const JobSeekerDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+        {/* Mobile Navigation Tabs */}
+        <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
+          <button onClick={() => setActiveTab('home')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'home' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Home</button>
+          <button onClick={() => setActiveTab('applied')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applied' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Applied</button>
+          <button onClick={() => setActiveTab('applications_tracker')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applications_tracker' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Tracker</button>
+          <button onClick={() => setActiveTab('saved')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'saved' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Saved Jobs</button>
+          <button onClick={() => setActiveTab('notifications')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'notifications' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Notifications</button>
+          <button onClick={() => setActiveTab('profile')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'profile' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Settings</button>
+          <button onClick={() => setActiveTab('view_profile')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'view_profile' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Profile</button>
+        </div>
+
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-600"></div>
@@ -566,27 +648,27 @@ const JobSeekerDashboard = () => {
                 </div>
 
                 {/* Search Bar Area */}
-                <div className="max-w-4xl mb-8 flex gap-4">
+                <div className="max-w-4xl mb-8 flex flex-col sm:flex-row gap-4">
                   <div className="flex-1 flex items-center bg-white border border-slate-200 rounded-full pl-6 pr-2 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
-                    <Search className="w-5 h-5 text-slate-400 mr-3" />
+                    <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
                     <input 
                       type="text" 
-                      placeholder="Job title, keywords, or company" 
+                      placeholder="Job title..." 
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="flex-1 outline-none text-slate-700 bg-transparent"
+                      className="flex-1 w-20 outline-none text-slate-700 bg-transparent text-sm sm:text-base"
                     />
-                    <div className="h-6 w-px bg-slate-200 mx-4 hidden md:block"></div>
-                    <MapPin className="w-5 h-5 text-slate-400 mr-3 hidden md:block" />
+                    <div className="h-6 w-px bg-slate-200 mx-2 hidden sm:block"></div>
+                    <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0 hidden sm:block" />
                     <input 
                       type="text" 
-                      placeholder="City, state, zip code, or 'remote'" 
+                      placeholder="Location" 
                       value={locationQuery}
                       onChange={(e) => setLocationQuery(e.target.value)}
-                      className="flex-1 outline-none text-slate-700 bg-transparent hidden md:block"
+                      className="flex-1 w-20 outline-none text-slate-700 bg-transparent text-sm sm:text-base hidden sm:block"
                     />
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-8 rounded-full transition-colors whitespace-nowrap ml-2">
-                      Find jobs
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 sm:px-8 rounded-full transition-colors whitespace-nowrap ml-2 text-sm sm:text-base">
+                      Search
                     </button>
                   </div>
                   <button 
@@ -655,9 +737,9 @@ const JobSeekerDashboard = () => {
             )}
 
             {/* Recommended Jobs */}
-            <div className="mb-6 flex justify-between items-end">
+            <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
                   {activeTab === 'applied' ? 'Applied Jobs' : activeTab === 'saved' ? 'Saved Jobs' : 'Recommended Jobs'}
                 </h1>
                 <p className="text-slate-500 mt-1">

@@ -12,4 +12,9 @@ public class ProfileUpdateRequest {
     private String skills;
     private String jobRole;
     private String location;
+    private String collegeName;
+    private String course;
+    private String department;
+    private String cgpa;
+    private String aboutMe;
 }

@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Moon, Sun, User as UserIcon, LogOut, Shield, Briefcase } from 'lucide-react';
+import { Moon, Sun, User as UserIcon, LogOut, Shield, Briefcase, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Header = ({ onLoginClick }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const getAdminViewText = () => {
@@ -61,6 +62,7 @@ const Header = ({ onLoginClick }) => {
             </div>
           </Link>
           
+          {/* Desktop Nav */}
           <nav className="hidden lg:ml-10 lg:flex lg:space-x-8">
             <Link to="/companies" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-base font-semibold transition-colors">
               Companies
@@ -126,8 +128,49 @@ const Header = ({ onLoginClick }) => {
               Sign in
             </button>
           )}
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden absolute top-20 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg py-4 px-4 flex flex-col space-y-4">
+          <Link to="/companies" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Companies</Link>
+          <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Services</Link>
+          <Link to="/financial" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Financial</Link>
+          <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Contact Us</Link>
+          
+          {user && user.role === 'ADMIN' && (
+            <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-4">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Switch View</div>
+              <Link to="/admin-dashboard" onClick={() => setMobileMenuOpen(false)} className="text-purple-600 hover:text-purple-700 dark:text-purple-400 text-base font-semibold flex items-center gap-2">
+                <Shield className="w-4 h-4" /> Admin Dashboard
+              </Link>
+              <Link to="/employer-dashboard" onClick={() => setMobileMenuOpen(false)} className="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-base font-semibold flex items-center gap-2">
+                <Briefcase className="w-4 h-4" /> Employer Dashboard
+              </Link>
+              <Link to="/seeker-dashboard" onClick={() => setMobileMenuOpen(false)} className="text-green-600 hover:text-green-700 dark:text-green-400 text-base font-semibold flex items-center gap-2">
+                <UserIcon className="w-4 h-4" /> Seeker Dashboard
+              </Link>
+            </div>
+          )}
+          
+          {user && user.role === 'EMPLOYER' && (
+            <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-4">
+              <Link to="/employer-dashboard" onClick={() => setMobileMenuOpen(false)} className="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-base font-semibold flex items-center gap-2">
+                <Briefcase className="w-4 h-4" /> Employer Dashboard
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 };

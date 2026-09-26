@@ -8,4 +8,6 @@ public class SignupRequest {
     private String email;
     private String password;
     private String role; // "SEEKER" or "EMPLOYER"
+    private String phoneNo;
+    private String companyName;
 }

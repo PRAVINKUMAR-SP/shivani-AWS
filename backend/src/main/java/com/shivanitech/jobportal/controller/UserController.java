@@ -40,6 +40,12 @@ public class UserController {
         if (request.getSkills() != null) user.setSkills(request.getSkills());
         if (request.getJobRole() != null) user.setJobRole(request.getJobRole());
         if (request.getLocation() != null) user.setLocation(request.getLocation());
+        if (request.getCollegeName() != null) user.setCollegeName(request.getCollegeName());
+        if (request.getCourse() != null) user.setCourse(request.getCourse());
+        if (request.getDepartment() != null) user.setDepartment(request.getDepartment());
+        if (request.getCgpa() != null) user.setCgpa(request.getCgpa());
+        if (request.getAboutMe() != null) user.setAboutMe(request.getAboutMe());
+        if (request.getPhoneNo() != null) user.setPhoneNo(request.getPhoneNo());
 
         userRepository.save(user);
         return ResponseEntity.ok(user);

@@ -19,10 +19,13 @@ export const AuthProvider = ({ children }) => {
         if (decoded.exp * 1000 < Date.now()) {
           logout();
         } else {
+          let userInfo = {};
+          try { userInfo = JSON.parse(localStorage.getItem('user_info')) || {}; } catch (e) {}
           setUser({
             email: decoded.sub,
             role: decoded.role,
-            id: decoded.id // if added to token
+            id: decoded.id, // if added to token
+            companyName: userInfo.companyName
           });
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
@@ -41,15 +44,34 @@ export const AuthProvider = ({ children }) => {
       setUser({
         email: res.data.email,
         role: res.data.role,
-        id: res.data.id
+        id: res.data.id,
+        companyName: res.data.companyName
       });
+      localStorage.setItem('user_info', JSON.stringify({ companyName: res.data.companyName }));
       axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
       return res.data;
     }
   };
 
-  const register = async (name, email, password, role) => {
-    const res = await axios.post('/api/auth/register', { name, email, password, role });
+  const loginWithGoogle = async (googleToken, role, phoneNo, name, companyName) => {
+    const res = await axios.post('/api/auth/google', { token: googleToken, role, phoneNo, name, companyName });
+    if (res.data.token) {
+      setToken(res.data.token);
+      localStorage.setItem('token', res.data.token);
+      setUser({
+        email: res.data.email,
+        role: res.data.role,
+        id: res.data.id,
+        companyName: res.data.companyName
+      });
+      localStorage.setItem('user_info', JSON.stringify({ companyName: res.data.companyName }));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+    }
+    return res.data;
+  };
+
+  const register = async (name, email, password, role, phoneNo, companyName) => {
+    const res = await axios.post('/api/auth/register', { name, email, password, role, phoneNo, companyName });
     return res.data;
   };
 
@@ -61,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/';
   };
 
-  const value = { user, token, login, register, logout, loading };
+  const value = { user, token, login, loginWithGoogle, register, logout, loading };
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };

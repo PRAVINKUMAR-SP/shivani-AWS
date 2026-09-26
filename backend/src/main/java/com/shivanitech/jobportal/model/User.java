@@ -42,6 +42,18 @@ public class User {
     private String companyName;
     private String companyDescription;
 
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private Boolean isApproved = true;
+
+    // Education specific
+    private String collegeName;
+    private String course;
+    private String department;
+    private String cgpa;
+
+    @Column(columnDefinition = "TEXT")
+    private String aboutMe;
+
     private LocalDateTime createdAt;
 
     @PrePersist

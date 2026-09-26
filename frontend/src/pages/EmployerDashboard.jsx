@@ -204,20 +204,29 @@ const EmployerDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+        {/* Mobile Navigation Tabs */}
+        <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
+          <button onClick={() => { setActiveTab('Dashboard'); setShowForm(false); }} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Dashboard' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Dashboard</button>
+          <button onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); }} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Post a Job' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Post Job</button>
+          <button onClick={() => setActiveTab('My Listings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'My Listings' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Listings</button>
+          <button onClick={() => setActiveTab('Applicants')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Applicants' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Applicants</button>
+          <button onClick={() => setActiveTab('Profile Settings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Profile Settings' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Settings</button>
+        </div>
+
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-600"></div>
           </div>
         ) : (
           <>
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <CheckCircle className="w-8 h-8 text-blue-600" />
-              <h1 className="text-3xl font-bold text-slate-900">Employer Dashboard</h1>
+              <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-blue-600 shrink-0" />
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Employer Dashboard</h1>
             </div>
-            <p className="text-slate-500">Welcome back, {user?.name || user?.email?.split('@')[0]}. Manage your job listings.</p>
+            <p className="text-slate-500 text-sm md:text-base">Welcome back, {user?.name || user?.email?.split('@')[0]}. Manage your job listings.</p>
           </div>
           <button 
             onClick={() => {
@@ -225,10 +234,10 @@ const EmployerDashboard = () => {
               setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' });
               setActiveTab('Post a Job');
             }}
-            className="btn-primary"
+            className="btn-primary whitespace-nowrap text-sm px-4 py-2 md:px-6 md:py-3 mt-4 sm:mt-0"
           >
-            <Plus className="w-5 h-5 mr-2" />
-            Post New Job
+            <Plus className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
+            Post Job
           </button>
         </div>
 

@@ -197,4 +197,48 @@ public class AdminController {
         }
         return ResponseEntity.ok(appsList);
     }
+
+    @GetMapping("/employers")
+    public ResponseEntity<?> getAllEmployers(Principal principal) {
+        List<User> employers = userRepository.findAll().stream()
+            .filter(u -> u.getRole() == Role.EMPLOYER)
+            .collect(Collectors.toList());
+        
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (User emp : employers) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", emp.getId());
+            map.put("name", emp.getName());
+            map.put("companyName", emp.getCompanyName());
+            map.put("phoneNo", emp.getPhoneNo());
+            map.put("email", emp.getEmail());
+            map.put("isApproved", emp.getIsApproved());
+            
+            List<Job> employerJobs = jobRepository.findByEmployerId(emp.getId());
+            map.put("totalJobs", employerJobs.size());
+            
+            long shortlistedCount = 0;
+            for (Job job : employerJobs) {
+                shortlistedCount += applicationRepository.findByJobId(job.getId()).stream()
+                    .filter(a -> "SHORTLISTED".equalsIgnoreCase(a.getStatus()) || "ACCEPTED".equalsIgnoreCase(a.getStatus()))
+                    .count();
+            }
+            map.put("shortlistedCount", shortlistedCount);
+            
+            result.add(map);
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/employers/{id}/approve")
+    public ResponseEntity<?> approveEmployer(@PathVariable Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent() && userOpt.get().getRole() == Role.EMPLOYER) {
+            User user = userOpt.get();
+            user.setIsApproved(true);
+            userRepository.save(user);
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

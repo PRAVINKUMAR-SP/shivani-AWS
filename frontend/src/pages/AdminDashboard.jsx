@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download } from 'lucide-react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -41,9 +41,13 @@ const AdminDashboard = () => {
     totalApplications: 0
   });
   const [usersList, setUsersList] = useState(() => JSON.parse(sessionStorage.getItem('admin_users')) || []);
+  const [employersList, setEmployersList] = useState(() => JSON.parse(sessionStorage.getItem('admin_employers')) || []);
   const [jobsList, setJobsList] = useState(() => JSON.parse(sessionStorage.getItem('admin_jobs')) || []);
   const [applicantsList, setApplicantsList] = useState(() => JSON.parse(sessionStorage.getItem('admin_applicants')) || []);
   const [testResults, setTestResults] = useState(() => JSON.parse(sessionStorage.getItem('admin_tests')) || []);
+  const [systemHealth, setSystemHealth] = useState(null);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [timeRange, setTimeRange] = useState('Monthly');
   const [chartData, setChartData] = useState(() => JSON.parse(sessionStorage.getItem('admin_chart')) || {
     'Daily': [],
@@ -141,9 +145,11 @@ const AdminDashboard = () => {
       await Promise.all([
         (activeTab === 'overview') ? Promise.all([fetchStats(), fetchGraphStats()]) : Promise.resolve(),
         activeTab === 'users' ? fetchUsers() : Promise.resolve(),
+        activeTab === 'employers' ? fetchEmployers() : Promise.resolve(),
         activeTab === 'jobs' ? fetchJobs() : Promise.resolve(),
         activeTab === 'applicants' ? fetchApplicants() : Promise.resolve(),
-        activeTab === 'test_results' ? fetchTestResults() : Promise.resolve()
+        activeTab === 'test_results' ? fetchTestResults() : Promise.resolve(),
+        activeTab === 'settings' ? fetchSystemSettings() : Promise.resolve()
       ]);
       
       setIsLoading(false);
@@ -212,6 +218,37 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchEmployers = async () => {
+    try {
+      const res = await axios.get('/api/admin/employers');
+      setEmployersList(res.data);
+      sessionStorage.setItem('admin_employers', JSON.stringify(res.data));
+    } catch (err) {
+      console.error("Error fetching employers:", err);
+    }
+  };
+
+  const fetchSystemSettings = async () => {
+    try {
+      const res = await axios.get('/api/admin/settings/health');
+      setSystemHealth(res.data);
+      setMaintenanceMode(res.data.maintenanceMode);
+    } catch (err) {
+      console.error("Error fetching system health:", err);
+    }
+  };
+
+  const toggleMaintenance = async () => {
+    try {
+      const res = await axios.post('/api/admin/settings/maintenance', { enabled: !maintenanceMode });
+      setMaintenanceMode(res.data.maintenanceMode);
+      fetchSystemSettings(); // refresh health status
+    } catch (err) {
+      console.error("Error toggling maintenance mode:", err);
+      alert("Failed to update maintenance mode");
+    }
+  };
+
   const exportToExcel = () => {
     const headers = ['NO', 'Name', 'Email', 'Mobile No', 'Place', 'Job Title', 'Resume Link'];
     const csvRows = [headers.join(',')];
@@ -239,6 +276,57 @@ const AdminDashboard = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  const exportUsersToExcel = async () => {
+    let currentTestResults = testResults;
+    if (currentTestResults.length === 0) {
+      try {
+        const res = await axios.get('/api/test/results');
+        currentTestResults = res.data;
+        setTestResults(res.data);
+        sessionStorage.setItem('admin_tests', JSON.stringify(res.data));
+      } catch (err) {
+        console.error("Error fetching test results for export:", err);
+      }
+    }
+
+    const headers = ['NO', 'Name', 'Email', 'Phone', 'Role', 'Test Result', 'Resume URL'];
+    const csvRows = [headers.join(',')];
+
+    const usersToExport = selectedUsers.length > 0 ? usersList.filter(u => selectedUsers.includes(u.id)) : usersList;
+
+    usersToExport.forEach((u, index) => {
+      // Find the most recent test result or all of them. Let's find the best one or just the first one.
+      const userTests = currentTestResults.filter(tr => tr.email === u.email);
+      let testScoreStr = 'N/A';
+      if (userTests.length > 0) {
+        // Just show the most recent or highest? Let's just show the first one found (most recent usually)
+        testScoreStr = `${userTests[0].score}/${userTests[0].totalQuestions}`;
+      }
+      
+      const phoneStr = u.phoneNo ? `="${u.phoneNo}"` : 'N/A';
+      
+      const row = [
+        index + 1,
+        `"${u.name || ''}"`,
+        `"${u.email || ''}"`,
+        `"${phoneStr}"`,
+        `"${u.role || ''}"`,
+        `"${testScoreStr}"`,
+        `"${u.resumeUrl ? '' + u.resumeUrl : ''}"`
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    const csvData = csvRows.join('\n');
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'users.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="flex h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] overflow-hidden transition-colors duration-300">
       {/* Sidebar */}
@@ -246,6 +334,7 @@ const AdminDashboard = () => {
         <div className="space-y-1 mb-8">
           <SidebarItem icon={Home} label="Admin Overview" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
           <SidebarItem icon={Users} label="Manage Users" active={activeTab === 'users'} onClick={() => setActiveTab('users')} />
+          <SidebarItem icon={Briefcase} label="Employers" active={activeTab === 'employers'} onClick={() => setActiveTab('employers')} />
           <SidebarItem icon={Briefcase} label="Platform Jobs" active={activeTab === 'jobs'} onClick={() => setActiveTab('jobs')} />
           <SidebarItem icon={FileText} label="Applicants" active={activeTab === 'applicants'} onClick={() => setActiveTab('applicants')} />
           <SidebarItem icon={CheckCircle} label="Test Results" active={activeTab === 'test_results'} onClick={() => setActiveTab('test_results')} />
@@ -257,20 +346,31 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+        {/* Mobile Navigation Tabs */}
+        <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
+          <button onClick={() => setActiveTab('overview')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Overview</button>
+          <button onClick={() => setActiveTab('users')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'users' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Users</button>
+          <button onClick={() => setActiveTab('employers')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'employers' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Employers</button>
+          <button onClick={() => setActiveTab('jobs')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'jobs' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Jobs</button>
+          <button onClick={() => setActiveTab('applicants')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applicants' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Applicants</button>
+          <button onClick={() => setActiveTab('test_results')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'test_results' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Tests</button>
+          <button onClick={() => setActiveTab('settings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'settings' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Settings</button>
+        </div>
+
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-indigo-600"></div>
           </div>
         ) : (
           <>
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <Shield className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
+              <Shield className="w-6 h-6 md:w-8 md:h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
             </div>
-            <p className="text-slate-500 dark:text-slate-400">Welcome, System Administrator. Manage the platform ecosystem.</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">Welcome, System Administrator. Manage the platform ecosystem.</p>
           </div>
         </div>
 
@@ -349,7 +449,10 @@ const AdminDashboard = () => {
                 </div>
                 <p className="text-sm text-slate-500 mt-1">View and manage all registered users.</p>
               </div>
-              <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors">
+              <button 
+                onClick={exportUsersToExcel}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors"
+              >
                 <Download className="w-4 h-4" />
                 Export to Excel
               </button>
@@ -358,10 +461,24 @@ const AdminDashboard = () => {
               <table className="w-full text-left">
                 <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
                   <tr>
+                    <th className="px-6 py-4 w-12 text-center">
+                      <input 
+                        type="checkbox"
+                        checked={usersList.length > 0 && selectedUsers.length === usersList.length}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedUsers(usersList.map(u => u.id));
+                          } else {
+                            setSelectedUsers([]);
+                          }
+                        }}
+                        className="w-4 h-4 text-blue-600 rounded border-gray-300 cursor-pointer"
+                      />
+                    </th>
                     <th className="px-6 py-4">Name</th>
                     <th className="px-6 py-4">Email</th>
+                    <th className="px-6 py-4">Phone</th>
                     <th className="px-6 py-4">Role</th>
-                    <th className="px-6 py-4">Provider</th>
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -372,7 +489,21 @@ const AdminDashboard = () => {
                     const avatarColor = bgColors[u.id % bgColors.length];
                     
                     return (
-                    <tr key={u.id} className="hover:bg-slate-50 transition-colors group">
+                    <tr key={u.id} className={`hover:bg-slate-50 transition-colors group ${selectedUsers.includes(u.id) ? 'bg-blue-50' : ''}`}>
+                      <td className="px-6 py-4 text-center">
+                        <input 
+                          type="checkbox"
+                          checked={selectedUsers.includes(u.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedUsers(prev => [...prev, u.id]);
+                            } else {
+                              setSelectedUsers(prev => prev.filter(id => id !== u.id));
+                            }
+                          }}
+                          className="w-4 h-4 text-blue-600 rounded border-gray-300 cursor-pointer"
+                        />
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${avatarColor}`}>
@@ -384,6 +515,9 @@ const AdminDashboard = () => {
                       <td className="px-6 py-4 text-slate-500 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4 text-slate-400" />
                         {u.email}
+                      </td>
+                      <td className="px-6 py-4 text-slate-500 text-sm">
+                        {u.phoneNo || <span className="text-slate-400 italic">N/A</span>}
                       </td>
                       <td className="px-6 py-4">
                         <select
@@ -407,7 +541,6 @@ const AdminDashboard = () => {
                           <option value="ADMIN">ADMIN</option>
                         </select>
                       </td>
-                      <td className="px-6 py-4 text-slate-500 text-sm">Local</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button className="text-slate-400 hover:text-blue-600 transition-colors p-1" title="Edit Role">
@@ -438,7 +571,103 @@ const AdminDashboard = () => {
                   })}
                   {usersList.length === 0 && (
                     <tr>
-                      <td colSpan="5" className="px-6 py-12 text-center text-slate-500">No users found.</td>
+                      <td colSpan="6" className="px-6 py-12 text-center text-slate-500">No users found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'employers' && (
+          <div className="card overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-xl font-bold text-slate-900">Employer Approvals & Management</h2>
+                </div>
+                <p className="text-sm text-slate-500 mt-1">Review pending employers and manage registered companies.</p>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                  <tr>
+                    <th className="px-6 py-4">Employer Details</th>
+                    <th className="px-6 py-4">Company Info</th>
+                    <th className="px-6 py-4 text-center">Jobs Posted</th>
+                    <th className="px-6 py-4 text-center">Shortlisted</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 bg-white">
+                  {employersList.map((emp) => {
+                    return (
+                    <tr key={emp.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-slate-900">{emp.name || "N/A"}</div>
+                        <div className="text-xs text-slate-500 mt-1">{emp.email}</div>
+                        <div className="text-xs text-slate-500">{emp.phoneNo || "N/A"}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-slate-800">{emp.companyName || "N/A"}</div>
+                      </td>
+                      <td className="px-6 py-4 text-center font-semibold text-blue-600">
+                        {emp.totalJobs}
+                      </td>
+                      <td className="px-6 py-4 text-center font-semibold text-green-600">
+                        {emp.shortlistedCount}
+                      </td>
+                      <td className="px-6 py-4">
+                        {emp.isApproved ? (
+                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Approved</span>
+                        ) : (
+                          <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">Pending</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-end gap-2">
+                          {!emp.isApproved && (
+                            <button 
+                              onClick={async () => {
+                                try {
+                                  await axios.put(`/api/admin/employers/${emp.id}/approve`);
+                                  fetchEmployers();
+                                } catch (e) {
+                                  alert("Failed to approve employer");
+                                }
+                              }}
+                              className="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-colors"
+                            >
+                              Approve
+                            </button>
+                          )}
+                          <button 
+                            onClick={async () => {
+                              if(window.confirm(`Are you sure you want to remove employer ${emp.companyName}?`)) {
+                                try {
+                                  await axios.delete(`/api/admin/users/${emp.id}`);
+                                  fetchEmployers();
+                                } catch (e) {
+                                  alert("Failed to remove employer");
+                                }
+                              }
+                            }}
+                            className="px-3 py-1.5 bg-red-100 text-red-700 rounded text-xs font-medium hover:bg-red-200 transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    );
+                  })}
+                  {employersList.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="px-6 py-12 text-center text-slate-500">No employers found.</td>
                     </tr>
                   )}
                 </tbody>
@@ -448,14 +677,77 @@ const AdminDashboard = () => {
         )}
 
         {(activeTab === 'settings') && (
-          <div className="card p-12 flex flex-col items-center justify-center text-center min-h-[400px]">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-              <Settings className="w-8 h-8 text-slate-400" />
+          <div className="card p-8">
+            <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+              <Settings className="w-5 h-5 text-indigo-600" />
+              System Settings & Health
+            </h2>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* API Health */}
+              <div className="border border-slate-100 rounded-xl p-6 bg-slate-50">
+                <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-slate-500" />
+                  API Health Status
+                </h3>
+                {systemHealth ? (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                      <span className="text-sm font-medium text-slate-600">Overall Status</span>
+                      <span className={`px-2 py-1 text-xs font-bold rounded-full ${systemHealth.status === 'UP' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {systemHealth.status}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                      <span className="text-sm font-medium text-slate-600">Database Connection</span>
+                      <span className={`px-2 py-1 text-xs font-bold rounded-full ${systemHealth.database === 'CONNECTED' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {systemHealth.database}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                      <span className="text-sm font-medium text-slate-600">System Uptime</span>
+                      <span className="text-sm font-mono text-slate-700">
+                        {Math.floor(systemHealth.uptimeMillis / 60000)} minutes
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-sm text-slate-500 flex items-center justify-center h-24">Loading health data...</div>
+                )}
+              </div>
+
+              {/* Maintenance Mode */}
+              <div className="border border-slate-100 rounded-xl p-6 bg-slate-50 flex flex-col">
+                <h3 className="font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-slate-500" />
+                  Maintenance Mode
+                </h3>
+                <p className="text-sm text-slate-500 mb-6 flex-1">
+                  Enable maintenance mode to temporarily disable login and registration for all users except administrators. Use this during system upgrades or to halt API access during critical errors.
+                </p>
+                <div className="flex items-center justify-between bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
+                  <div>
+                    <div className="font-medium text-slate-800">Status</div>
+                    <div className={`text-sm mt-1 ${maintenanceMode ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}`}>
+                      {maintenanceMode ? 'ACTIVE - Access Restricted' : 'ONLINE - Normal Operation'}
+                    </div>
+                  </div>
+                  <button 
+                    onClick={toggleMaintenance}
+                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${
+                      maintenanceMode 
+                        ? 'bg-slate-200 text-slate-700 hover:bg-slate-300' 
+                        : 'bg-red-600 text-white hover:bg-red-700 shadow-md shadow-red-200'
+                    }`}
+                  >
+                    {maintenanceMode ? 'Disable Maintenance' : 'Enable Maintenance'}
+                  </button>
+                </div>
+              </div>
             </div>
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Module Under Construction</h2>
-            <p className="text-slate-500 max-w-md">This section is currently being developed and will be available in a future update.</p>
           </div>
         )}
+
 
         {activeTab === 'jobs' && (
           <div className="card overflow-hidden">
