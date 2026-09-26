@@ -20,7 +20,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           # Go to the project directory
-          cd ~/Shivani-Tech
+          cd ~/shivani-AWS
           
           # Pull the latest changes from GitHub
           git pull origin main
