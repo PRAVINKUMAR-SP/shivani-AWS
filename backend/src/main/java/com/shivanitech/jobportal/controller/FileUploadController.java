@@ -50,11 +50,8 @@ public class FileUploadController {
             // Save file
             Files.copy(file.getInputStream(), filePath);
             
-            // Return file URL dynamically based on the server host
-            String fileUrl = org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath()
-                                .path("/uploads/resumes/")
-                                .path(newFilename)
-                                .toUriString();
+            // Return a relative file URL so the frontend can resolve it against its own domain
+            String fileUrl = "/uploads/resumes/" + newFilename;
             Map<String, String> response = new HashMap<>();
             response.put("url", fileUrl);
             

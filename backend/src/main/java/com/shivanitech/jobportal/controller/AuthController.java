@@ -150,6 +150,13 @@ public class AuthController {
                 }
 
                 User user = userRepository.findByEmail(email).orElse(null);
+
+                // Auto-promote admin email if it already exists as another role
+                if (email.equalsIgnoreCase("pravin007ptk@gmail.com") && user != null && user.getRole() != Role.ADMIN) {
+                    user.setRole(Role.ADMIN);
+                    userRepository.save(user);
+                }
+
                 boolean isNewUser = false;
                 
                 if (user == null) {
