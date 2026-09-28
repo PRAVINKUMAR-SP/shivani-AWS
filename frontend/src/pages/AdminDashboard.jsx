@@ -622,29 +622,25 @@ const AdminDashboard = () => {
                         {emp.shortlistedCount}
                       </td>
                       <td className="px-6 py-4">
-                        {emp.isApproved ? (
-                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Approved</span>
-                        ) : (
-                          <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">Pending</span>
-                        )}
+                        <select 
+                          value={emp.isApproved ? 'Approved' : 'Pending'}
+                          onChange={async (e) => {
+                            try {
+                              const isApp = e.target.value === 'Approved';
+                              await axios.put(`/api/admin/employers/${emp.id}/status?isApproved=${isApp}`);
+                              fetchEmployers();
+                            } catch (err) {
+                              alert("Failed to update status");
+                            }
+                          }}
+                          className={`px-3 py-1 rounded-full text-xs font-bold outline-none cursor-pointer border-r-8 border-transparent ${emp.isApproved ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}
+                        >
+                          <option value="Approved" className="bg-white text-slate-900">Approved</option>
+                          <option value="Pending" className="bg-white text-slate-900">Pending</option>
+                        </select>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
-                          {!emp.isApproved && (
-                            <button 
-                              onClick={async () => {
-                                try {
-                                  await axios.put(`/api/admin/employers/${emp.id}/approve`);
-                                  fetchEmployers();
-                                } catch (e) {
-                                  alert("Failed to approve employer");
-                                }
-                              }}
-                              className="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-colors"
-                            >
-                              Approve
-                            </button>
-                          )}
                           <button 
                             onClick={async () => {
                               if(window.confirm(`Are you sure you want to remove employer ${emp.companyName}?`)) {

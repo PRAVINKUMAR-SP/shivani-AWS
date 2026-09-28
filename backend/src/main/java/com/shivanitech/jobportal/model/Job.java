@@ -31,6 +31,7 @@ public class Job {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User employer;
     
     private LocalDateTime postedAt;

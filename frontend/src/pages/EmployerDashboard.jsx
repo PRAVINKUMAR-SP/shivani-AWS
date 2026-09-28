@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Plus, Edit, Trash2, Download, Star } from 'lucide-react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Plus, Edit, Trash2, Download, Star, Mail, Phone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
@@ -35,6 +35,8 @@ const EmployerDashboard = () => {
   const [jobs, setJobs] = useState(() => JSON.parse(sessionStorage.getItem('emp_jobs')) || []);
   const [applications, setApplications] = useState(() => JSON.parse(sessionStorage.getItem('emp_apps')) || []);
   const [stats, setStats] = useState(() => JSON.parse(sessionStorage.getItem('emp_stats')) || { activeListings: 0, totalApplications: 0 });
+  const [filterJob, setFilterJob] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
   
   // New Job Form State
   const [showForm, setShowForm] = useState(false);
@@ -398,23 +400,51 @@ const EmployerDashboard = () => {
 
         {activeTab === 'Applicants' && (
           <div className="card overflow-hidden">
-            <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+            <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
               <h2 className="text-lg font-bold text-slate-900">Recent Applications</h2>
-              <button 
-                onClick={exportToExcel}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
-              >
-                <Download className="w-4 h-4" />
-                Export to Excel
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <select value={filterJob} onChange={(e) => setFilterJob(e.target.value)} className="px-3 py-2 rounded-lg border border-slate-200 text-sm">
+                  <option value="">All Jobs</option>
+                  {[...new Set(applications.map(app => app.job?.title).filter(Boolean))].map(title => (
+                    <option key={title} value={title}>{title}</option>
+                  ))}
+                </select>
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="px-3 py-2 rounded-lg border border-slate-200 text-sm">
+                  <option value="">All Statuses</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="RESUME VIEWED">RESUME VIEWED</option>
+                  <option value="CONTACT VIEWED">CONTACT VIEWED</option>
+                  <option value="SHORTLISTED">SHORTLISTED</option>
+                  <option value="REJECTED">REJECTED</option>
+                </select>
+                <button 
+                  onClick={exportToExcel}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Export to Excel
+                </button>
+              </div>
             </div>
             <div className="divide-y divide-slate-100">
-              {applications.map(app => (
+              {applications
+                .filter(app => !filterJob || app.job?.title === filterJob)
+                .filter(app => !filterStatus || app.status === filterStatus)
+                .map(app => (
                 <div key={app.id} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">{app.seeker?.name || 'Applicant'}</h3>
-                    <div className="text-sm text-slate-500 mt-1">Applied for: <span className="font-medium text-blue-600">{app.job?.title}</span></div>
-                    <div className="text-sm text-slate-500 mt-1">Email: {app.seeker?.email}</div>
+                    <div className="text-sm text-slate-500 mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                      <span>Applied for: <span className="font-medium text-blue-600">{app.job?.title}</span></span>
+                      {app.seeker?.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {app.seeker.email}</span>}
+                      {app.seeker?.phoneNo && <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {app.seeker.phoneNo}</span>}
+                    </div>
+                    {(app.seeker?.collegeName || app.seeker?.skills) && (
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                        {app.seeker?.collegeName && <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded-md">{app.seeker.collegeName}</span>}
+                        {app.seeker?.skills && <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-medium">Skills: {app.seeker.skills}</span>}
+                      </div>
+                    )}
                   </div>
                   <div className="text-right flex flex-col items-end">
                     <select 
@@ -457,9 +487,37 @@ const EmployerDashboard = () => {
         )}
 
         {activeTab === 'Profile Settings' && (
-          <div className="card p-8">
+          <div className="card p-8 max-w-2xl">
             <h2 className="text-xl font-bold text-slate-900 mb-6">Company Settings</h2>
-            <p className="text-slate-500">Settings functionality coming soon.</p>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                await axios.put('/api/users/profile', {
+                  companyName: e.target.companyName.value,
+                  companyDescription: e.target.companyDescription.value,
+                  phoneNo: e.target.phoneNo.value
+                });
+                alert('Company profile updated successfully!');
+              } catch (err) {
+                alert('Failed to update company profile');
+              }
+            }} className="space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Company Name</label>
+                <input type="text" name="companyName" defaultValue={user?.companyName} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" required />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Company Phone</label>
+                <input type="tel" name="phoneNo" defaultValue={user?.phoneNo} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Company Description</label>
+                <textarea name="companyDescription" defaultValue={user?.companyDescription} rows="4" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none resize-none"></textarea>
+              </div>
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors">
+                Save Changes
+              </button>
+            </form>
           </div>
         )}
           </>

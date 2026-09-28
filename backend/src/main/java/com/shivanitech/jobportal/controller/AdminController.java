@@ -230,12 +230,12 @@ public class AdminController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/employers/{id}/approve")
-    public ResponseEntity<?> approveEmployer(@PathVariable Long id) {
+    @PutMapping("/employers/{id}/status")
+    public ResponseEntity<?> updateEmployerStatus(@PathVariable Long id, @RequestParam boolean isApproved) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent() && userOpt.get().getRole() == Role.EMPLOYER) {
             User user = userOpt.get();
-            user.setIsApproved(true);
+            user.setIsApproved(isApproved);
             userRepository.save(user);
             return ResponseEntity.ok(user);
         }

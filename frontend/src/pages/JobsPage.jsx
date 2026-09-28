@@ -64,7 +64,7 @@ const JobsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-8 pb-20 px-4">
+    <div className="bg-slate-50 pt-8 pb-20 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center space-y-4 mb-12">
           <h1 className="text-4xl font-bold text-slate-900">Explore Open Roles</h1>

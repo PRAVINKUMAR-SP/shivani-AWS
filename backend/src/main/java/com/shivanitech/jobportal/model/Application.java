@@ -22,10 +22,12 @@ public class Application {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Job job;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seeker_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User seeker;
     
     private String status = "PENDING"; // PENDING, ACCEPTED, REJECTED

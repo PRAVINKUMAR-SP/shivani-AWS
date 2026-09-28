@@ -49,7 +49,7 @@ const LandingPage = ({ onLoginClick }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0f172a] flex flex-col transition-colors duration-300">
+    <div className="bg-slate-50 dark:bg-[#0f172a] flex flex-col transition-colors duration-300">
       {/* Hero Section */}
       <section className="pt-24 pb-16 px-4">
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">

@@ -117,7 +117,19 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
   return (
     <div className="max-w-4xl w-full card p-8">
       <h2 className="text-2xl font-bold text-slate-900 mb-6">Profile Settings</h2>
-      {message && <div className="mb-6 p-4 bg-blue-50 text-blue-700 rounded-xl border border-blue-100">{message}</div>}
+      {message && (
+        <div className="fixed top-24 right-6 z-50 animate-fade-in-down">
+          <div className="bg-white px-6 py-4 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border-l-4 border-blue-500 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
+              <Check className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <h4 className="font-bold text-slate-800 text-sm">Success</h4>
+              <p className="text-slate-500 text-sm">{message}</p>
+            </div>
+          </div>
+        </div>
+      )}
       <form onSubmit={handleSave} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>

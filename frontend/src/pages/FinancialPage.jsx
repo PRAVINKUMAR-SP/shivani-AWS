@@ -17,7 +17,7 @@ const FinanceFeature = ({ title, description, icon: Icon }) => (
 
 const FinancialPage = () => {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="bg-slate-50">
       <div className="bg-white border-b border-slate-200 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Financial & Payroll Solutions</h1>
@@ -76,9 +76,9 @@ const FinancialPage = () => {
       
       <div className="max-w-4xl mx-auto px-4 pb-24 text-center">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Ready to simplify your finances?</h2>
-        <button className="btn-primary py-4 px-10 text-lg shadow-md mx-auto">
+        <a href="/contact" className="inline-block btn-primary py-4 px-10 text-lg shadow-md mx-auto">
           Schedule a Demo
-        </button>
+        </a>
       </div>
     </div>
   );

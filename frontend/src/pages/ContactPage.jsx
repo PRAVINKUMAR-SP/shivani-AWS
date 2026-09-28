@@ -15,7 +15,7 @@ const ContactInfo = ({ icon: Icon, title, content }) => (
 
 const ContactPage = () => {
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] py-20 px-4 flex justify-center items-center transition-colors duration-300">
+    <div className="bg-[#f8fafc] dark:bg-[#0f172a] py-20 px-4 flex justify-center items-center transition-colors duration-300">
       <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-16 items-start">
         
         {/* Left Column */}
@@ -50,33 +50,56 @@ const ContactPage = () => {
         
         {/* Right Column */}
         <div className="card p-8 sm:p-10 shadow-lg border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-3xl">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  name: e.target.name.value,
+                  email: e.target.email.value,
+                  phone: e.target.phone.value,
+                  subject: e.target.subject.value,
+                  message: e.target.message.value
+                })
+              });
+              if (res.ok) {
+                alert('Message sent successfully!');
+                e.target.reset();
+              } else {
+                alert('Failed to send message: ' + await res.text());
+              }
+            } catch (err) {
+              alert('Error connecting to server.');
+            }
+          }}>
             <div>
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Your Name *</label>
-              <input type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="John Doe" />
+              <input type="text" name="name" required className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="John Doe" />
             </div>
             
             <div>
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email Address *</label>
-              <input type="email" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="john@example.com" />
+              <input type="email" name="email" required className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="john@example.com" />
             </div>
             
             <div>
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Phone Number *</label>
-              <input type="tel" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="9876543210" />
+              <input type="tel" name="phone" required className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="9876543210" />
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Subject</label>
-              <input type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="Business Inquiry" />
+              <input type="text" name="subject" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="Business Inquiry" />
             </div>
             
             <div>
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Message *</label>
-              <textarea rows="4" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none placeholder:text-slate-400 dark:text-white" placeholder="Tell us about your project requirements..."></textarea>
+              <textarea name="message" required rows="4" className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none placeholder:text-slate-400 dark:text-white" placeholder="Tell us about your project requirements..."></textarea>
             </div>
             
-            <button type="button" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl flex items-center justify-center transition-colors">
+            <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl flex items-center justify-center transition-colors">
               Send Message
               <Send className="w-4 h-4 ml-2" />
             </button>
