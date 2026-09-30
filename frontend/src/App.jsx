@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AuthModals from './components/AuthModals';
@@ -17,6 +17,16 @@ import TestPage from './pages/TestPage';
 import MobileAuth from './pages/MobileAuth';
 import SplashScreen from './components/SplashScreen';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
@@ -24,6 +34,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
         <div className="min-h-[100dvh] bg-slate-50 flex flex-col">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
