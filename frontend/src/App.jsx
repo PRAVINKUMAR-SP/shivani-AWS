@@ -14,6 +14,7 @@ import FinancialPage from './pages/FinancialPage';
 import ContactPage from './pages/ContactPage';
 import { AuthProvider } from './context/AuthContext';
 import TestPage from './pages/TestPage';
+import MobileAuth from './pages/MobileAuth';
 
 function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -36,6 +37,7 @@ function App() {
               <Route path="/financial" element={<FinancialPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/test" element={<TestPage />} />
+              <Route path="/mobile-auth" element={<MobileAuth />} />
             </Routes>
           </div>
           <Footer />
