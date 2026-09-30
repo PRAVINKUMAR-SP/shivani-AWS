@@ -156,7 +156,7 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
           {profile.resumeUrl && (
             <div className="mt-3 text-sm">
               <span className="text-slate-500">Current Resume: </span>
-              <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">View File</a>
+              <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">View File</a>
             </div>
           )}
           <p className="text-[13px] text-slate-500 mt-2">Max file size: 5MB.</p>
@@ -361,14 +361,14 @@ const ViewProfileSection = ({ profile, user, onEdit }) => {
                   {profile.aboutMe}
                   {profile.resumeUrl && (
                     <span className="block mt-2">
-                      <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">View my resume here.</a>
+                      <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">View my resume here.</a>
                     </span>
                   )}
                 </>
               ) : profile?.resumeUrl ? (
                 <span>
                   Ready to work and actively seeking opportunities. 
-                  <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">View my resume here.</a>
+                  <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">View my resume here.</a>
                 </span>
               ) : (
                 <span className="text-slate-400 italic">Add your summary and resume in settings to display your about section.</span>
@@ -560,9 +560,9 @@ const JobSeekerDashboard = () => {
   const completionPercentage = calculateCompletion();
 
   return (
-    <div className="flex h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] overflow-hidden transition-colors duration-300">
+    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex overflow-y-auto transition-colors duration-300">
+      <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex lg:sticky lg:top-[80px] lg:h-[calc(100vh-80px)] overflow-y-auto transition-colors duration-300 z-10">
         <div className="space-y-1 mb-8">
           <SidebarItem icon={Home} label="Home" active={activeTab === 'home'} onClick={() => setActiveTab('home')} />
           <SidebarItem icon={Briefcase} label="Applied" active={activeTab === 'applied'} onClick={() => setActiveTab('applied')} />
@@ -594,7 +594,7 @@ const JobSeekerDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
         <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
           <button onClick={() => setActiveTab('home')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'home' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Home</button>
@@ -778,7 +778,22 @@ const JobSeekerDashboard = () => {
                   (filterType === 'All' || job.type === filterType) &&
                   (filterSalary === 'All' || (job.salary && parseInt(job.salary.replace(/[^0-9]/g, '')) >= parseInt(filterSalary)))
                 ).length === 0 && (
-                  <p className="text-slate-500 col-span-full text-center py-12">No jobs found.</p>
+                  <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm mt-4">
+                    <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
+                      <Briefcase className="w-10 h-10 text-blue-500" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No jobs found</h3>
+                    <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-6 text-sm">
+                      {activeTab === 'applied' ? "You haven't applied to any jobs yet. Start exploring and kickstart your career!" 
+                      : activeTab === 'saved' ? "You haven't saved any jobs yet. Bookmark jobs you're interested in to view them later."
+                      : "We couldn't find any jobs matching your search criteria. Try adjusting your filters or check back later!"}
+                    </p>
+                    {activeTab !== 'home' && (
+                      <button onClick={() => setActiveTab('home')} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 dark:shadow-none">
+                        Explore Jobs
+                      </button>
+                    )}
+                  </div>
                 )}
                 {jobs
                   .filter(job => 

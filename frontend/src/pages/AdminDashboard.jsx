@@ -341,9 +341,9 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] overflow-hidden transition-colors duration-300">
+    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex overflow-y-auto transition-colors duration-300">
+      <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex lg:sticky lg:top-[80px] lg:h-[calc(100vh-80px)] overflow-y-auto transition-colors duration-300 z-10">
         <div className="space-y-1 mb-8">
           <SidebarItem icon={Home} label="Admin Overview" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
           <SidebarItem icon={Users} label="Manage Users" active={activeTab === 'users'} onClick={() => setActiveTab('users')} />
@@ -360,7 +360,7 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
         <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
           <button onClick={() => setActiveTab('overview')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Overview</button>
@@ -536,7 +536,7 @@ const AdminDashboard = () => {
                       </td>
                       <td className="px-6 py-4">
                         <select
-                          className={`text-xs font-bold px-3 py-1.5 rounded-md outline-none border cursor-pointer appearance-none ${
+                          className={`text-xs font-bold px-3 py-1.5 rounded-md outline-none border cursor-pointer ${
                             u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700 border-purple-200' :
                             u.role === 'EMPLOYER' ? 'bg-green-100 text-green-700 border-green-200' :
                             'bg-blue-100 text-blue-700 border-blue-200'
@@ -557,10 +557,7 @@ const AdminDashboard = () => {
                         </select>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button className="text-slate-400 hover:text-blue-600 transition-colors p-1" title="Edit Role">
-                            <Edit2 className="w-4 h-4" />
-                          </button>
+                        <div className="flex items-center justify-end gap-3 transition-opacity">
                           <button 
                             className="text-slate-400 hover:text-red-600 transition-colors p-1" 
                             title="Delete User"
@@ -586,7 +583,15 @@ const AdminDashboard = () => {
                   })}
                   {usersList.length === 0 && (
                     <tr>
-                      <td colSpan="6" className="px-6 py-12 text-center text-slate-500">No users found.</td>
+                      <td colSpan="6" className="px-6 py-20 text-center">
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                            <Users className="w-8 h-8 text-blue-500" />
+                          </div>
+                          <h3 className="text-lg font-bold text-slate-900 mb-1">No users found</h3>
+                          <p className="text-sm text-slate-500">There are currently no users registered on the platform.</p>
+                        </div>
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -913,7 +918,7 @@ const AdminDashboard = () => {
                         <td className="px-6 py-4 text-right">
                           {app.resumeUrl ? (
                             <a 
-                              href={app.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} 
+                              href={app.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} 
                               target="_blank" 
                               rel="noopener noreferrer" 
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-sm font-medium transition-colors"

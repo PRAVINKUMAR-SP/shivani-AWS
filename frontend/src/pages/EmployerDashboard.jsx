@@ -186,9 +186,9 @@ const EmployerDashboard = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] overflow-hidden transition-colors duration-300">
+    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex overflow-y-auto transition-colors duration-300">
+      <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex lg:sticky lg:top-[80px] lg:h-[calc(100vh-80px)] overflow-y-auto transition-colors duration-300 z-10">
         <div className="space-y-1 mb-8">
           <SidebarItem icon={Home} label="Dashboard" active={activeTab === 'Dashboard'} onClick={() => { setActiveTab('Dashboard'); setShowForm(false); }} />
           <SidebarItem icon={Plus} label="Post a Job" active={activeTab === 'Post a Job'} onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); }} />
@@ -206,7 +206,7 @@ const EmployerDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
         <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
           <button onClick={() => { setActiveTab('Dashboard'); setShowForm(false); }} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Dashboard' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Dashboard</button>
@@ -392,7 +392,21 @@ const EmployerDashboard = () => {
                       </div>
                     </div>
                   ))}
-                  {jobs.length === 0 && <div className="p-8 text-center text-slate-500">No jobs posted yet.</div>}
+                  {jobs.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                      <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
+                        <Briefcase className="w-10 h-10 text-blue-500" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No jobs posted yet</h3>
+                      <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-6 text-sm">
+                        You haven't posted any jobs. Create your first job listing to start receiving applications from top talent.
+                      </p>
+                      <button onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); }} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 dark:shadow-none flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        Post a Job Now
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
           </>
@@ -467,7 +481,7 @@ const EmployerDashboard = () => {
                     </select>
                     {app.seeker?.resumeUrl && (
                       <a 
-                        href={`${app.seeker.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')}`}
+                        href={`${app.seeker.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')}`}
                         target="_blank"
                         rel="noreferrer"
                         className="text-xs text-blue-600 hover:underline flex items-center gap-1 mt-2 font-medium"
@@ -481,7 +495,17 @@ const EmployerDashboard = () => {
                   </div>
                 </div>
               ))}
-              {applications.length === 0 && <div className="p-8 text-center text-slate-500">No applications received yet.</div>}
+              {applications.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                  <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
+                    <Users className="w-10 h-10 text-blue-500" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No applications yet</h3>
+                  <p className="text-slate-500 dark:text-slate-400 max-w-sm text-sm">
+                    Applications for your job postings will appear here. Make sure your job descriptions are detailed and attractive to candidates!
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}
