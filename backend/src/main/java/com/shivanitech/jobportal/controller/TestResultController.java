@@ -59,4 +59,15 @@ public class TestResultController {
         
         return ResponseEntity.ok(resultList);
     }
+
+    @GetMapping("/status")
+    public ResponseEntity<?> getTestStatus(Principal principal) {
+        if (principal == null) return ResponseEntity.status(401).body(Collections.singletonMap("completed", false));
+        
+        Optional<User> userOpt = userRepository.findByEmail(principal.getName());
+        if (!userOpt.isPresent()) return ResponseEntity.badRequest().body(Collections.singletonMap("completed", false));
+        
+        boolean hasCompleted = testResultRepository.existsByUserId(userOpt.get().getId());
+        return ResponseEntity.ok(Collections.singletonMap("completed", hasCompleted));
+    }
 }

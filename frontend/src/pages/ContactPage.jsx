@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 const ContactInfo = ({ icon: Icon, title, content }) => (
@@ -14,8 +15,11 @@ const ContactInfo = ({ icon: Icon, title, content }) => (
 );
 
 const ContactPage = () => {
+  const [searchParams] = useSearchParams();
+  const initialSubject = searchParams.get('subject') || '';
+  
   const [formData, setFormData] = useState({
-    name: '', email: '', phone: '', subject: '', message: ''
+    name: '', email: '', phone: '', subject: initialSubject, message: ''
   });
   const [status, setStatus] = useState('');
 

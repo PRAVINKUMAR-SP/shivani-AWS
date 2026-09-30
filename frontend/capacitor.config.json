@@ -1,0 +1,9 @@
+{
+  "appId": "com.shivanitech.app",
+  "appName": "Shivani Technologies",
+  "webDir": "dist",
+  "server": {
+    "url": "https://shivanitech.in",
+    "cleartext": true
+  }
+}

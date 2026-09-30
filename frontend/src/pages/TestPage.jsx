@@ -41,6 +41,24 @@ const TestPage = () => {
   const [timeLeft, setTimeLeft] = useState(20);
   const [testFinished, setTestFinished] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState(Array(20).fill(null));
+  const [alreadyCompleted, setAlreadyCompleted] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState(true);
+
+  useEffect(() => {
+    if (user && user.role === 'SEEKER') {
+      axios.get('/api/test/status')
+        .then(res => {
+          setAlreadyCompleted(res.data.completed);
+          setLoadingStatus(false);
+        })
+        .catch(err => {
+          console.error("Failed to fetch test status", err);
+          setLoadingStatus(false);
+        });
+    } else {
+      setLoadingStatus(false);
+    }
+  }, [user]);
 
   useEffect(() => {
     let timer;
@@ -108,6 +126,33 @@ const TestPage = () => {
           >
             Go to Home
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadingStatus) {
+    return (
+      <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] flex items-center justify-center p-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (alreadyCompleted) {
+    return (
+      <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] flex items-center justify-center p-4">
+        <div className="card max-w-lg w-full p-10 text-center space-y-6">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-green-100 text-green-600">
+            <CheckCircle className="w-10 h-10" />
+          </div>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Already Completed</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-lg">You have already completed the skill assessment test.</p>
+          
+          <div className="flex gap-4 mt-6">
+            <button onClick={() => navigate('/services')} className="flex-1 btn-primary">Back to Services</button>
+            <button onClick={() => navigate('/seeker-dashboard')} className="flex-1 py-3 px-6 rounded-xl font-bold transition-all duration-300 transform border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-white">Go to Dashboard</button>
+          </div>
         </div>
       </div>
     );

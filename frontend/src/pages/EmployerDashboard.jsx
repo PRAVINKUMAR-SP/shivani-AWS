@@ -467,7 +467,7 @@ const EmployerDashboard = () => {
                     </select>
                     {app.seeker?.resumeUrl && (
                       <a 
-                        href={`${app.seeker.resumeUrl}`}
+                        href={`${app.seeker.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')}`}
                         target="_blank"
                         rel="noreferrer"
                         className="text-xs text-blue-600 hover:underline flex items-center gap-1 mt-2 font-medium"

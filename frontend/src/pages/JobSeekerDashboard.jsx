@@ -156,7 +156,7 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
           {profile.resumeUrl && (
             <div className="mt-3 text-sm">
               <span className="text-slate-500">Current Resume: </span>
-              <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">View File</a>
+              <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">View File</a>
             </div>
           )}
           <p className="text-[13px] text-slate-500 mt-2">Max file size: 5MB.</p>
@@ -361,14 +361,14 @@ const ViewProfileSection = ({ profile, user, onEdit }) => {
                   {profile.aboutMe}
                   {profile.resumeUrl && (
                     <span className="block mt-2">
-                      <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">View my resume here.</a>
+                      <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">View my resume here.</a>
                     </span>
                   )}
                 </>
               ) : profile?.resumeUrl ? (
                 <span>
                   Ready to work and actively seeking opportunities. 
-                  <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">View my resume here.</a>
+                  <a href={profile.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">View my resume here.</a>
                 </span>
               ) : (
                 <span className="text-slate-400 italic">Add your summary and resume in settings to display your about section.</span>

@@ -45,6 +45,7 @@ const AdminDashboard = () => {
   const [jobsList, setJobsList] = useState(() => JSON.parse(sessionStorage.getItem('admin_jobs')) || []);
   const [applicantsList, setApplicantsList] = useState(() => JSON.parse(sessionStorage.getItem('admin_applicants')) || []);
   const [testResults, setTestResults] = useState(() => JSON.parse(sessionStorage.getItem('admin_tests')) || []);
+  const [messagesList, setMessagesList] = useState(() => JSON.parse(sessionStorage.getItem('admin_messages')) || []);
   const [systemHealth, setSystemHealth] = useState(null);
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -136,7 +137,8 @@ const AdminDashboard = () => {
         (activeTab === 'users' && usersList.length === 0) ||
         (activeTab === 'jobs' && jobsList.length === 0) ||
         (activeTab === 'applicants' && applicantsList.length === 0) ||
-        (activeTab === 'test_results' && testResults.length === 0);
+        (activeTab === 'test_results' && testResults.length === 0) ||
+        (activeTab === 'messages' && messagesList.length === 0);
 
       if (needsLoading) {
         setIsLoading(true);
@@ -149,6 +151,7 @@ const AdminDashboard = () => {
         activeTab === 'jobs' ? fetchJobs() : Promise.resolve(),
         activeTab === 'applicants' ? fetchApplicants() : Promise.resolve(),
         activeTab === 'test_results' ? fetchTestResults() : Promise.resolve(),
+        activeTab === 'messages' ? fetchMessages() : Promise.resolve(),
         activeTab === 'settings' ? fetchSystemSettings() : Promise.resolve()
       ]);
       
@@ -184,6 +187,16 @@ const AdminDashboard = () => {
       sessionStorage.setItem('admin_tests', JSON.stringify(res.data));
     } catch (err) {
       console.error("Error fetching test results:", err);
+    }
+  };
+
+  const fetchMessages = async () => {
+    try {
+      const res = await axios.get('/api/contact/messages');
+      setMessagesList(res.data);
+      sessionStorage.setItem('admin_messages', JSON.stringify(res.data));
+    } catch (err) {
+      console.error("Error fetching messages:", err);
     }
   };
 
@@ -338,6 +351,7 @@ const AdminDashboard = () => {
           <SidebarItem icon={Briefcase} label="Platform Jobs" active={activeTab === 'jobs'} onClick={() => setActiveTab('jobs')} />
           <SidebarItem icon={FileText} label="Applicants" active={activeTab === 'applicants'} onClick={() => setActiveTab('applicants')} />
           <SidebarItem icon={CheckCircle} label="Test Results" active={activeTab === 'test_results'} onClick={() => setActiveTab('test_results')} />
+          <SidebarItem icon={MessageSquare} label="Messages" active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} />
           <SidebarItem icon={Settings} label="System Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
         </div>
         
@@ -355,6 +369,7 @@ const AdminDashboard = () => {
           <button onClick={() => setActiveTab('jobs')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'jobs' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Jobs</button>
           <button onClick={() => setActiveTab('applicants')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applicants' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Applicants</button>
           <button onClick={() => setActiveTab('test_results')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'test_results' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Tests</button>
+          <button onClick={() => setActiveTab('messages')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'messages' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Messages</button>
           <button onClick={() => setActiveTab('settings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'settings' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Settings</button>
         </div>
 
@@ -898,7 +913,7 @@ const AdminDashboard = () => {
                         <td className="px-6 py-4 text-right">
                           {app.resumeUrl ? (
                             <a 
-                              href={app.resumeUrl} 
+                              href={app.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '')} 
                               target="_blank" 
                               rel="noopener noreferrer" 
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-sm font-medium transition-colors"
@@ -977,6 +992,65 @@ const AdminDashboard = () => {
                   {testResults.length === 0 && (
                     <tr>
                       <td colSpan="4" className="px-6 py-12 text-center text-slate-500">No test results found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'messages' && (
+          <div className="card overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+              <div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-xl font-bold text-slate-900">Contact Messages</h2>
+                </div>
+                <p className="text-sm text-slate-500 mt-1">View inquiries from the contact page.</p>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                  <tr>
+                    <th className="px-6 py-4">Sender</th>
+                    <th className="px-6 py-4">Contact</th>
+                    <th className="px-6 py-4">Subject & Message</th>
+                    <th className="px-6 py-4">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 bg-white">
+                  {messagesList.map((msg) => {
+                    const initials = (msg.name || "User").substring(0, 2).toUpperCase();
+                    return (
+                      <tr key={msg.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-indigo-100 text-indigo-600">
+                              {initials}
+                            </div>
+                            <span className="font-semibold text-slate-900">{msg.name || "Anonymous"}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-slate-500 text-sm">
+                          <div>{msg.email}</div>
+                          <div>{msg.phone || 'N/A'}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="font-semibold text-slate-800 text-sm mb-1">{msg.subject || 'No Subject'}</div>
+                          <div className="text-slate-500 text-xs max-w-md truncate" title={msg.message}>{msg.message}</div>
+                        </td>
+                        <td className="px-6 py-4 text-slate-500 text-sm">
+                          {new Date(msg.createdAt).toLocaleString()}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {messagesList.length === 0 && (
+                    <tr>
+                      <td colSpan="4" className="px-6 py-12 text-center text-slate-500">No messages found.</td>
                     </tr>
                   )}
                 </tbody>

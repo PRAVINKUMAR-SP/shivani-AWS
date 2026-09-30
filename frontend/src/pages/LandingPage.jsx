@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Building2, BarChart2, Award, User, Settings, Search, GraduationCap, Monitor, CheckCircle, ArrowRight, Server } from 'lucide-react';
+import { Home, Building2, BarChart2, Award, User, Settings, Search, GraduationCap, Monitor, CheckCircle, ArrowRight, Server, Download } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -59,11 +59,15 @@ const LandingPage = ({ onLoginClick }) => {
           <p className="text-slate-600 dark:text-slate-300 text-[17px]">
             Create an account or sign in to see your personalised job recommendations.
           </p>
-          <div className="pt-4 flex justify-center">
+          <div className="pt-4 flex justify-center gap-4">
             <button onClick={onLoginClick} className="inline-flex items-center justify-center bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg transition-colors">
               Get Started
               <ArrowRight className="w-5 h-5 ml-2 font-bold" />
             </button>
+            <a href="/shivani-app.apk" download className="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+              Download App
+              <Download className="w-5 h-5 ml-2 font-bold" />
+            </a>
           </div>
         </div>
 

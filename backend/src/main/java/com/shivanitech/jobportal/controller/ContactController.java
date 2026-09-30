@@ -15,6 +15,9 @@ public class ContactController {
     @Autowired
     private SnsService snsService;
 
+    @Autowired
+    private com.shivanitech.jobportal.repository.ContactMessageRepository contactMessageRepository;
+
     @PostMapping
     public ResponseEntity<?> submitContactForm(@RequestBody Map<String, String> contactData) {
         String name = contactData.get("name");
@@ -22,6 +25,15 @@ public class ContactController {
         String phone = contactData.get("phone");
         String subject = contactData.get("subject");
         String message = contactData.get("message");
+
+        // Save to database
+        com.shivanitech.jobportal.model.ContactMessage contactMessage = new com.shivanitech.jobportal.model.ContactMessage();
+        contactMessage.setName(name);
+        contactMessage.setEmail(email);
+        contactMessage.setPhone(phone);
+        contactMessage.setSubject(subject);
+        contactMessage.setMessage(message);
+        contactMessageRepository.save(contactMessage);
 
         // Format message for SMS to send to admins
         String adminMessage = String.format("New Contact Inquiry!\nName: %s\nEmail: %s\nPhone: %s\nSubject: %s\nMsg: %s", 
@@ -42,5 +54,11 @@ public class ContactController {
         } else {
             return ResponseEntity.status(500).body("Failed to send SMS to one or more admin numbers.");
         }
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<?> getAllMessages(java.security.Principal principal) {
+        // Assume security config or method level security protects this to ADMIN only
+        return ResponseEntity.ok(contactMessageRepository.findAllByOrderByCreatedAtDesc());
     }
 }

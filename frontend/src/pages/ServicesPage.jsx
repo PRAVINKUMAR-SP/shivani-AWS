@@ -36,7 +36,7 @@ const ServicesPage = () => {
       colorClass: "bg-emerald-100/80 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
       price: "₹49/session",
       actionText: "Book a Coach",
-      linkTo: "/contact"
+      linkTo: "/contact?subject=Interview+Preparation"
     },
     { 
       title: "Skill Certifications", 
@@ -45,7 +45,7 @@ const ServicesPage = () => {
       colorClass: "bg-purple-100/80 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
       price: "From ₹19",
       actionText: "Explore Courses",
-      linkTo: "/contact"
+      linkTo: "/contact?subject=Skill+Certifications"
     },
     { 
       title: "Career Counseling", 
@@ -54,7 +54,7 @@ const ServicesPage = () => {
       colorClass: "bg-orange-100/80 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",
       price: "₹79/session",
       actionText: "Find a Mentor",
-      linkTo: "/contact"
+      linkTo: "/contact?subject=Career+Counseling"
     },
     { 
       title: "Skill Assessments", 
@@ -64,6 +64,15 @@ const ServicesPage = () => {
       price: "Free",
       actionText: "Take a Test",
       linkTo: "/test"
+    },
+    { 
+      title: "GST REGISTRATION", 
+      description: "Professional assistance for your GST registration process quickly and effortlessly.", 
+      icon: FileText, 
+      colorClass: "bg-blue-100/80 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+      price: "Free",
+      actionText: "Register Now",
+      linkTo: "/contact?subject=GST+REGISTRATION"
     }
   ];
 
