@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 import { useGoogleLogin } from '@react-oauth/google';
+import { Capacitor } from '@capacitor/core';
+
+const isNative = Capacitor.isNativePlatform();
 import axios from 'axios';
 
 const AuthModals = ({ isOpen, onClose }) => {
@@ -196,23 +199,27 @@ const AuthModals = ({ isOpen, onClose }) => {
                 </button>
               </form>
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-slate-400 uppercase font-semibold text-xs tracking-wider">Or</span>
-                </div>
-              </div>
+              {!isNative && (
+                <>
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white text-slate-400 uppercase font-semibold text-xs tracking-wider">Or</span>
+                    </div>
+                  </div>
 
-              <button 
-                type="button" 
-                onClick={() => handleGoogleLogin('SEEKER')}
-                className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm"
-              >
-                <GoogleIcon />
-                Continue with Google
-              </button>
+                  <button 
+                    type="button" 
+                    onClick={() => handleGoogleLogin('SEEKER')}
+                    className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm"
+                  >
+                    <GoogleIcon />
+                    Continue with Google
+                  </button>
+                </>
+              )}
               
               <div className="text-center text-sm text-slate-600 mt-6">
                 Don't have an account? <button onClick={() => changeStep('register-seeker')} className="text-blue-600 font-semibold hover:underline">Sign up</button>
@@ -284,23 +291,27 @@ const AuthModals = ({ isOpen, onClose }) => {
                 <button type="submit" className="btn-primary w-full text-base font-semibold py-3.5">Sign In</button>
               </form>
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-slate-400 uppercase font-semibold text-xs tracking-wider">Or</span>
-                </div>
-              </div>
+              {!isNative && (
+                <>
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white text-slate-400 uppercase font-semibold text-xs tracking-wider">Or</span>
+                    </div>
+                  </div>
 
-              <button 
-                type="button" 
-                onClick={() => handleGoogleLogin('EMPLOYER')}
-                className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm"
-              >
-                <GoogleIcon />
-                Continue with Google
-              </button>
+                  <button 
+                    type="button" 
+                    onClick={() => handleGoogleLogin('EMPLOYER')}
+                    className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm"
+                  >
+                    <GoogleIcon />
+                    Continue with Google
+                  </button>
+                </>
+              )}
               <div className="text-center text-sm text-slate-600 mt-6">
                 New company? <button onClick={() => changeStep('register-employer')} className="text-blue-600 font-semibold hover:underline">Register here</button>
               </div>
