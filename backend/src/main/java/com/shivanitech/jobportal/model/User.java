@@ -41,6 +41,7 @@ public class User {
     // Employer specific
     private String companyName;
     private String companyDescription;
+    private String profilePicUrl;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean isApproved = true;

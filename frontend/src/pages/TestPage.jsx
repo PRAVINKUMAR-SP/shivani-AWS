@@ -196,9 +196,11 @@ const TestPage = () => {
               <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-xl text-blue-700 dark:text-blue-400 font-bold">20 Questions</div>
               <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-xl text-purple-700 dark:text-purple-400 font-bold">20s per Question</div>
             </div>
-            <button onClick={startTest} className="btn-primary w-full sm:w-auto px-12 text-lg">
-              Start Test Now
-            </button>
+            <div className="flex justify-center">
+              <button onClick={startTest} className="btn-primary w-full sm:w-auto px-12 text-lg">
+                Start Test Now
+              </button>
+            </div>
           </div>
         ) : (
           <div className="card p-8 sm:p-12">

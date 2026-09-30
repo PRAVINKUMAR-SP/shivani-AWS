@@ -57,7 +57,7 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, appli
     <div className="flex justify-between items-center mt-auto pt-2">
       <span className="text-slate-400 text-sm font-medium">{time || 'Recently posted'}</span>
       {applied ? (
-        <span className={`font-semibold text-[13px] px-4 py-2.5 rounded-lg flex items-center gap-1.5 ${
+        <span className={`whitespace-nowrap font-semibold text-[13px] px-4 py-2.5 rounded-lg flex items-center gap-1.5 ${
           appStatus === 'PENDING' || !appStatus ? 'bg-yellow-50 text-yellow-600' :
           appStatus === 'RESUME VIEWED' ? 'bg-blue-50 text-blue-700' :
           appStatus === 'CONTACT VIEWED' ? 'bg-purple-50 text-purple-700' :
@@ -224,6 +224,39 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
   );
 };
 
+const ApplicationTimeline = ({ currentStatus }) => {
+  const steps = ['PENDING', 'RESUME VIEWED', 'CONTACT VIEWED', 'SHORTLISTED'];
+  const currentIndex = steps.indexOf(currentStatus) === -1 ? 0 : steps.indexOf(currentStatus);
+  const isRejected = currentStatus === 'REJECTED';
+
+  return (
+    <div className="hidden md:group-hover:flex w-full mt-8 items-center justify-between relative z-0">
+      <div className="absolute h-1 bg-slate-100 w-[80%] left-[10%] top-3 -z-10"></div>
+      <div className={`absolute h-1 bg-green-500 top-3 -z-10 transition-all duration-500 ${isRejected ? 'hidden' : ''}`} style={{ width: `${(currentIndex / 3) * 80}%`, left: '10%' }}></div>
+      
+      {steps.map((step, idx) => {
+        const isCompleted = idx < currentIndex && !isRejected;
+        const isActive = idx === currentIndex && !isRejected;
+        return (
+          <div key={step} className="flex flex-col items-center gap-2 bg-white px-2">
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 ${
+              isRejected && idx === currentIndex ? 'bg-red-50 text-red-600 border-red-500' :
+              isActive ? 'bg-blue-50 text-blue-600 border-blue-500' :
+              isCompleted ? 'bg-green-50 text-green-600 border-green-500' : 
+              'bg-slate-50 text-slate-400 border-slate-200'
+            }`}>
+              {isCompleted ? '✓' : isRejected && idx === currentIndex ? '✕' : (idx + 1)}
+            </div>
+            <span className={`text-[10px] font-bold ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-slate-400'}`}>
+              {step}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const ApplicationsTrackerSection = ({ applications }) => (
   <div className="max-w-4xl space-y-6">
     <div className="mb-8 flex justify-between items-end">
@@ -237,31 +270,34 @@ const ApplicationsTrackerSection = ({ applications }) => (
       <div className="card p-12 text-center text-slate-500">You haven't applied to any jobs yet.</div>
     ) : (
       applications.map(app => (
-        <div key={app.id} className="card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-xl uppercase">
-              {app.job?.company?.charAt(0) || 'C'}
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-900 text-lg">{app.job?.title}</h3>
-              <p className="text-slate-500 text-sm mt-0.5">{app.job?.company} • {app.job?.location}</p>
-              <div className="flex items-center gap-2 mt-3 text-sm text-slate-600">
-                <span className="flex items-center gap-1"><FileText className="w-4 h-4 text-slate-400" /> Applied {new Date(app.appliedAt).toLocaleDateString()}</span>
+        <div key={app.id} className="card p-6 flex flex-col group cursor-pointer hover:border-blue-200 transition-all">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-xl uppercase">
+                {app.job?.company?.charAt(0) || 'C'}
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 text-lg">{app.job?.title}</h3>
+                <p className="text-slate-500 text-sm mt-0.5">{app.job?.company} • {app.job?.location}</p>
+                <div className="flex items-center gap-2 mt-3 text-sm text-slate-600">
+                  <span className="flex items-center gap-1"><FileText className="w-4 h-4 text-slate-400" /> Applied {new Date(app.appliedAt).toLocaleDateString()}</span>
+                </div>
               </div>
             </div>
+            <div className="text-right">
+              <span className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold ${
+                app.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
+                app.status === 'RESUME VIEWED' ? 'bg-blue-100 text-blue-700' :
+                app.status === 'CONTACT VIEWED' ? 'bg-purple-100 text-purple-700' :
+                app.status === 'SHORTLISTED' ? 'bg-green-100 text-green-700' :
+                app.status === 'REJECTED' ? 'bg-red-100 text-red-700' :
+                'bg-gray-100 text-gray-700'
+              }`}>
+                {app.status || 'PENDING'}
+              </span>
+            </div>
           </div>
-          <div className="text-right">
-            <span className={`px-4 py-2 rounded-full text-xs font-bold ${
-              app.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
-              app.status === 'RESUME VIEWED' ? 'bg-blue-100 text-blue-700' :
-              app.status === 'CONTACT VIEWED' ? 'bg-purple-100 text-purple-700' :
-              app.status === 'SHORTLISTED' ? 'bg-green-100 text-green-700' :
-              app.status === 'REJECTED' ? 'bg-red-100 text-red-700' :
-              'bg-gray-100 text-gray-700'
-            }`}>
-              {app.status || 'PENDING'}
-            </span>
-          </div>
+          <ApplicationTimeline currentStatus={app.status || 'PENDING'} />
         </div>
       ))
     )}

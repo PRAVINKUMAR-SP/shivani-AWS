@@ -62,4 +62,36 @@ public class FileUploadController {
             return ResponseEntity.internalServerError().body("Failed to upload file");
         }
     }
+
+    @PostMapping("/profile-pic")
+    public ResponseEntity<?> uploadProfilePic(@RequestParam("file") MultipartFile file, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Please select a file to upload.");
+        }
+        try {
+            Path uploadPath = Paths.get("uploads/profiles/");
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String newFilename = "profile_" + UUID.randomUUID().toString() + extension;
+            Path filePath = uploadPath.resolve(newFilename);
+            Files.copy(file.getInputStream(), filePath);
+            
+            String fileUrl = "/uploads/profiles/" + newFilename;
+            Map<String, String> response = new HashMap<>();
+            response.put("url", fileUrl);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Failed to upload file");
+        }
+    }
 }

@@ -55,10 +55,4 @@ public class ContactController {
             return ResponseEntity.status(500).body("Failed to send SMS to one or more admin numbers.");
         }
     }
-
-    @GetMapping("/messages")
-    public ResponseEntity<?> getAllMessages(java.security.Principal principal) {
-        // Assume security config or method level security protects this to ADMIN only
-        return ResponseEntity.ok(contactMessageRepository.findAllByOrderByCreatedAtDesc());
-    }
 }

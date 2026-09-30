@@ -14,7 +14,7 @@ const Footer = () => {
         {/* Column 1: Brand & About */}
         <div className="space-y-4">
           <Link to="/" className="flex items-center gap-3">
-            <img src="/logo.png" alt="Shivani Technologies Logo" className="h-10 w-auto" />
+            <img src="/logo.png" alt="Shivani Technologies Logo" className="h-10 w-auto rounded-xl" />
             <span className="text-[1.3rem] font-black text-white tracking-tight">SHIVANI TECHNOLOGIES</span>
           </Link>
           <p className="text-[14px] leading-relaxed text-slate-400">

@@ -45,6 +45,11 @@ const EmployerDashboard = () => {
     title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: ''
   });
   const [isLoading, setIsLoading] = useState(() => !sessionStorage.getItem('emp_jobs'));
+  const [profile, setProfile] = useState({
+    name: '', companyName: '', email: '', phoneNo: '', location: '', companyDescription: '', profilePicUrl: ''
+  });
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileMessage, setProfileMessage] = useState('');
 
   useEffect(() => {
     const loadData = async () => {
@@ -52,7 +57,8 @@ const EmployerDashboard = () => {
       await Promise.all([
         fetchJobs(),
         fetchStats(),
-        fetchApplications()
+        fetchApplications(),
+        fetchProfile()
       ]);
       setIsLoading(false);
     };
@@ -66,6 +72,17 @@ const EmployerDashboard = () => {
       sessionStorage.setItem('emp_apps', JSON.stringify(res.data));
     } catch (err) {
       console.error("Error fetching applications:", err);
+    }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get('/api/users/profile');
+      if (res.data) setProfile(res.data);
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -511,32 +528,86 @@ const EmployerDashboard = () => {
         )}
 
         {activeTab === 'Profile Settings' && (
-          <div className="card p-8 max-w-2xl">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Company Settings</h2>
+          <div className="card p-8 max-w-4xl">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Profile Settings</h2>
+            {profileMessage && (
+              <div className="mb-6 bg-green-50 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
+                <CheckCircle className="w-5 h-5" />
+                {profileMessage}
+              </div>
+            )}
             <form onSubmit={async (e) => {
               e.preventDefault();
               try {
-                await axios.put('/api/users/profile', {
-                  companyName: e.target.companyName.value,
-                  companyDescription: e.target.companyDescription.value,
-                  phoneNo: e.target.phoneNo.value
-                });
-                alert('Company profile updated successfully!');
+                await axios.put('/api/users/profile', profile);
+                setProfileMessage('Profile updated successfully!');
+                setTimeout(() => setProfileMessage(''), 3000);
               } catch (err) {
-                alert('Failed to update company profile');
+                alert('Failed to update profile');
               }
             }} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Company Name</label>
-                <input type="text" name="companyName" defaultValue={user?.companyName} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" required />
+              
+              <div className="flex flex-col md:flex-row gap-8 items-start">
+                <div className="w-full md:w-1/3 flex flex-col items-center">
+                  <div className="w-32 h-32 rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-300 relative group cursor-pointer">
+                    {profile.profilePicUrl ? (
+                      <img src={profile.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Company Logo" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-slate-400 flex flex-col items-center">
+                        <Users className="w-8 h-8 mb-2" />
+                        <span className="text-xs font-semibold">Upload Logo</span>
+                      </div>
+                    )}
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        try {
+                          const res = await axios.post('/api/upload/profile-pic', formData);
+                          setProfile({...profile, profilePicUrl: res.data.url});
+                        } catch (err) {
+                          alert('Failed to upload picture');
+                        }
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-slate-500 mt-3 text-center">JPG, PNG or GIF (Max 5MB)</p>
+                </div>
+                
+                <div className="w-full md:w-2/3 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">Company Name</label>
+                      <input type="text" value={profile.companyName || ''} onChange={e => setProfile({...profile, companyName: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">Employer Name</label>
+                      <input type="text" value={profile.name || ''} onChange={e => setProfile({...profile, name: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                      <input type="email" value={profile.email || ''} readOnly className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 outline-none cursor-not-allowed" title="Email cannot be changed" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
+                      <input type="tel" value={profile.phoneNo || ''} onChange={e => setProfile({...profile, phoneNo: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">Location</label>
+                      <input type="text" value={profile.location || ''} onChange={e => setProfile({...profile, location: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. New York, USA" />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Company Phone</label>
-                <input type="tel" name="phoneNo" defaultValue={user?.phoneNo} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" />
-              </div>
+
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Company Description</label>
-                <textarea name="companyDescription" defaultValue={user?.companyDescription} rows="4" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none resize-none"></textarea>
+                <textarea value={profile.companyDescription || ''} onChange={e => setProfile({...profile, companyDescription: e.target.value})} rows="4" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none resize-none"></textarea>
               </div>
               <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors">
                 Save Changes

@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 import com.shivanitech.jobportal.model.Job;
 import com.shivanitech.jobportal.model.Application;
+import com.shivanitech.jobportal.repository.ContactMessageRepository;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -40,6 +41,9 @@ public class AdminController {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ContactMessageRepository contactMessageRepository;
 
     @GetMapping("/stats")
     public ResponseEntity<?> getStats(Principal principal) {
@@ -240,5 +244,10 @@ public class AdminController {
             return ResponseEntity.ok(user);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<?> getAllMessages(Principal principal) {
+        return ResponseEntity.ok(contactMessageRepository.findAllByOrderByCreatedAtDesc());
     }
 }

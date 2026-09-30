@@ -192,7 +192,7 @@ const AdminDashboard = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get('/api/contact/messages');
+      const res = await axios.get('/api/admin/messages');
       setMessagesList(res.data);
       sessionStorage.setItem('admin_messages', JSON.stringify(res.data));
     } catch (err) {
@@ -494,7 +494,7 @@ const AdminDashboard = () => {
                     <th className="px-6 py-4">Email</th>
                     <th className="px-6 py-4">Phone</th>
                     <th className="px-6 py-4">Role</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th className="px-6 py-4 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -556,8 +556,8 @@ const AdminDashboard = () => {
                           <option value="ADMIN">ADMIN</option>
                         </select>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-3 transition-opacity">
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-3 transition-opacity">
                           <button 
                             className="text-slate-400 hover:text-red-600 transition-colors p-1" 
                             title="Delete User"
@@ -620,7 +620,7 @@ const AdminDashboard = () => {
                     <th className="px-6 py-4 text-center">Jobs Posted</th>
                     <th className="px-6 py-4 text-center">Shortlisted</th>
                     <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th className="px-6 py-4 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -641,7 +641,7 @@ const AdminDashboard = () => {
                       <td className="px-6 py-4 text-center font-semibold text-green-600">
                         {emp.shortlistedCount}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <select 
                           value={emp.isApproved ? 'Approved' : 'Pending'}
                           onChange={async (e) => {
@@ -659,8 +659,8 @@ const AdminDashboard = () => {
                           <option value="Pending" className="bg-white text-slate-900">Pending</option>
                         </select>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
                           <button 
                             onClick={async () => {
                               if(window.confirm(`Are you sure you want to remove employer ${emp.companyName}?`)) {
@@ -785,7 +785,7 @@ const AdminDashboard = () => {
                     <th className="px-6 py-4">Date Posted</th>
                     <th className="px-6 py-4">Applicants</th>
                     <th className="px-6 py-4">Selected</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th className="px-6 py-4 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -809,8 +809,8 @@ const AdminDashboard = () => {
                             {job.selectedCount}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center gap-3 transition-opacity">
                             <button 
                               className="text-slate-400 hover:text-red-600 transition-colors p-1" 
                               title="Delete Job"
