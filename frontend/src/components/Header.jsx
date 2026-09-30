@@ -86,11 +86,9 @@ const Header = ({ onLoginClick }) => {
             <Link to="/contact" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-base font-semibold transition-colors">
               Contact Us
             </Link>
-            {user && user.role === 'SEEKER' && (
-              <Link to="/test" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center gap-1 text-base font-semibold transition-colors">
-                Skill Assessments {testCompleted && <CheckCircle className="w-4 h-4 text-green-500" title="Completed"/>}
-              </Link>
-            )}
+            <Link to="/test" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center gap-1 text-base font-semibold transition-colors">
+              Skill Assessments {user && user.role === 'SEEKER' && testCompleted && <CheckCircle className="w-4 h-4 text-green-500" title="Completed"/>}
+            </Link>
           </nav>
         </div>
         
@@ -161,11 +159,9 @@ const Header = ({ onLoginClick }) => {
           <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Services</Link>
           <Link to="/financial" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Financial</Link>
           <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Contact Us</Link>
-          {user && user.role === 'SEEKER' && (
-            <Link to="/test" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold flex items-center gap-2">
-              Skill Assessments {testCompleted && <CheckCircle className="w-4 h-4 text-green-500" title="Completed"/>}
-            </Link>
-          )}
+          <Link to="/test" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold flex items-center gap-2">
+            Skill Assessments {user && user.role === 'SEEKER' && testCompleted && <CheckCircle className="w-4 h-4 text-green-500" title="Completed"/>}
+          </Link>
           
           {user && user.role === 'ADMIN' && (
             <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-4">
