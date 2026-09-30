@@ -18,13 +18,13 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
 );
 
 const StatCard = ({ title, count, icon: Icon, iconColor, bgColor }) => (
-  <div className="card p-6 flex items-center gap-6">
-    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${bgColor} ${iconColor}`}>
-      <Icon className="w-8 h-8" />
+  <div className="card p-3 md:p-6 flex flex-col md:flex-row md:items-center gap-2 md:gap-6 text-center md:text-left">
+    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 mx-auto md:mx-0 ${bgColor} ${iconColor}`}>
+      <Icon className="w-5 h-5 md:w-8 md:h-8" />
     </div>
-    <div>
-      <h3 className="text-slate-500 font-medium mb-1">{title}</h3>
-      <div className="text-3xl font-bold text-slate-900">{count}</div>
+    <div className="w-full">
+      <h3 className="text-[10px] md:text-base text-slate-500 font-medium mb-0.5 leading-tight">{title}</h3>
+      <div className="text-lg md:text-3xl font-bold text-slate-900">{count}</div>
     </div>
   </div>
 );
@@ -246,9 +246,9 @@ const EmployerDashboard = () => {
         {activeTab === 'Dashboard' && (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-3 gap-2 md:gap-6 mb-8">
               <StatCard title="Active Listings" count={stats.activeListings} icon={Briefcase} bgColor="bg-purple-50 dark:bg-purple-900/30" iconColor="text-purple-600 dark:text-purple-400" />
-              <StatCard title="Total Applicants" count={stats.totalApplications} icon={Users} bgColor="bg-blue-50 dark:bg-blue-900/30" iconColor="text-blue-600 dark:text-blue-400" />
+              <StatCard title="Applicants" count={stats.totalApplications} icon={Users} bgColor="bg-blue-50 dark:bg-blue-900/30" iconColor="text-blue-600 dark:text-blue-400" />
               <StatCard title="Shortlisted" count={stats.shortlisted || 0} icon={Star} bgColor="bg-orange-50 dark:bg-orange-900/30" iconColor="text-orange-600 dark:text-orange-400" />
             </div>
 

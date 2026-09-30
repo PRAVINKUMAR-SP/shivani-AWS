@@ -15,14 +15,17 @@ import ContactPage from './pages/ContactPage';
 import { AuthProvider } from './context/AuthContext';
 import TestPage from './pages/TestPage';
 import MobileAuth from './pages/MobileAuth';
+import SplashScreen from './components/SplashScreen';
 
 function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
 
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-slate-50 flex flex-col">
+        {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+        <div className="min-h-[100dvh] bg-slate-50 flex flex-col">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
           
           <div className="flex-1">

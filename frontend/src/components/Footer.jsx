@@ -9,7 +9,7 @@ const InstagramIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0f172a] text-slate-300 pt-8 pb-6 px-4 border-t border-slate-800 mt-auto">
+    <footer className="bg-[#0f172a] text-slate-300 pt-8 pb-6 px-4 border-t border-slate-800 mt-auto max-h-[600px]:hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
         {/* Column 1: Brand & About */}
         <div className="space-y-4">
