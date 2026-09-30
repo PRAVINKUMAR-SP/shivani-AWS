@@ -57,6 +57,10 @@ const AdminDashboard = () => {
   });
   const [isLoading, setIsLoading] = useState(() => !sessionStorage.getItem('admin_stats'));
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
+
   const processGraphData = (data) => {
     const now = new Date();
     
@@ -536,10 +540,10 @@ const AdminDashboard = () => {
                       </td>
                       <td className="px-6 py-4">
                         <select
-                          className={`text-xs font-bold px-3 py-1.5 rounded-md outline-none border cursor-pointer ${
-                            u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700 border-purple-200' :
-                            u.role === 'EMPLOYER' ? 'bg-green-100 text-green-700 border-green-200' :
-                            'bg-blue-100 text-blue-700 border-blue-200'
+                          className={`appearance-none text-xs font-bold px-4 py-2 rounded-xl outline-none border cursor-pointer shadow-sm hover:shadow transition-all bg-no-repeat bg-[right_0.5rem_center] bg-[length:1em_1em] pr-8 ${
+                            u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700 border-purple-200 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%237e22ce%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]' :
+                            u.role === 'EMPLOYER' ? 'bg-green-100 text-green-700 border-green-200 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2315803d%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]' :
+                            'bg-blue-100 text-blue-700 border-blue-200 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%231d4ed8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]'
                           }`}
                           value={u.role}
                           onChange={async (e) => {
@@ -653,7 +657,7 @@ const AdminDashboard = () => {
                               alert("Failed to update status");
                             }
                           }}
-                          className={`px-3 py-1 rounded-full text-xs font-bold outline-none cursor-pointer border-r-8 border-transparent ${emp.isApproved ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}
+                          className={`appearance-none px-4 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer border border-transparent shadow-sm hover:shadow transition-all bg-no-repeat bg-[right_0.5rem_center] bg-[length:1em_1em] pr-8 ${emp.isApproved ? 'bg-green-100 text-green-700 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2315803d%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]' : 'bg-yellow-100 text-yellow-700 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a16207%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]'}`}
                         >
                           <option value="Approved" className="bg-white text-slate-900">Approved</option>
                           <option value="Pending" className="bg-white text-slate-900">Pending</option>
@@ -672,9 +676,10 @@ const AdminDashboard = () => {
                                 }
                               }
                             }}
-                            className="px-3 py-1.5 bg-red-100 text-red-700 rounded text-xs font-medium hover:bg-red-200 transition-colors"
+                            className="text-slate-400 hover:text-red-600 transition-colors p-1"
+                            title="Delete Employer"
                           >
-                            Remove
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
@@ -904,7 +909,7 @@ const AdminDashboard = () => {
                           <div className="text-xs mt-1">{app.seekerLocation || 'N/A'}</div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          <span className={`whitespace-nowrap inline-block px-3 py-1 rounded-full text-xs font-semibold ${
                             app.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
                             app.status === 'RESUME VIEWED' ? 'bg-blue-100 text-blue-700' :
                             app.status === 'CONTACT VIEWED' ? 'bg-purple-100 text-purple-700' :

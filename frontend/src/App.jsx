@@ -29,13 +29,18 @@ function ScrollToTop() {
 
 function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('splash_shown'));
+
+  const handleSplashFinish = () => {
+    sessionStorage.setItem('splash_shown', 'true');
+    setShowSplash(false);
+  };
 
   return (
     <AuthProvider>
       <Router>
         <ScrollToTop />
-        {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+        {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
         <div className="min-h-[100dvh] bg-slate-50 flex flex-col">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
           

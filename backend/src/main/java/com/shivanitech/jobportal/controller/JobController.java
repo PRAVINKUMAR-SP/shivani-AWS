@@ -47,10 +47,12 @@ public class JobController {
         
         long activeListings = jobRepository.countByEmployerId(employer.getId());
         long totalApplications = applicationRepository.countByJobEmployerId(employer.getId());
+        long shortlistedCount = applicationRepository.countByJobEmployerIdAndStatus(employer.getId(), "SHORTLISTED");
 
         java.util.Map<String, Long> stats = new java.util.HashMap<>();
         stats.put("activeListings", activeListings);
         stats.put("totalApplications", totalApplications);
+        stats.put("shortlistedCount", shortlistedCount);
         
         return ResponseEntity.ok(stats);
     }

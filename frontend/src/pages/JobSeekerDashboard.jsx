@@ -230,7 +230,7 @@ const ApplicationTimeline = ({ currentStatus }) => {
   const isRejected = currentStatus === 'REJECTED';
 
   return (
-    <div className="hidden md:group-hover:flex w-full mt-8 items-center justify-between relative z-0">
+    <div className="flex w-full items-center justify-between relative z-0 mt-8">
       <div className="absolute h-1 bg-slate-100 w-[80%] left-[10%] top-3 -z-10"></div>
       <div className={`absolute h-1 bg-green-500 top-3 -z-10 transition-all duration-500 ${isRejected ? 'hidden' : ''}`} style={{ width: `${(currentIndex / 3) * 80}%`, left: '10%' }}></div>
       
@@ -247,7 +247,7 @@ const ApplicationTimeline = ({ currentStatus }) => {
             }`}>
               {isCompleted ? '✓' : isRejected && idx === currentIndex ? '✕' : (idx + 1)}
             </div>
-            <span className={`text-[10px] font-bold ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-slate-400'}`}>
+            <span className={`text-[10px] whitespace-nowrap font-bold ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-slate-400'}`}>
               {step}
             </span>
           </div>
@@ -447,6 +447,10 @@ const JobSeekerDashboard = () => {
     fetchStats();
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
 
   const fetchProfile = async () => {
     try {
@@ -755,7 +759,7 @@ const JobSeekerDashboard = () => {
                         <select 
                           value={filterType}
                           onChange={e => setFilterType(e.target.value)}
-                          className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow text-slate-700"
+                          className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow text-slate-700 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat cursor-pointer shadow-sm hover:border-blue-400"
                         >
                           <option value="All">All Types</option>
                           <option value="Full-time">Full-time</option>
@@ -769,7 +773,7 @@ const JobSeekerDashboard = () => {
                         <select 
                           value={filterSalary}
                           onChange={e => setFilterSalary(e.target.value)}
-                          className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow text-slate-700"
+                          className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow text-slate-700 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat cursor-pointer shadow-sm hover:border-blue-400"
                         >
                           <option value="All">Any Salary</option>
                           <option value="50000">₹50,000+</option>
@@ -790,7 +794,7 @@ const JobSeekerDashboard = () => {
                 <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
                   {activeTab === 'applied' ? 'Applied Jobs' : 
                    activeTab === 'saved' ? 'Saved Jobs' : 
-                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Search Results' : 'Recommended Jobs'}
+                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Search Results' : 'Search Jobs'}
                 </h1>
                 <p className="text-slate-500 mt-1">
                   {activeTab === 'applied' ? 'Jobs you have submitted applications for' : 

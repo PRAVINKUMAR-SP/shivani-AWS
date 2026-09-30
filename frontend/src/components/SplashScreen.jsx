@@ -34,17 +34,21 @@ const SplashScreen = ({ onFinish }) => {
     <div className={`fixed inset-0 z-[9999] bg-gradient-to-br from-blue-600 to-indigo-900 flex flex-col items-center justify-center transition-opacity duration-500 ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
       <div className="relative flex flex-col items-center animate-fade-in-up">
         {/* Logo / Icon Animation */}
-        <div className="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center mb-6 animate-bounce">
-          <span className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">ST</span>
+        <div className="mb-8 animate-[bounce_2s_ease-in-out_infinite]">
+          <div className="w-32 h-32 bg-white rounded-full shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center overflow-hidden border-4 border-white/20">
+            <img src="/logo.png" alt="Shivani Technology Logo" className="w-full h-full object-cover" />
+          </div>
         </div>
         
         {/* Welcome Text */}
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 tracking-tight text-center">
-          Welcome to
-        </h1>
-        <h2 className="text-2xl md:text-4xl font-extrabold text-blue-200 text-center tracking-widest">
-          SHIVANI TECHNOLOGY
-        </h2>
+        <div className="text-center animate-[fade-in-up_1s_ease-out]">
+          <h1 className="text-2xl md:text-4xl font-medium text-blue-100 mb-1 tracking-wide">
+            Welcome to
+          </h1>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200 tracking-wider mt-2 shadow-sm drop-shadow-lg">
+            Shivani Technology
+          </h2>
+        </div>
         
         {/* Loading dots */}
         <div className="flex gap-2 mt-8">

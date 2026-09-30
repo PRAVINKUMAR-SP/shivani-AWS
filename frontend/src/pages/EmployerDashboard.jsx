@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Plus, Edit, Trash2, Download, Star, Mail, Phone } from 'lucide-react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Plus, Edit, Trash2, Download, Star, Mail, Phone, MapPin, IndianRupee } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
@@ -64,6 +64,10 @@ const EmployerDashboard = () => {
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
 
   const fetchApplications = async () => {
     try {
@@ -266,7 +270,7 @@ const EmployerDashboard = () => {
             <div className="grid grid-cols-3 gap-2 md:gap-6 mb-8">
               <StatCard title="Active Listings" count={stats.activeListings} icon={Briefcase} bgColor="bg-purple-50 dark:bg-purple-900/30" iconColor="text-purple-600 dark:text-purple-400" />
               <StatCard title="Applicants" count={stats.totalApplications} icon={Users} bgColor="bg-blue-50 dark:bg-blue-900/30" iconColor="text-blue-600 dark:text-blue-400" />
-              <StatCard title="Shortlisted" count={stats.shortlisted || 0} icon={Star} bgColor="bg-orange-50 dark:bg-orange-900/30" iconColor="text-orange-600 dark:text-orange-400" />
+              <StatCard title="Shortlisted" count={stats.shortlistedCount || 0} icon={Star} bgColor="bg-orange-50 dark:bg-orange-900/30" iconColor="text-orange-600 dark:text-orange-400" />
             </div>
 
             {jobs.length === 0 ? (
@@ -332,7 +336,7 @@ const EmployerDashboard = () => {
                   </div>
                   <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Location</label>
-                    <select required value={newJob.location} onChange={e => setNewJob({...newJob, location: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    <select required value={newJob.location} onChange={e => setNewJob({...newJob, location: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat shadow-sm hover:border-blue-400 text-slate-700 font-medium">
                       <optgroup label="Tamil Nadu">
                         <option value="Chennai">Chennai</option>
                         <option value="Coimbatore">Coimbatore</option>
@@ -354,7 +358,7 @@ const EmployerDashboard = () => {
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Salary Range</label>
                     <div className="flex gap-2">
                       <input type="number" required value={newJob.salaryAmount} onChange={e => setNewJob({...newJob, salaryAmount: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. 5" />
-                      <select value={newJob.salaryType} onChange={e => setNewJob({...newJob, salaryType: e.target.value})} className="px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all w-32 shrink-0">
+                      <select value={newJob.salaryType} onChange={e => setNewJob({...newJob, salaryType: e.target.value})} className="px-4 py-3.5 rounded-xl border border-slate-200 bg-white focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all w-32 shrink-0 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat shadow-sm hover:border-blue-400 text-slate-700 font-medium">
                         <option value="LPA">LPA</option>
                         <option value="Monthly">Monthly</option>
                       </select>
@@ -362,7 +366,7 @@ const EmployerDashboard = () => {
                   </div>
                   <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Job Type</label>
-                    <select value={newJob.type} onChange={e => setNewJob({...newJob, type: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    <select value={newJob.type} onChange={e => setNewJob({...newJob, type: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat shadow-sm hover:border-blue-400 text-slate-700 font-medium">
                       <option>Full-time</option>
                       <option>Part-time</option>
                       <option>Contract</option>
@@ -390,25 +394,31 @@ const EmployerDashboard = () => {
                   <h2 className="text-lg font-bold text-slate-900">All Job Listings</h2>
                 </div>
                 <div className="divide-y divide-slate-100">
-                  {jobs.map(job => (
-                    <div key={job.id} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div>
-                        <h3 className="text-lg font-semibold text-blue-600">{job.title}</h3>
-                        <div className="text-sm text-slate-500 mt-1 flex gap-4">
-                          <span>{job.location}</span>
-                          <span>•</span>
-                          <span>{job.type}</span>
+                  {jobs.map(job => {
+                    const appCount = applications.filter(app => app.job?.id === job.id).length;
+                    return (
+                    <div key={job.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:bg-blue-50/30 transition-all border-l-4 border-transparent hover:border-blue-500">
+                      <div className="mb-4 sm:mb-0">
+                        <div className="flex items-center gap-3 mb-1">
+                          <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{job.title}</h3>
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{job.type}</span>
+                        </div>
+                        <div className="text-sm text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-2 mt-2">
+                          <span className="flex items-center gap-1"><MapPin className="w-4 h-4 text-slate-400" /> {job.location}</span>
+                          <span className="flex items-center gap-1 font-medium text-slate-700"><IndianRupee className="w-4 h-4 text-slate-400" /> {job.salary}</span>
+                          <span className="flex items-center gap-1 text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md font-medium"><Users className="w-4 h-4" /> {appCount} Applicants</span>
                         </div>
                       </div>
-                      <div className="text-right flex flex-col items-end gap-2">
-                        <div className="text-sm font-medium text-slate-900">{job.salary}</div>
-                        <div className="flex gap-2">
-                          <button onClick={() => handleEditJob(job)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Job"><Edit className="w-4 h-4" /></button>
-                          <button onClick={() => handleDeleteJob(job.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete Job"><Trash2 className="w-4 h-4" /></button>
-                        </div>
+                      <div className="text-right flex items-center gap-3 w-full sm:w-auto justify-end border-t sm:border-0 pt-4 sm:pt-0 border-slate-100">
+                        <button onClick={() => handleEditJob(job)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100" title="Edit Job">
+                          <Edit className="w-4 h-4" /> Edit
+                        </button>
+                        <button onClick={() => handleDeleteJob(job.id)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100" title="Delete Job">
+                          <Trash2 className="w-4 h-4" /> Delete
+                        </button>
                       </div>
                     </div>
-                  ))}
+                  )})}
                   {jobs.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
                       <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
@@ -433,14 +443,14 @@ const EmployerDashboard = () => {
           <div className="card overflow-hidden">
             <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
               <h2 className="text-lg font-bold text-slate-900">Recent Applications</h2>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <select value={filterJob} onChange={(e) => setFilterJob(e.target.value)} className="px-3 py-2 rounded-lg border border-slate-200 text-sm">
+              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <select value={filterJob} onChange={(e) => setFilterJob(e.target.value)} className="cursor-pointer focus:ring-2 focus:ring-blue-500 outline-none border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 bg-white shadow-sm hover:border-blue-400 transition-all min-w-[150px]">
                   <option value="">All Jobs</option>
                   {[...new Set(applications.map(app => app.job?.title).filter(Boolean))].map(title => (
                     <option key={title} value={title}>{title}</option>
                   ))}
                 </select>
-                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="px-3 py-2 rounded-lg border border-slate-200 text-sm">
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="cursor-pointer focus:ring-2 focus:ring-blue-500 outline-none border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 bg-white shadow-sm hover:border-blue-400 transition-all min-w-[150px]">
                   <option value="">All Statuses</option>
                   <option value="PENDING">PENDING</option>
                   <option value="RESUME VIEWED">RESUME VIEWED</option>
@@ -481,7 +491,7 @@ const EmployerDashboard = () => {
                     <select 
                       value={app.status || 'PENDING'} 
                       onChange={(e) => handleUpdateStatus(app.id, e.target.value)}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold outline-none cursor-pointer border-r-8 border-transparent ${
+                      className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer border border-transparent shadow-sm hover:shadow transition-all ${
                         app.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
                         app.status === 'RESUME VIEWED' ? 'bg-blue-100 text-blue-700' :
                         app.status === 'CONTACT VIEWED' ? 'bg-purple-100 text-purple-700' :
