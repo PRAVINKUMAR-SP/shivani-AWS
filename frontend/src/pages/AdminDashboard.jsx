@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity } from 'lucide-react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -539,26 +539,35 @@ const AdminDashboard = () => {
                         {u.phoneNo || <span className="text-slate-400 italic">N/A</span>}
                       </td>
                       <td className="px-6 py-4">
-                        <select
-                          className={`appearance-none text-xs font-bold px-4 py-2 rounded-xl outline-none border cursor-pointer shadow-sm hover:shadow transition-all bg-no-repeat bg-[right_0.5rem_center] bg-[length:1em_1em] pr-8 ${
-                            u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700 border-purple-200 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%237e22ce%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]' :
-                            u.role === 'EMPLOYER' ? 'bg-green-100 text-green-700 border-green-200 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2315803d%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]' :
-                            'bg-blue-100 text-blue-700 border-blue-200 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%231d4ed8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]'
-                          }`}
-                          value={u.role}
-                          onChange={async (e) => {
-                            try {
-                              await axios.put(`/api/admin/users/${u.id}/role?newRole=${e.target.value}`);
-                              fetchUsers(); // Refresh the list
-                            } catch (error) {
-                              alert("Failed to update user role.");
-                            }
-                          }}
-                        >
-                          <option value="SEEKER">SEEKER</option>
-                          <option value="EMPLOYER">EMPLOYER</option>
-                          <option value="ADMIN">ADMIN</option>
-                        </select>
+                        <div className="relative inline-block w-32">
+                          <select
+                            className={`w-full appearance-none text-xs font-bold px-4 py-2 pr-8 rounded-xl outline-none border cursor-pointer shadow-sm hover:shadow transition-all ${
+                              u.role === 'ADMIN' ? 'bg-purple-50 text-purple-700 border-purple-200 hover:border-purple-300' :
+                              u.role === 'EMPLOYER' ? 'bg-green-50 text-green-700 border-green-200 hover:border-green-300' :
+                              'bg-blue-50 text-blue-700 border-blue-200 hover:border-blue-300'
+                            }`}
+                            value={u.role}
+                            onChange={async (e) => {
+                              try {
+                                await axios.put(`/api/admin/users/${u.id}/role?newRole=${e.target.value}`);
+                                fetchUsers(); // Refresh the list
+                              } catch (error) {
+                                alert("Failed to update user role.");
+                              }
+                            }}
+                          >
+                            <option value="SEEKER">SEEKER</option>
+                            <option value="EMPLOYER">EMPLOYER</option>
+                            <option value="ADMIN">ADMIN</option>
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5">
+                            <ChevronDown className={`w-4 h-4 ${
+                              u.role === 'ADMIN' ? 'text-purple-500' :
+                              u.role === 'EMPLOYER' ? 'text-green-500' :
+                              'text-blue-500'
+                            }`} />
+                          </div>
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-3 transition-opacity">
