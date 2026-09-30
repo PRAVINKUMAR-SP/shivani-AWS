@@ -12,6 +12,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Add Axios interceptor to catch 401 and 403 errors and auto-logout
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
     if (token) {
       try {
         const decoded = jwtDecode(token);
@@ -34,6 +45,10 @@ export const AuthProvider = ({ children }) => {
       }
     }
     setLoading(false);
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
   }, [token]);
 
   const login = async (email, password) => {
