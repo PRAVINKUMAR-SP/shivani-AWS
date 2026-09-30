@@ -41,7 +41,7 @@ function App() {
       <Router>
         <ScrollToTop />
         {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-        <div className="min-h-[100dvh] bg-slate-50 flex flex-col">
+        <div className="min-h-[100dvh] bg-slate-50 flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
           
           <div className="flex-1">

@@ -18,13 +18,14 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
 );
 
 const StatCard = ({ title, count, icon: Icon, iconColor, bgColor }) => (
-  <div className="card p-3 md:p-6 flex flex-col md:flex-row md:items-center gap-2 md:gap-6 text-center md:text-left">
-    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 mx-auto md:mx-0 ${bgColor} ${iconColor}`}>
-      <Icon className="w-5 h-5 md:w-8 md:h-8" />
+  <div className="card p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between group relative overflow-hidden gap-2 md:gap-6 text-center md:text-left">
+    <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full ${bgColor} opacity-20 group-hover:scale-150 transition-transform duration-500`}></div>
+    <div className="relative z-10 w-full order-2 md:order-1">
+      <h3 className="text-xs md:text-base text-slate-500 font-medium mb-0.5 leading-tight">{title}</h3>
+      <div className="text-xl md:text-3xl font-bold text-slate-900">{count}</div>
     </div>
-    <div className="w-full">
-      <h3 className="text-[10px] md:text-base text-slate-500 font-medium mb-0.5 leading-tight">{title}</h3>
-      <div className="text-lg md:text-3xl font-bold text-slate-900">{count}</div>
+    <div className={`relative z-10 w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 mx-auto md:mx-0 order-1 md:order-2 ${bgColor} ${iconColor} shadow-sm group-hover:shadow-md transition-shadow`}>
+      <Icon className="w-5 h-5 md:w-8 md:h-8" />
     </div>
   </div>
 );

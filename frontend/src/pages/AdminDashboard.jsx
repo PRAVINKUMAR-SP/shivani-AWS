@@ -19,13 +19,14 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
 );
 
 const StatCard = ({ title, count, icon: Icon, iconColor, bgColor }) => (
-  <div className="card p-6 flex items-center gap-6">
-    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${bgColor} ${iconColor} dark:opacity-90`}>
-      <Icon className="w-8 h-8" />
-    </div>
-    <div>
+  <div className="card p-6 flex items-center justify-between group relative overflow-hidden">
+    <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full ${bgColor} opacity-20 group-hover:scale-150 transition-transform duration-500`}></div>
+    <div className="relative z-10">
       <h3 className="text-slate-500 dark:text-slate-400 font-medium mb-1">{title}</h3>
       <div className="text-3xl font-bold text-slate-900 dark:text-white">{count}</div>
+    </div>
+    <div className={`relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center ${bgColor} ${iconColor} dark:opacity-90 shadow-sm group-hover:shadow-md transition-shadow`}>
+      <Icon className="w-8 h-8" />
     </div>
   </div>
 );
