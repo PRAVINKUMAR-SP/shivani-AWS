@@ -748,14 +748,18 @@ const JobSeekerDashboard = () => {
               </>
             )}
 
-            {/* Recommended Jobs */}
+            {/* Recommended / Search Jobs */}
             <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-                  {activeTab === 'applied' ? 'Applied Jobs' : activeTab === 'saved' ? 'Saved Jobs' : 'Recommended Jobs'}
+                  {activeTab === 'applied' ? 'Applied Jobs' : 
+                   activeTab === 'saved' ? 'Saved Jobs' : 
+                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Search Results' : 'Recommended Jobs'}
                 </h1>
                 <p className="text-slate-500 mt-1">
-                  {activeTab === 'applied' ? 'Jobs you have submitted applications for' : activeTab === 'saved' ? 'Jobs you have bookmarked for later' : 'Based on your profile and preferences'}
+                  {activeTab === 'applied' ? 'Jobs you have submitted applications for' : 
+                   activeTab === 'saved' ? 'Jobs you have bookmarked for later' : 
+                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Jobs matching your search criteria' : 'Based on your profile and preferences'}
                 </p>
               </div>
               <button className="text-blue-600 font-semibold hover:text-blue-700 text-sm">
@@ -768,7 +772,7 @@ const JobSeekerDashboard = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {jobs.filter(job => 
-                  (activeTab === 'home' || 
+                  ((activeTab === 'home' && !appliedJobs.includes(job.id)) || 
                   (activeTab === 'applied' && appliedJobs.includes(job.id)) ||
                   (activeTab === 'saved' && savedJobs.includes(job.id))) &&
                   (job.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -797,7 +801,7 @@ const JobSeekerDashboard = () => {
                 )}
                 {jobs
                   .filter(job => 
-                    (activeTab === 'home' || 
+                    ((activeTab === 'home' && !appliedJobs.includes(job.id)) || 
                     (activeTab === 'applied' && appliedJobs.includes(job.id)) ||
                     (activeTab === 'saved' && savedJobs.includes(job.id))) &&
                     (job.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
