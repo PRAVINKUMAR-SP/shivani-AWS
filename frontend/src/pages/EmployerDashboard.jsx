@@ -232,7 +232,7 @@ const EmployerDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
+        <div className="lg:hidden flex flex-wrap gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
           <button onClick={() => { setActiveTab('Dashboard'); setShowForm(false); }} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Dashboard' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Dashboard</button>
           <button onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); }} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Post a Job' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Post Job</button>
           <button onClick={() => setActiveTab('My Listings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'My Listings' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Listings</button>
@@ -270,7 +270,7 @@ const EmployerDashboard = () => {
         {activeTab === 'Dashboard' && (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-2 md:gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-8">
               <StatCard title="Active Listings" count={stats.activeListings} icon={Briefcase} bgColor="bg-purple-50 dark:bg-purple-900/30" iconColor="text-purple-600 dark:text-purple-400" />
               <StatCard title="Applicants" count={stats.totalApplications} icon={Users} bgColor="bg-blue-50 dark:bg-blue-900/30" iconColor="text-blue-600 dark:text-blue-400" />
               <StatCard title="Shortlisted" count={stats.shortlistedCount || 0} icon={Star} bgColor="bg-orange-50 dark:bg-orange-900/30" iconColor="text-orange-600 dark:text-orange-400" />
@@ -460,7 +460,7 @@ const EmployerDashboard = () => {
             <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
               <h2 className="text-lg font-bold text-slate-900">Recent Applications</h2>
               <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                <div className="w-[150px]">
+                <div className="w-full sm:w-[150px]">
                   <CustomDropdown 
                     value={filterJob}
                     onChange={setFilterJob}
@@ -471,7 +471,7 @@ const EmployerDashboard = () => {
                     defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
                   />
                 </div>
-                <div className="w-[160px]">
+                <div className="w-full sm:w-[160px]">
                   <CustomDropdown 
                     value={filterStatus}
                     onChange={setFilterStatus}
@@ -500,7 +500,7 @@ const EmployerDashboard = () => {
                 .filter(app => !filterJob || app.job?.title === filterJob)
                 .filter(app => !filterStatus || app.status === filterStatus)
                 .map(app => (
-                <div key={app.id} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                <div key={app.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:bg-slate-50 transition-colors gap-4 sm:gap-0">
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">{app.seeker?.name || 'Applicant'}</h3>
                     <div className="text-sm text-slate-500 mt-1 flex flex-wrap gap-x-4 gap-y-1">

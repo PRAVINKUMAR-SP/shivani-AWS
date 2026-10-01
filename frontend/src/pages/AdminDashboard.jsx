@@ -369,7 +369,7 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
+        <div className="lg:hidden flex flex-wrap gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
           <button onClick={() => setActiveTab('overview')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Overview</button>
           <button onClick={() => setActiveTab('users')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'users' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Users</button>
           <button onClick={() => setActiveTab('employers')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'employers' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Employers</button>
@@ -408,7 +408,7 @@ const AdminDashboard = () => {
             </div>
             
             <div className="card p-6 min-h-[400px] flex flex-col">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
                   <h2 className="text-xl font-bold text-slate-900 dark:text-white">Platform Growth</h2>
                   <p className="text-slate-500 dark:text-slate-400 text-sm">Visualizing user registrations and applications.</p>
@@ -463,7 +463,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'users' && (
           <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-blue-600" />
@@ -612,7 +612,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'employers' && (
           <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <Briefcase className="w-5 h-5 text-blue-600" />
@@ -784,7 +784,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'jobs' && (
           <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <Briefcase className="w-5 h-5 text-blue-600" />
@@ -864,7 +864,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'applicants' && (
           <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-600" />
@@ -963,7 +963,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'test_results' && (
           <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-blue-600" />
@@ -1024,7 +1024,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'messages' && (
           <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
+            <div className="px-6 py-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <MessageSquare className="w-5 h-5 text-blue-600" />
