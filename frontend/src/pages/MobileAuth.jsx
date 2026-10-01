@@ -1,39 +1,63 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
 const MobileAuth = () => {
   const [searchParams] = useSearchParams();
-  const role = searchParams.get('role') || 'SEEKER';
+  const [loading, setLoading] = useState(false);
+  const role = searchParams.get('role') || localStorage.getItem('mobile_auth_role') || 'SEEKER';
   const { loginWithGoogle } = useAuth();
-
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const data = await loginWithGoogle(tokenResponse.access_token, role);
-        if (data && data.token) {
-          // Redirect back to mobile app using deep link
-          let url = `shivaniapp://login?token=${data.token}&role=${data.role}`;
-          if (data.companyName) {
-            url += `&companyName=${encodeURIComponent(data.companyName)}`;
-          }
-          window.location.href = url;
-        } else if (data && data.requireDetails) {
-          // If they are not registered, we can redirect them to register in app but passing google token is hard.
-          // For now, redirect with an error code, or just let them register on web.
-          toast.error("Please register your account first on the website before logging into the app via Google.");
-          window.location.href = `shivaniapp://login?error=not_registered`;
-        }
-      } catch (err) {
-        toast.error("Login failed. Please try again.");
-      }
-    },
-    onError: () => {
-      toast.error("Google login failed.");
+  
+  useEffect(() => {
+    if (searchParams.get('role')) {
+      localStorage.setItem('mobile_auth_role', searchParams.get('role'));
     }
-  });
+
+    // Check if we just returned from Google OAuth redirect
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token=')) {
+      setLoading(true);
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get('access_token');
+      
+      if (accessToken) {
+        handleGoogleResponse(accessToken);
+      } else {
+        setLoading(false);
+      }
+    }
+  }, []);
+
+  const handleGoogleResponse = async (accessToken) => {
+    try {
+      const data = await loginWithGoogle(accessToken, role);
+      if (data && data.token) {
+        // Redirect back to mobile app using deep link
+        let url = `shivaniapp://login?token=${data.token}&role=${data.role}`;
+        if (data.companyName) {
+          url += `&companyName=${encodeURIComponent(data.companyName)}`;
+        }
+        window.location.href = url;
+      } else if (data && data.requireDetails) {
+        toast.error("Please register your account first on the website before logging into the app via Google.");
+        window.location.href = `shivaniapp://login?error=not_registered`;
+      }
+    } catch (err) {
+      toast.error("Login failed. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    localStorage.setItem('mobile_auth_role', role);
+    const clientId = '409550030080-3us131eki79rkudl2843ocg31m4t5aa9.apps.googleusercontent.com';
+    const redirectUri = 'https://shivanitech.in/mobile-auth';
+    const scope = 'email profile';
+    // Use manual redirect instead of popup to ensure it works in Capacitor InAppBrowser
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}`;
+    window.location.href = url;
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
@@ -43,10 +67,11 @@ const MobileAuth = () => {
           Click the button below to securely authenticate with Google and return to the Shivani Tech app.
         </p>
         <button 
-          onClick={() => handleGoogleLogin()}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm"
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm disabled:opacity-50"
         >
-          Continue with Google
+          {loading ? 'Processing...' : 'Continue with Google'}
         </button>
       </div>
     </div>
