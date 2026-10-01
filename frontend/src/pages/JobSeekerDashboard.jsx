@@ -645,14 +645,21 @@ const JobSeekerDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden flex flex-wrap gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
-          <button onClick={() => setActiveTab('home')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'home' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Home</button>
-          <button onClick={() => setActiveTab('applied')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applied' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Applied</button>
-          <button onClick={() => setActiveTab('applications_tracker')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applications_tracker' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Tracker</button>
-          <button onClick={() => setActiveTab('saved')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'saved' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Saved Jobs</button>
-          <button onClick={() => setActiveTab('notifications')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'notifications' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Notifications</button>
-          <button onClick={() => setActiveTab('profile')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'profile' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Settings</button>
-          <button onClick={() => setActiveTab('view_profile')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'view_profile' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Profile</button>
+        <div className="lg:hidden mb-6">
+          <select 
+            value={activeTab} 
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-blue-500 transition-colors appearance-none"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
+          >
+            <option value="home">Home</option>
+            <option value="applied">Applied Jobs</option>
+            <option value="applications_tracker">Track Applications</option>
+            <option value="saved">Saved Jobs</option>
+            <option value="notifications">Notifications</option>
+            <option value="profile">Profile Settings</option>
+            <option value="view_profile">View Profile</option>
+          </select>
         </div>
 
         {loading ? (

@@ -369,15 +369,22 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden flex flex-wrap gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
-          <button onClick={() => setActiveTab('overview')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Overview</button>
-          <button onClick={() => setActiveTab('users')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'users' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Users</button>
-          <button onClick={() => setActiveTab('employers')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'employers' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Employers</button>
-          <button onClick={() => setActiveTab('jobs')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'jobs' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Jobs</button>
-          <button onClick={() => setActiveTab('applicants')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applicants' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Applicants</button>
-          <button onClick={() => setActiveTab('test_results')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'test_results' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Tests</button>
-          <button onClick={() => setActiveTab('messages')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'messages' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Messages</button>
-          <button onClick={() => setActiveTab('settings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'settings' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600'}`}>Settings</button>
+        <div className="lg:hidden mb-6">
+          <select 
+            value={activeTab} 
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 transition-colors appearance-none"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
+          >
+            <option value="overview">Overview</option>
+            <option value="users">Users Management</option>
+            <option value="employers">Employers Management</option>
+            <option value="jobs">Jobs Management</option>
+            <option value="applicants">Applicants</option>
+            <option value="test_results">Skill Test Results</option>
+            <option value="messages">Contact Messages</option>
+            <option value="settings">Settings</option>
+          </select>
         </div>
 
         {isLoading ? (

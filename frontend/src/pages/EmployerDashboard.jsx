@@ -232,12 +232,31 @@ const EmployerDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden flex flex-wrap gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
-          <button onClick={() => { setActiveTab('Dashboard'); setShowForm(false); }} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Dashboard' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Dashboard</button>
-          <button onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); }} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Post a Job' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Post Job</button>
-          <button onClick={() => setActiveTab('My Listings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'My Listings' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Listings</button>
-          <button onClick={() => setActiveTab('Applicants')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Applicants' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Applicants</button>
-          <button onClick={() => setActiveTab('Profile Settings')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'Profile Settings' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Settings</button>
+        <div className="lg:hidden mb-6">
+          <select 
+            value={activeTab} 
+            onChange={(e) => {
+              const tab = e.target.value;
+              if (tab === 'Dashboard') {
+                setShowForm(false);
+                setActiveTab('Dashboard');
+              } else if (tab === 'Post a Job') {
+                setEditingJobId(null); 
+                setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); 
+                setActiveTab('Post a Job');
+              } else {
+                setActiveTab(tab);
+              }
+            }}
+            className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-blue-500 transition-colors appearance-none"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
+          >
+            <option value="Dashboard">Dashboard</option>
+            <option value="Post a Job">Post Job</option>
+            <option value="My Listings">Listings</option>
+            <option value="Applicants">Applicants</option>
+            <option value="Profile Settings">Settings</option>
+          </select>
         </div>
 
         {isLoading ? (
