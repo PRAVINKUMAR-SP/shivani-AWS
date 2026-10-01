@@ -3,6 +3,8 @@ import { Home, Briefcase, Mail, Bookmark, Bell, Settings, User, LogOut, Search, 
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { MailOpen, BellRing, Eye, Check, X, FileText } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
+import { toast } from 'react-toastify';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
@@ -81,13 +83,18 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, appli
 
 const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
   const [uploading, setUploading] = useState(false);
+  const [localMsg, setLocalMsg] = useState('');
+
+  const displayMsg = localMsg || message;
+  const isError = displayMsg && (displayMsg.toLowerCase().includes('failed') || displayMsg.toLowerCase().includes('error'));
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("File is too large. Maximum size is 5MB.");
+      setLocalMsg("Failed to upload: File is too large (max 5MB).");
+      setTimeout(() => setLocalMsg(''), 3000);
       return;
     }
 
@@ -98,8 +105,11 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
     try {
       const res = await axios.post('/api/upload/resume', formData);
       setProfile({...profile, resumeUrl: res.data.url});
+      setLocalMsg('Resume successfully uploaded!');
+      setTimeout(() => setLocalMsg(''), 3000);
     } catch (err) {
-      alert(err.response?.data || "Failed to upload resume");
+      setLocalMsg(err.response?.data || "Failed to upload resume");
+      setTimeout(() => setLocalMsg(''), 3000);
     } finally {
       setUploading(false);
     }
@@ -115,15 +125,15 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
   return (
     <div className="max-w-4xl w-full card p-8">
       <h2 className="text-2xl font-bold text-slate-900 mb-6">Profile Settings</h2>
-      {message && (
-        <div className="fixed top-24 right-6 z-50 animate-fade-in-down">
-          <div className="bg-white px-6 py-4 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border-l-4 border-blue-500 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-              <Check className="w-5 h-5 text-blue-600" />
+      {displayMsg && (
+        <div className="fixed top-4 left-4 z-50 animate-fade-in-down">
+          <div className={`bg-white px-6 py-4 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border-l-4 flex items-center gap-4 ${isError ? 'border-red-500' : 'border-green-500'}`}>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isError ? 'bg-red-50' : 'bg-green-50'}`}>
+              {isError ? <X className="w-5 h-5 text-red-600" /> : <Check className="w-5 h-5 text-green-600" />}
             </div>
             <div>
-              <h4 className="font-bold text-slate-800 text-sm">Success</h4>
-              <p className="text-slate-500 text-sm">{message}</p>
+              <h4 className="font-bold text-slate-800 text-sm">{isError ? 'Error' : 'Success'}</h4>
+              <p className="text-slate-500 text-sm">{displayMsg}</p>
             </div>
           </div>
         </div>
@@ -550,7 +560,7 @@ const JobSeekerDashboard = () => {
   const handleApply = async (jobId) => {
     // Validate profile before applying
     if (!profile.name || !profile.phoneNo || !profile.resumeUrl) {
-      alert("Please complete your profile (Full Name, Phone Number, and Resume URL) before applying to jobs.");
+      toast.error("Please complete your profile (Full Name, Phone Number, and Resume URL) before applying to jobs.");
       setActiveTab('profile');
       return;
     }
@@ -558,9 +568,10 @@ const JobSeekerDashboard = () => {
     try {
       await axios.post(`/api/applications/${jobId}`);
       setAppliedJobs([...appliedJobs, jobId]);
+      toast.success("Application submitted successfully!");
       fetchStats(); // Update applied count stats
     } catch (err) {
-      alert(err.response?.data || 'Failed to apply');
+      toast.error(err.response?.data || 'Failed to apply');
     }
   };
 
@@ -754,31 +765,33 @@ const JobSeekerDashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-2">Job Type</label>
-                        <select 
+                        <CustomDropdown 
                           value={filterType}
-                          onChange={e => setFilterType(e.target.value)}
-                          className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow text-slate-700 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat cursor-pointer shadow-sm hover:border-blue-400"
-                        >
-                          <option value="All">All Types</option>
-                          <option value="Full-time">Full-time</option>
-                          <option value="Part-time">Part-time</option>
-                          <option value="Contract">Contract</option>
-                          <option value="Internship">Internship</option>
-                        </select>
+                          onChange={setFilterType}
+                          options={[
+                            { value: 'All', label: 'All Types' },
+                            { value: 'Full-time', label: 'Full-time' },
+                            { value: 'Part-time', label: 'Part-time' },
+                            { value: 'Contract', label: 'Contract' },
+                            { value: 'Internship', label: 'Internship' }
+                          ]}
+                          defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                        />
                       </div>
                       <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-2">Minimum Salary</label>
-                        <select 
+                        <CustomDropdown 
                           value={filterSalary}
-                          onChange={e => setFilterSalary(e.target.value)}
-                          className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow text-slate-700 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat cursor-pointer shadow-sm hover:border-blue-400"
-                        >
-                          <option value="All">Any Salary</option>
-                          <option value="50000">₹50,000+</option>
-                          <option value="100000">₹1,00,000+</option>
-                          <option value="200000">₹2,00,000+</option>
-                          <option value="500000">₹5,00,000+</option>
-                        </select>
+                          onChange={setFilterSalary}
+                          options={[
+                            { value: 'All', label: 'Any Salary' },
+                            { value: '50000', label: '₹50,000+' },
+                            { value: '100000', label: '₹1,00,000+' },
+                            { value: '200000', label: '₹2,00,000+' },
+                            { value: '500000', label: '₹5,00,000+' }
+                          ]}
+                          defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                        />
                       </div>
                     </div>
                   </div>

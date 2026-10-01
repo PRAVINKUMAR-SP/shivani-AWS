@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Plus, Edit, Trash2, Download, Star, Mail, Phone, MapPin, IndianRupee } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import CustomDropdown from '../components/CustomDropdown';
+import { toast } from 'react-toastify';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
@@ -136,7 +138,7 @@ const EmployerDashboard = () => {
       fetchStats();
       setActiveTab('My Listings');
     } catch (err) {
-      alert('Failed to post/update job. Make sure you are logged in as an Employer.');
+      toast.error('Failed to post/update job. Make sure you are logged in as an Employer.');
     }
   };
 
@@ -167,7 +169,7 @@ const EmployerDashboard = () => {
       fetchStats();
     } catch (err) {
       console.error("Failed to delete job", err);
-      alert("Failed to delete job.");
+      toast.error("Failed to delete job.");
     }
   };
 
@@ -337,42 +339,55 @@ const EmployerDashboard = () => {
                   </div>
                   <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Location</label>
-                    <select required value={newJob.location} onChange={e => setNewJob({...newJob, location: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat shadow-sm hover:border-blue-400 text-slate-700 font-medium">
-                      <optgroup label="Tamil Nadu">
-                        <option value="Chennai">Chennai</option>
-                        <option value="Coimbatore">Coimbatore</option>
-                        <option value="Madurai">Madurai</option>
-                        <option value="Trichy">Trichy</option>
-                      </optgroup>
-                      <optgroup label="Other IT Hubs">
-                        <option value="Bangalore">Bangalore</option>
-                        <option value="Hyderabad">Hyderabad</option>
-                        <option value="Pune">Pune</option>
-                        <option value="Mumbai">Mumbai</option>
-                        <option value="Noida">Noida</option>
-                        <option value="Gurgaon">Gurgaon</option>
-                      </optgroup>
-                      <option value="Remote">Remote</option>
-                    </select>
+                    <CustomDropdown 
+                      value={newJob.location}
+                      onChange={val => setNewJob({...newJob, location: val})}
+                      options={[
+                        { value: 'Chennai', label: 'Chennai (Tamil Nadu)' },
+                        { value: 'Coimbatore', label: 'Coimbatore (Tamil Nadu)' },
+                        { value: 'Madurai', label: 'Madurai (Tamil Nadu)' },
+                        { value: 'Trichy', label: 'Trichy (Tamil Nadu)' },
+                        { value: 'Bangalore', label: 'Bangalore (IT Hub)' },
+                        { value: 'Hyderabad', label: 'Hyderabad (IT Hub)' },
+                        { value: 'Pune', label: 'Pune (IT Hub)' },
+                        { value: 'Mumbai', label: 'Mumbai (IT Hub)' },
+                        { value: 'Noida', label: 'Noida (IT Hub)' },
+                        { value: 'Gurgaon', label: 'Gurgaon (IT Hub)' },
+                        { value: 'Remote', label: 'Remote' }
+                      ]}
+                      defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                    />
                   </div>
                   <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Salary Range</label>
                     <div className="flex gap-2">
                       <input type="number" required value={newJob.salaryAmount} onChange={e => setNewJob({...newJob, salaryAmount: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="e.g. 5" />
-                      <select value={newJob.salaryType} onChange={e => setNewJob({...newJob, salaryType: e.target.value})} className="px-4 py-3.5 rounded-xl border border-slate-200 bg-white focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all w-32 shrink-0 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat shadow-sm hover:border-blue-400 text-slate-700 font-medium">
-                        <option value="LPA">LPA</option>
-                        <option value="Monthly">Monthly</option>
-                      </select>
+                      <div className="w-32 shrink-0">
+                        <CustomDropdown 
+                          value={newJob.salaryType}
+                          onChange={val => setNewJob({...newJob, salaryType: val})}
+                          options={[
+                            { value: 'LPA', label: 'LPA' },
+                            { value: 'Monthly', label: 'Monthly' }
+                          ]}
+                          defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Job Type</label>
-                    <select value={newJob.type} onChange={e => setNewJob({...newJob, type: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2em_1.2em] bg-[right_1rem_center] bg-no-repeat shadow-sm hover:border-blue-400 text-slate-700 font-medium">
-                      <option>Full-time</option>
-                      <option>Part-time</option>
-                      <option>Contract</option>
-                      <option>Internship</option>
-                    </select>
+                    <CustomDropdown 
+                      value={newJob.type}
+                      onChange={val => setNewJob({...newJob, type: val})}
+                      options={[
+                        { value: 'Full-time', label: 'Full-time' },
+                        { value: 'Part-time', label: 'Part-time' },
+                        { value: 'Contract', label: 'Contract' },
+                        { value: 'Internship', label: 'Internship' }
+                      ]}
+                      defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                    />
                   </div>
                   <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Tags (comma separated)</label>
@@ -445,20 +460,32 @@ const EmployerDashboard = () => {
             <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
               <h2 className="text-lg font-bold text-slate-900">Recent Applications</h2>
               <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                <select value={filterJob} onChange={(e) => setFilterJob(e.target.value)} className="cursor-pointer focus:ring-2 focus:ring-blue-500 outline-none border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 bg-white shadow-sm hover:border-blue-400 transition-all min-w-[150px]">
-                  <option value="">All Jobs</option>
-                  {[...new Set(applications.map(app => app.job?.title).filter(Boolean))].map(title => (
-                    <option key={title} value={title}>{title}</option>
-                  ))}
-                </select>
-                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="cursor-pointer focus:ring-2 focus:ring-blue-500 outline-none border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 bg-white shadow-sm hover:border-blue-400 transition-all min-w-[150px]">
-                  <option value="">All Statuses</option>
-                  <option value="PENDING">PENDING</option>
-                  <option value="RESUME VIEWED">RESUME VIEWED</option>
-                  <option value="CONTACT VIEWED">CONTACT VIEWED</option>
-                  <option value="SHORTLISTED">SHORTLISTED</option>
-                  <option value="REJECTED">REJECTED</option>
-                </select>
+                <div className="w-[150px]">
+                  <CustomDropdown 
+                    value={filterJob}
+                    onChange={setFilterJob}
+                    options={[
+                      { value: '', label: 'All Jobs' },
+                      ...[...new Set(applications.map(app => app.job?.title).filter(Boolean))].map(title => ({ value: title, label: title }))
+                    ]}
+                    defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                  />
+                </div>
+                <div className="w-[160px]">
+                  <CustomDropdown 
+                    value={filterStatus}
+                    onChange={setFilterStatus}
+                    options={[
+                      { value: '', label: 'All Statuses' },
+                      { value: 'PENDING', label: 'PENDING' },
+                      { value: 'RESUME VIEWED', label: 'RESUME VIEWED' },
+                      { value: 'CONTACT VIEWED', label: 'CONTACT VIEWED' },
+                      { value: 'SHORTLISTED', label: 'SHORTLISTED' },
+                      { value: 'REJECTED', label: 'REJECTED' }
+                    ]}
+                    defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                  />
+                </div>
                 <button 
                   onClick={exportToExcel}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
@@ -489,24 +516,26 @@ const EmployerDashboard = () => {
                     )}
                   </div>
                   <div className="text-right flex flex-col items-end">
-                    <select 
-                      value={app.status || 'PENDING'} 
-                      onChange={(e) => handleUpdateStatus(app.id, e.target.value)}
-                      className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer border border-transparent shadow-sm hover:shadow transition-all ${
-                        app.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
-                        app.status === 'RESUME VIEWED' ? 'bg-blue-100 text-blue-700' :
-                        app.status === 'CONTACT VIEWED' ? 'bg-purple-100 text-purple-700' :
-                        app.status === 'SHORTLISTED' ? 'bg-green-100 text-green-700' :
-                        app.status === 'REJECTED' ? 'bg-red-100 text-red-700' :
-                        'bg-gray-100 text-gray-700'
-                      }`}
-                    >
-                      <option value="PENDING" className="bg-white text-slate-900">PENDING</option>
-                      <option value="RESUME VIEWED" className="bg-white text-slate-900">RESUME VIEWED</option>
-                      <option value="CONTACT VIEWED" className="bg-white text-slate-900">CONTACT VIEWED</option>
-                      <option value="SHORTLISTED" className="bg-white text-slate-900">SHORTLISTED</option>
-                      <option value="REJECTED" className="bg-white text-slate-900">REJECTED</option>
-                    </select>
+                    <div className="w-[160px] inline-block mb-2">
+                      <CustomDropdown
+                        options={[
+                          { value: 'PENDING', label: 'PENDING' },
+                          { value: 'RESUME VIEWED', label: 'RESUME VIEWED' },
+                          { value: 'CONTACT VIEWED', label: 'CONTACT VIEWED' },
+                          { value: 'SHORTLISTED', label: 'SHORTLISTED' },
+                          { value: 'REJECTED', label: 'REJECTED' }
+                        ]}
+                        value={app.status || 'PENDING'}
+                        colorMap={{
+                          'PENDING': 'bg-yellow-100 text-yellow-700 border-transparent',
+                          'RESUME VIEWED': 'bg-blue-100 text-blue-700 border-transparent',
+                          'CONTACT VIEWED': 'bg-purple-100 text-purple-700 border-transparent',
+                          'SHORTLISTED': 'bg-green-100 text-green-700 border-transparent',
+                          'REJECTED': 'bg-red-100 text-red-700 border-transparent'
+                        }}
+                        onChange={(newStatus) => handleUpdateStatus(app.id, newStatus)}
+                      />
+                    </div>
                     {app.seeker?.resumeUrl && (
                       <a 
                         href={`${app.seeker.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')}`}
@@ -554,7 +583,7 @@ const EmployerDashboard = () => {
                 setProfileMessage('Profile updated successfully!');
                 setTimeout(() => setProfileMessage(''), 3000);
               } catch (err) {
-                alert('Failed to update profile');
+                toast.error('Failed to update profile');
               }
             }} className="space-y-6">
               
@@ -582,7 +611,7 @@ const EmployerDashboard = () => {
                           const res = await axios.post('/api/upload/profile-pic', formData);
                           setProfile({...profile, profilePicUrl: res.data.url});
                         } catch (err) {
-                          alert('Failed to upload picture');
+                          toast.error('Failed to upload picture');
                         }
                       }}
                     />

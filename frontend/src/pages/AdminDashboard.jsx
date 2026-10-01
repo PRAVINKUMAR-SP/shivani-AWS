@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { toast } from 'react-toastify';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
@@ -263,7 +265,7 @@ const AdminDashboard = () => {
       fetchSystemSettings(); // refresh health status
     } catch (err) {
       console.error("Error toggling maintenance mode:", err);
-      alert("Failed to update maintenance mode");
+      toast.error("Failed to update maintenance mode");
     }
   };
 
@@ -540,34 +542,28 @@ const AdminDashboard = () => {
                         {u.phoneNo || <span className="text-slate-400 italic">N/A</span>}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="relative inline-block w-32">
-                          <select
-                            className={`w-full appearance-none text-xs font-bold px-4 py-2 pr-8 rounded-xl outline-none border cursor-pointer shadow-sm hover:shadow transition-all ${
-                              u.role === 'ADMIN' ? 'bg-purple-50 text-purple-700 border-purple-200 hover:border-purple-300' :
-                              u.role === 'EMPLOYER' ? 'bg-green-50 text-green-700 border-green-200 hover:border-green-300' :
-                              'bg-blue-50 text-blue-700 border-blue-200 hover:border-blue-300'
-                            }`}
+                        <div className="w-32">
+                          <CustomDropdown
+                            options={[
+                              { value: 'SEEKER', label: 'SEEKER' },
+                              { value: 'EMPLOYER', label: 'EMPLOYER' },
+                              { value: 'ADMIN', label: 'ADMIN' }
+                            ]}
                             value={u.role}
-                            onChange={async (e) => {
+                            colorMap={{
+                              'ADMIN': 'bg-purple-50 text-purple-700 border-purple-200 hover:border-purple-300',
+                              'EMPLOYER': 'bg-green-50 text-green-700 border-green-200 hover:border-green-300',
+                              'SEEKER': 'bg-blue-50 text-blue-700 border-blue-200 hover:border-blue-300'
+                            }}
+                            onChange={async (newRole) => {
                               try {
-                                await axios.put(`/api/admin/users/${u.id}/role?newRole=${e.target.value}`);
+                                await axios.put(`/api/admin/users/${u.id}/role?newRole=${newRole}`);
                                 fetchUsers(); // Refresh the list
                               } catch (error) {
-                                alert("Failed to update user role.");
+                                toast.error("Failed to update user role.");
                               }
                             }}
-                          >
-                            <option value="SEEKER">SEEKER</option>
-                            <option value="EMPLOYER">EMPLOYER</option>
-                            <option value="ADMIN">ADMIN</option>
-                          </select>
-                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5">
-                            <ChevronDown className={`w-4 h-4 ${
-                              u.role === 'ADMIN' ? 'text-purple-500' :
-                              u.role === 'EMPLOYER' ? 'text-green-500' :
-                              'text-blue-500'
-                            }`} />
-                          </div>
+                          />
                         </div>
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -583,7 +579,7 @@ const AdminDashboard = () => {
                                   fetchStats();
                                   fetchGraphStats();
                                 } catch (error) {
-                                  alert("Failed to delete user.");
+                                    toast.error("Failed to delete user.");
                                 }
                               }
                             }}
@@ -656,22 +652,28 @@ const AdminDashboard = () => {
                         {emp.shortlistedCount}
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <select 
-                          value={emp.isApproved ? 'Approved' : 'Pending'}
-                          onChange={async (e) => {
-                            try {
-                              const isApp = e.target.value === 'Approved';
-                              await axios.put(`/api/admin/employers/${emp.id}/status?isApproved=${isApp}`);
-                              fetchEmployers();
-                            } catch (err) {
-                              alert("Failed to update status");
-                            }
-                          }}
-                          className={`appearance-none px-4 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer border border-transparent shadow-sm hover:shadow transition-all bg-no-repeat bg-[right_0.5rem_center] bg-[length:1em_1em] pr-8 ${emp.isApproved ? 'bg-green-100 text-green-700 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2315803d%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]' : 'bg-yellow-100 text-yellow-700 bg-[url(\'data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a16207%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E\')]'}`}
-                        >
-                          <option value="Approved" className="bg-white text-slate-900">Approved</option>
-                          <option value="Pending" className="bg-white text-slate-900">Pending</option>
-                        </select>
+                        <div className="w-32 inline-block">
+                          <CustomDropdown
+                            options={[
+                              { value: 'Approved', label: 'Approved' },
+                              { value: 'Pending', label: 'Pending' }
+                            ]}
+                            value={emp.isApproved ? 'Approved' : 'Pending'}
+                            colorMap={{
+                              'Approved': 'bg-green-50 text-green-700 border-green-200 hover:border-green-300',
+                              'Pending': 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:border-yellow-300'
+                            }}
+                            onChange={async (newStatus) => {
+                              try {
+                                const isApp = newStatus === 'Approved';
+                                await axios.put(`/api/admin/employers/${emp.id}/status?isApproved=${isApp}`);
+                                fetchEmployers();
+                              } catch (err) {
+                                toast.error("Failed to update status");
+                              }
+                            }}
+                          />
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
@@ -682,7 +684,7 @@ const AdminDashboard = () => {
                                   await axios.delete(`/api/admin/users/${emp.id}`);
                                   fetchEmployers();
                                 } catch (e) {
-                                  alert("Failed to remove employer");
+                                    toast.error("Failed to remove employer");
                                 }
                               }
                             }}
@@ -725,8 +727,8 @@ const AdminDashboard = () => {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
                       <span className="text-sm font-medium text-slate-600">Overall Status</span>
-                      <span className={`px-2 py-1 text-xs font-bold rounded-full ${systemHealth.status === 'UP' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                        {systemHealth.status}
+                      <span className={`px-2 py-1 text-xs font-bold rounded-full ${(systemHealth.status === 'UP' && !maintenanceMode) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {maintenanceMode ? 'DOWN' : systemHealth.status}
                       </span>
                     </div>
                     <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
@@ -837,7 +839,7 @@ const AdminDashboard = () => {
                                     fetchStats();
                                     fetchGraphStats();
                                   } catch (error) {
-                                    alert("Failed to delete job.");
+                                      toast.error("Failed to delete job.");
                                   }
                                 }
                               }}

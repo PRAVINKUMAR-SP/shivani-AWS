@@ -31,6 +31,7 @@ const AuthModals = ({ isOpen, onClose }) => {
   const [phoneNo, setPhoneNo] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [googleToken, setGoogleToken] = useState('');
   const [currentRole, setCurrentRole] = useState('SEEKER');
 
@@ -130,15 +131,15 @@ const AuthModals = ({ isOpen, onClose }) => {
       setError('Mobile number must be exactly 10 digits.');
       return;
     }
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(password)) {
-      setError('Password must contain at least one uppercase letter, one lowercase letter, and one number.');
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/.test(password)) {
+      setError('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
       return;
     }
     setError('');
     try {
       await register(name, email, password, role, phoneNo, companyName);
       setStep(redirectStep);
-      setError('Registration successful! Please login.');
+      setSuccess('Registration successful! Please login.');
     } catch (err) {
       setError(err.response?.data || 'Registration failed.');
     }
@@ -151,6 +152,7 @@ const AuthModals = ({ isOpen, onClose }) => {
     setPhoneNo('');
     setCompanyName('');
     setError('');
+    setSuccess('');
   };
 
   const changeStep = (newStep) => {
@@ -177,6 +179,7 @@ const AuthModals = ({ isOpen, onClose }) => {
         {/* Content */}
         <div className="px-4 sm:px-8 pb-4 sm:pb-8">
           {error && <div className="mb-4 text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200">{error}</div>}
+          {success && <div className="mb-4 text-green-600 text-sm bg-green-50 p-3 rounded-lg border border-green-200">{success}</div>}
 
           {step === 'select-role' && (
             <div className="space-y-6">
@@ -236,6 +239,9 @@ const AuthModals = ({ isOpen, onClose }) => {
                     required
                   />
                 </div>
+                <div className="flex justify-end">
+                   <button type="button" onClick={() => changeStep('forgot-password')} className="text-sm font-semibold text-blue-600 hover:underline">Forgot password?</button>
+                </div>
                 
                 <button type="submit" className="btn-primary w-full text-base font-semibold py-3.5">
                   Sign In
@@ -286,6 +292,9 @@ const AuthModals = ({ isOpen, onClose }) => {
                 </div>
                 <div>
                   <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  {password.length > 0 && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/.test(password) && (
+                    <p className="text-xs text-red-500 mt-2 ml-1">Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.</p>
+                  )}
                 </div>
                 <button type="submit" className="btn-primary w-full">Sign Up</button>
               </form>
@@ -322,6 +331,9 @@ const AuthModals = ({ isOpen, onClose }) => {
                     className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" 
                     required 
                   />
+                </div>
+                <div className="flex justify-end">
+                   <button type="button" onClick={() => changeStep('forgot-password')} className="text-sm font-semibold text-blue-600 hover:underline">Forgot password?</button>
                 </div>
                 <button type="submit" className="btn-primary w-full text-base font-semibold py-3.5">Sign In</button>
               </form>
@@ -372,9 +384,51 @@ const AuthModals = ({ isOpen, onClose }) => {
                 </div>
                 <div>
                   <input type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  {password.length > 0 && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/.test(password) && (
+                    <p className="text-xs text-red-500 mt-2 ml-1">Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.</p>
+                  )}
                 </div>
                 <button type="submit" className="btn-primary w-full">Register</button>
               </form>
+            </div>
+          )}
+          {step === 'forgot-password' && (
+            <div className="space-y-6">
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold text-slate-900 mt-4">Reset Password</h2>
+                <p className="text-slate-500 text-sm">Enter your email to receive a reset link.</p>
+              </div>
+
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                setError('');
+                if (!email) {
+                  setError('Please enter your email.');
+                  return;
+                }
+                // Simulate sending reset link
+                setSuccess('Reset link sent to your email!');
+              }} className="space-y-4">
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input 
+                    type="email" 
+                    placeholder="Email Address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)} 
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    required
+                  />
+                </div>
+                
+                <button type="submit" className="btn-primary w-full text-base font-semibold py-3.5">
+                  Send Reset Link
+                </button>
+              </form>
+              
+              <div className="text-center text-sm text-slate-600 mt-6">
+                Remember your password? <button onClick={() => changeStep('select-role')} className="text-blue-600 font-semibold hover:underline">Back to login</button>
+              </div>
             </div>
           )}
           {step === 'google-register-seeker' && (

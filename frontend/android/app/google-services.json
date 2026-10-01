@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "525066497687",
+    "project_id": "shivani-a1cf3",
+    "storage_bucket": "shivani-a1cf3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525066497687:android:2d6a1393de5d5bd96703d2",
+        "android_client_info": {
+          "package_name": "com.shivanitech.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiXVRCrwiyNh5tZ28cl_2c873jBKrdLGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

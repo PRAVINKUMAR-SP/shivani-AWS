@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const MobileAuth = () => {
   const [searchParams] = useSearchParams();
@@ -22,15 +23,15 @@ const MobileAuth = () => {
         } else if (data && data.requireDetails) {
           // If they are not registered, we can redirect them to register in app but passing google token is hard.
           // For now, redirect with an error code, or just let them register on web.
-          alert("Please register your account first on the website before logging into the app via Google.");
+          toast.error("Please register your account first on the website before logging into the app via Google.");
           window.location.href = `shivaniapp://login?error=not_registered`;
         }
       } catch (err) {
-        alert("Login failed. Please try again.");
+        toast.error("Login failed. Please try again.");
       }
     },
     onError: () => {
-      alert("Google login failed.");
+      toast.error("Google login failed.");
     }
   });
 

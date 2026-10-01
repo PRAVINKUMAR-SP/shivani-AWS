@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const ContactInfo = ({ icon: Icon, title, content }) => (
   <div className="flex items-start gap-5">
@@ -37,16 +38,16 @@ const ContactPage = () => {
         body: JSON.stringify(formData)
       });
       if (res.ok) {
-        alert('Message sent successfully!');
+        toast.success('Message sent successfully!');
         setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
         setStatus('Sent!');
       } else {
         const errText = await res.text();
-        alert('Failed to send message: ' + errText);
+        toast.error('Failed to send message: ' + errText);
         setStatus('Error');
       }
     } catch (err) {
-      alert('Error connecting to server.');
+      toast.error('Error connecting to server.');
       setStatus('Error');
     }
   };

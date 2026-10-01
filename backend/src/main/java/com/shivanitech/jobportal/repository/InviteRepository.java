@@ -8,4 +8,5 @@ import java.util.List;
 public interface InviteRepository extends JpaRepository<Invite, Long> {
     List<Invite> findBySeeker(User seeker);
     List<Invite> findByEmployer(User employer);
+    List<Invite> findByJobId(Long jobId);
 }

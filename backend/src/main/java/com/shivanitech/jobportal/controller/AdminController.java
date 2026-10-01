@@ -4,6 +4,10 @@ import com.shivanitech.jobportal.model.Role;
 import com.shivanitech.jobportal.repository.ApplicationRepository;
 import com.shivanitech.jobportal.repository.JobRepository;
 import com.shivanitech.jobportal.repository.UserRepository;
+import com.shivanitech.jobportal.repository.SavedJobRepository;
+import com.shivanitech.jobportal.repository.InviteRepository;
+import com.shivanitech.jobportal.model.SavedJob;
+import com.shivanitech.jobportal.model.Invite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,6 +48,12 @@ public class AdminController {
 
     @Autowired
     private ContactMessageRepository contactMessageRepository;
+
+    @Autowired
+    private SavedJobRepository savedJobRepository;
+
+    @Autowired
+    private InviteRepository inviteRepository;
 
     @GetMapping("/stats")
     public ResponseEntity<?> getStats(Principal principal) {
@@ -155,8 +165,15 @@ public class AdminController {
     @DeleteMapping("/jobs/{id}")
     public ResponseEntity<?> deleteJob(@PathVariable Long id) {
         if (jobRepository.existsById(id)) {
+            List<SavedJob> savedJobs = savedJobRepository.findByJobId(id);
+            savedJobRepository.deleteAll(savedJobs);
+            
+            List<Invite> invites = inviteRepository.findByJobId(id);
+            inviteRepository.deleteAll(invites);
+            
             List<Application> apps = applicationRepository.findByJobId(id);
             applicationRepository.deleteAll(apps);
+            
             jobRepository.deleteById(id);
             return ResponseEntity.ok("Job deleted");
         }

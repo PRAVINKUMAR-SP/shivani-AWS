@@ -5,6 +5,10 @@ import com.shivanitech.jobportal.model.User;
 import com.shivanitech.jobportal.repository.JobRepository;
 import com.shivanitech.jobportal.repository.UserRepository;
 import com.shivanitech.jobportal.repository.ApplicationRepository;
+import com.shivanitech.jobportal.repository.SavedJobRepository;
+import com.shivanitech.jobportal.repository.InviteRepository;
+import com.shivanitech.jobportal.model.SavedJob;
+import com.shivanitech.jobportal.model.Invite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +29,12 @@ public class JobController {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private SavedJobRepository savedJobRepository;
+
+    @Autowired
+    private InviteRepository inviteRepository;
 
     @GetMapping
     public List<Job> getAllJobs() {
@@ -109,8 +119,15 @@ public class JobController {
         }
 
         // Need to delete related applications first to avoid foreign key constraint violations
+        List<SavedJob> savedJobs = savedJobRepository.findByJobId(id);
+        savedJobRepository.deleteAll(savedJobs);
+        
+        List<Invite> invites = inviteRepository.findByJobId(id);
+        inviteRepository.deleteAll(invites);
+        
         List<com.shivanitech.jobportal.model.Application> apps = applicationRepository.findByJobId(id);
         applicationRepository.deleteAll(apps);
+        
         jobRepository.delete(existingJob);
         return ResponseEntity.ok("Job deleted successfully");
     }
