@@ -645,7 +645,7 @@ const JobSeekerDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8">
         {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
+        <div className="lg:hidden flex flex-wrap gap-2 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
           <button onClick={() => setActiveTab('home')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'home' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Home</button>
           <button onClick={() => setActiveTab('applied')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applied' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Applied</button>
           <button onClick={() => setActiveTab('applications_tracker')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 'applications_tracker' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}>Tracker</button>
@@ -678,57 +678,60 @@ const JobSeekerDashboard = () => {
             {activeTab === 'home' && (
               <>
                 {/* Stats Bar */}
-                <div className="grid grid-cols-3 gap-2 md:gap-6 mb-8">
-                  <div className="card p-3 md:p-6 flex items-center justify-between border-l-4 border-blue-500">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-8">
+                  <div className="card p-4 md:p-6 flex items-center justify-between border-l-4 border-blue-500">
                     <div>
-                      <p className="text-[10px] md:text-sm font-medium text-slate-500 mb-1 leading-tight">Applied Jobs</p>
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900">{stats.appliedCount}</h3>
+                      <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Applied Jobs</p>
+                      <h3 className="text-2xl font-bold text-slate-900">{stats.appliedCount}</h3>
                     </div>
-                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                      <Briefcase className="w-4 h-4 md:w-6 md:h-6" />
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                      <Briefcase className="w-6 h-6" />
                     </div>
                   </div>
-                  <div className="card p-3 md:p-6 flex items-center justify-between border-l-4 border-green-500">
+                  <div className="card p-4 md:p-6 flex items-center justify-between border-l-4 border-green-500">
                     <div>
-                      <p className="text-[10px] md:text-sm font-medium text-slate-500 mb-1 leading-tight">Shortlisted</p>
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900">{stats.shortlistedCount}</h3>
+                      <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Shortlisted</p>
+                      <h3 className="text-2xl font-bold text-slate-900">{stats.shortlistedCount}</h3>
                     </div>
-                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-green-50 text-green-600 flex items-center justify-center shrink-0">
-                      <Check className="w-4 h-4 md:w-6 md:h-6" />
+                    <div className="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center shrink-0">
+                      <Check className="w-6 h-6" />
                     </div>
                   </div>
-                  <div className="card p-3 md:p-6 flex items-center justify-between border-l-4 border-purple-500">
+                  <div className="card p-4 md:p-6 flex items-center justify-between border-l-4 border-purple-500">
                     <div>
-                      <p className="text-[10px] md:text-sm font-medium text-slate-500 mb-1 leading-tight">Matching</p>
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900">{stats.matchingCount}</h3>
+                      <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Matching Jobs</p>
+                      <h3 className="text-2xl font-bold text-slate-900">{stats.matchingCount}</h3>
                     </div>
-                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-                      <Search className="w-4 h-4 md:w-6 md:h-6" />
+                    <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                      <Search className="w-6 h-6" />
                     </div>
                   </div>
                 </div>
 
                 {/* Search Bar Area */}
                 <div className="max-w-4xl mb-8 flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1 flex items-center bg-white border border-slate-200 rounded-full pl-6 pr-2 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
-                    <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
-                    <input 
-                      type="text" 
-                      placeholder="Job title..." 
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="flex-1 w-20 outline-none text-slate-700 bg-transparent text-sm sm:text-base"
-                    />
-                    <div className="h-6 w-px bg-slate-200 mx-2 hidden sm:block"></div>
-                    <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0 hidden sm:block" />
-                    <input 
-                      type="text" 
-                      placeholder="Location" 
-                      value={locationQuery}
-                      onChange={(e) => setLocationQuery(e.target.value)}
-                      className="flex-1 w-20 outline-none text-slate-700 bg-transparent text-sm sm:text-base hidden sm:block"
-                    />
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 sm:px-8 rounded-full transition-colors whitespace-nowrap ml-2 text-sm sm:text-base">
+                  <div className="flex-1 flex flex-col sm:flex-row sm:items-center bg-white border border-slate-200 rounded-2xl sm:rounded-full p-2 sm:pl-6 sm:pr-2 sm:py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+                    <div className="flex items-center px-4 sm:px-0 py-3 sm:py-0 border-b sm:border-b-0 sm:border-r border-slate-100 flex-1">
+                      <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                      <input 
+                        type="text" 
+                        placeholder="Job title..." 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="flex-1 min-w-0 outline-none text-slate-700 bg-transparent text-sm sm:text-base"
+                      />
+                    </div>
+                    <div className="flex items-center px-4 sm:px-4 py-3 sm:py-0 flex-1">
+                      <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                      <input 
+                        type="text" 
+                        placeholder="Location" 
+                        value={locationQuery}
+                        onChange={(e) => setLocationQuery(e.target.value)}
+                        className="flex-1 min-w-0 outline-none text-slate-700 bg-transparent text-sm sm:text-base"
+                      />
+                    </div>
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-2 px-4 sm:px-8 rounded-xl sm:rounded-full transition-colors whitespace-nowrap sm:ml-2 text-sm sm:text-base w-full sm:w-auto mt-2 sm:mt-0">
                       Search
                     </button>
                   </div>
