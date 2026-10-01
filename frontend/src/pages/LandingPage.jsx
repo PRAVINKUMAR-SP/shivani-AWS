@@ -65,7 +65,7 @@ const LandingPage = ({ onLoginClick }) => {
               <ArrowRight className="w-5 h-5 ml-2 font-bold" />
             </button>
             <a href="/shivani-app.apk" download className="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-              Download App
+              Get App
               <Download className="w-5 h-5 ml-2 font-bold" />
             </a>
           </div>

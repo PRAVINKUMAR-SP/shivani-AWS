@@ -122,6 +122,18 @@ const AuthModals = ({ isOpen, onClose }) => {
 
   const handleRegister = async (e, role, redirectStep) => {
     e.preventDefault();
+    if (!/^[a-zA-Z\s]+$/.test(name)) {
+      setError('Name can only contain letters and spaces.');
+      return;
+    }
+    if (!/^\d{10}$/.test(phoneNo)) {
+      setError('Mobile number must be exactly 10 digits.');
+      return;
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(password)) {
+      setError('Password must contain at least one uppercase letter, one lowercase letter, and one number.');
+      return;
+    }
     setError('');
     try {
       await register(name, email, password, role, phoneNo, companyName);
@@ -196,9 +208,7 @@ const AuthModals = ({ isOpen, onClose }) => {
           {step === 'login-seeker' && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <button onClick={() => changeStep('select-role')} className="text-slate-400 hover:text-slate-600 absolute left-4 sm:left-6 top-6">
-                  &larr; Back
-                </button>
+
                 <h2 className="text-2xl font-bold text-slate-900 mt-4">Sign in as Job Seeker</h2>
                 <p className="text-slate-500 text-sm">Welcome back! Please enter your details.</p>
               </div>
@@ -259,19 +269,17 @@ const AuthModals = ({ isOpen, onClose }) => {
           {step === 'register-seeker' && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <button onClick={() => changeStep('login-seeker')} className="text-slate-400 hover:text-slate-600 absolute left-4 sm:left-6 top-6">
-                  &larr; Back
-                </button>
+
                 <h2 className="text-2xl font-bold text-slate-900 mt-4">Create Seeker Account</h2>
                 <p className="text-slate-500 text-sm">Find your dream job today.</p>
               </div>
 
               <form onSubmit={(e) => handleRegister(e, 'SEEKER', 'login-seeker')} className="space-y-4">
                 <div>
-                  <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="text" placeholder="Full Name" value={name} onChange={(e) => { const val = e.target.value; if (/^[a-zA-Z\s]*$/.test(val)) setName(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => setPhoneNo(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
                   <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
@@ -287,9 +295,7 @@ const AuthModals = ({ isOpen, onClose }) => {
           {step === 'login-employer' && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <button onClick={() => changeStep('select-role')} className="text-slate-400 hover:text-slate-600 absolute left-4 sm:left-6 top-6">
-                  &larr; Back
-                </button>
+
                 <h2 className="text-2xl font-bold text-slate-900 mt-4">Sign in as Employer</h2>
                 <p className="text-slate-500 text-sm">Welcome back! Please enter your details.</p>
               </div>
@@ -346,22 +352,20 @@ const AuthModals = ({ isOpen, onClose }) => {
           {step === 'register-employer' && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <button onClick={() => changeStep('login-employer')} className="text-slate-400 hover:text-slate-600 absolute left-4 sm:left-6 top-6">
-                  &larr; Back
-                </button>
+
                 <h2 className="text-2xl font-bold text-slate-900 mt-4">Register Company</h2>
                 <p className="text-slate-500 text-sm">Start hiring the best talent.</p>
               </div>
 
               <form onSubmit={(e) => handleRegister(e, 'EMPLOYER', 'login-employer')} className="space-y-4">
                 <div>
-                  <input type="text" placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="text" placeholder="Your Name" value={name} onChange={(e) => { const val = e.target.value; if (/^[a-zA-Z\s]*$/.test(val)) setName(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
                   <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => setPhoneNo(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
                   <input type="email" placeholder="Work Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
@@ -376,15 +380,21 @@ const AuthModals = ({ isOpen, onClose }) => {
           {step === 'google-register-seeker' && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <button onClick={() => changeStep('login-seeker')} className="text-slate-400 hover:text-slate-600 absolute left-4 sm:left-6 top-6">
-                  &larr; Back
-                </button>
+
                 <h2 className="text-2xl font-bold text-slate-900 mt-4">Complete Profile</h2>
                 <p className="text-slate-500 text-sm">Please provide your details.</p>
               </div>
 
               <form onSubmit={async (e) => {
                   e.preventDefault();
+                  if (!/^[a-zA-Z\s]+$/.test(name)) {
+                    setError('Name can only contain letters and spaces.');
+                    return;
+                  }
+                  if (!/^\d{10}$/.test(phoneNo)) {
+                    setError('Mobile number must be exactly 10 digits.');
+                    return;
+                  }
                   setError('');
                   try {
                       const data = await loginWithGoogle(googleToken, 'SEEKER', phoneNo, name);
@@ -395,13 +405,13 @@ const AuthModals = ({ isOpen, onClose }) => {
                   }
               }} className="space-y-4">
                 <div>
-                  <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="text" placeholder="Full Name" value={name} onChange={(e) => { const val = e.target.value; if (/^[a-zA-Z\s]*$/.test(val)) setName(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
                   <input type="email" value={email} disabled className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-100 cursor-not-allowed" />
                 </div>
                 <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => setPhoneNo(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <button type="submit" className="btn-primary w-full">Complete Registration</button>
               </form>
@@ -411,15 +421,21 @@ const AuthModals = ({ isOpen, onClose }) => {
           {step === 'google-register-employer' && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <button onClick={() => changeStep('login-employer')} className="text-slate-400 hover:text-slate-600 absolute left-4 sm:left-6 top-6">
-                  &larr; Back
-                </button>
+
                 <h2 className="text-2xl font-bold text-slate-900 mt-4">Complete Employer Profile</h2>
                 <p className="text-slate-500 text-sm">Please provide your details.</p>
               </div>
 
               <form onSubmit={async (e) => {
                   e.preventDefault();
+                  if (!/^[a-zA-Z\s]+$/.test(name)) {
+                    setError('Name can only contain letters and spaces.');
+                    return;
+                  }
+                  if (!/^\d{10}$/.test(phoneNo)) {
+                    setError('Mobile number must be exactly 10 digits.');
+                    return;
+                  }
                   setError('');
                   try {
                       const data = await loginWithGoogle(googleToken, 'EMPLOYER', phoneNo, name, companyName);
@@ -434,7 +450,7 @@ const AuthModals = ({ isOpen, onClose }) => {
                   }
               }} className="space-y-4">
                 <div>
-                  <input type="text" placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="text" placeholder="Your Name" value={name} onChange={(e) => { const val = e.target.value; if (/^[a-zA-Z\s]*$/.test(val)) setName(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
                   <input type="email" value={email} disabled className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-100 cursor-not-allowed" />
@@ -443,7 +459,7 @@ const AuthModals = ({ isOpen, onClose }) => {
                   <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => setPhoneNo(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
                 <button type="submit" className="btn-primary w-full">Complete Registration</button>
               </form>

@@ -96,9 +96,7 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
     setUploading(true);
 
     try {
-      const res = await axios.post('/api/upload/resume', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const res = await axios.post('/api/upload/resume', formData);
       setProfile({...profile, resumeUrl: res.data.url});
     } catch (err) {
       alert(err.response?.data || "Failed to upload resume");
