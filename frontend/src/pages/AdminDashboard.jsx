@@ -479,7 +479,6 @@ const AdminDashboard = () => {
                 </div>
                 <p className="text-sm text-slate-500 mt-1">View and manage all registered users.</p>
               </div>
-              </div>
               <div className="flex items-center gap-3">
                 <select 
                   value={userRoleFilter}
