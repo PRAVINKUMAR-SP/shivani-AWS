@@ -52,7 +52,8 @@ const AdminDashboard = () => {
   const [systemHealth, setSystemHealth] = useState(null);
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [timeRange, setTimeRange] = useState('Monthly');
+  const [userRoleFilter, setUserRoleFilter] = useState('All Roles');
+  const [timeRange, setTimeRange] = useState('Daily');
   const [chartData, setChartData] = useState(() => JSON.parse(sessionStorage.getItem('admin_chart')) || {
     'Daily': [],
     'Monthly': [],
@@ -73,7 +74,7 @@ const AdminDashboard = () => {
     for(let i=6; i>=0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
-      const label = d.toLocaleDateString('en-US', { weekday: 'short' });
+      const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       dailyMap[label] = { name: label, jobs: 0, applications: 0, users: 0, dateKey: d.toDateString() };
       dailyOrder.push(label);
     }
@@ -107,7 +108,7 @@ const AdminDashboard = () => {
         // Daily Match
         const diffDays = Math.floor((now.setHours(23,59,59,999) - d) / (1000 * 60 * 60 * 24));
         if (diffDays >= 0 && diffDays < 7) {
-          const label = d.toLocaleDateString('en-US', { weekday: 'short' });
+          const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
           if(dailyMap[label]) dailyMap[label][type]++;
         }
         
@@ -478,13 +479,26 @@ const AdminDashboard = () => {
                 </div>
                 <p className="text-sm text-slate-500 mt-1">View and manage all registered users.</p>
               </div>
-              <button 
-                onClick={exportUsersToExcel}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                Export to Excel
-              </button>
+              </div>
+              <div className="flex items-center gap-3">
+                <select 
+                  value={userRoleFilter}
+                  onChange={(e) => setUserRoleFilter(e.target.value)}
+                  className="bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="All Roles">All Roles</option>
+                  <option value="SEEKER">Seekers</option>
+                  <option value="EMPLOYER">Employers</option>
+                  <option value="ADMIN">Admins</option>
+                </select>
+                <button 
+                  onClick={exportUsersToExcel}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  Export to Excel
+                </button>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
@@ -512,7 +526,7 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
-                  {usersList.map((u) => {
+                  {usersList.filter(u => userRoleFilter === 'All Roles' || u.role === userRoleFilter).map((u) => {
                     const initials = (u.name || "User").substring(0, 2).toUpperCase();
                     const bgColors = ['bg-orange-100 text-orange-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-yellow-100 text-yellow-600'];
                     const avatarColor = bgColors[u.id % bgColors.length];
