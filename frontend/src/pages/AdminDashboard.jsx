@@ -400,7 +400,7 @@ const AdminDashboard = () => {
               <Shield className="w-6 h-6 md:w-8 md:h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
             </div>
-            <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">Welcome, System Administrator. Manage the platform ecosystem.</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">Welcome System Administrator.</p>
           </div>
         </div>
 
