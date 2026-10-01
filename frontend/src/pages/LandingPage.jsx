@@ -3,6 +3,7 @@ import { Home, Building2, BarChart2, Award, User, Settings, Search, GraduationCa
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
+import { Capacitor } from '@capacitor/core';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -84,104 +85,36 @@ const LandingPage = ({ onLoginClick }) => {
   return (
     <div className="bg-slate-50 dark:bg-[#0f172a] flex flex-col transition-colors duration-300">
       {/* Hero Section */}
-      <section className="pt-24 pb-20 px-4 relative overflow-hidden">
-        {/* Decorative background blur */}
-        <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-blue-400/20 dark:bg-blue-600/20 blur-[120px] rounded-full pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-600/20 blur-[120px] rounded-full pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
-
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center mb-16 relative z-10">
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="space-y-8 text-center lg:text-left"
-          >
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-medium text-sm border border-blue-200 dark:border-blue-800/50">
-              <span className="relative flex h-2 w-2 mr-1">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
-              </span>
-              <span>Over 10,000+ jobs available</span>
-            </motion.div>
-            
-            <motion.h1 variants={fadeInUp} className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-              Discover your <br className="hidden md:block"/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">dream career</span> today
-            </motion.h1>
-            
-            <motion.p variants={fadeInUp} className="text-slate-600 dark:text-slate-300 text-lg md:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Join thousands of professionals finding great jobs, building connections, and growing their careers with Shivani Tech.
-            </motion.p>
-            
-            <motion.div variants={fadeInUp} className="pt-2 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-              <button onClick={onLoginClick} className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition-all hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1">
-                Get Started
-                <ArrowRight className="w-5 h-5 ml-2 font-bold" />
-              </button>
-              <a href="/shivani-app.apk" download className="inline-flex items-center justify-center bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold py-4 px-8 rounded-xl border border-slate-200 dark:border-slate-700 transition-all hover:shadow-lg hover:-translate-y-1">
+      <section className="pt-24 pb-16 px-4 bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+        <div className="max-w-6xl mx-auto text-center space-y-8">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+            Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">dream job</span> <br className="hidden md:block"/>with Shivani Technologies
+          </h1>
+          <p className="text-slate-600 dark:text-slate-300 text-lg md:text-xl max-w-2xl mx-auto">
+            Connect with top employers and discover opportunities that match your skills and aspirations.
+          </p>
+          <div className="pt-4 flex flex-col sm:flex-row justify-center gap-4">
+            <button onClick={onLoginClick} className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+              Get Started
+              <ArrowRight className="w-5 h-5 ml-2 font-bold" />
+            </button>
+            {!Capacitor.isNativePlatform() && (
+              <a href="/shivani-app.apk" download className="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
                 Download App
                 <Download className="w-5 h-5 ml-2 font-bold" />
               </a>
-            </motion.div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.5, y: 50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.2 }}
-            className="relative hidden lg:block"
-          >
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[3rem] transform rotate-3 opacity-20 dark:opacity-30"></div>
-            <img 
-              src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80" 
-              alt="Professional Job Seeker" 
-              className="relative z-10 rounded-[3rem] w-full h-[600px] object-cover shadow-2xl border-8 border-white dark:border-slate-800 hover:scale-105 transition-transform duration-500"
-            />
-            
-            {/* Floating UI Elements */}
-            <motion.div 
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute top-10 -left-10 z-20 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-4"
-            >
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
-                <CheckCircle className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-slate-900 dark:text-white">Profile Matched</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Senior Developer</p>
-              </div>
-            </motion.div>
-            
-            <motion.div 
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-20 -right-10 z-20 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-4"
-            >
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-slate-900 dark:text-white">Interview Invite</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Tech Corp Inc.</p>
-              </div>
-            </motion.div>
-          </motion.div>
+            )}
+          </div>
         </div>
 
         {/* Categories Grid */}
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="max-w-[1100px] mx-auto mt-16 relative z-10"
-        >
+        <div className="max-w-[1000px] mx-auto mt-16">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categories.map((category, index) => (
               <CategoryChip key={index} icon={category.icon} label={category.label} />
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Services Section */}
