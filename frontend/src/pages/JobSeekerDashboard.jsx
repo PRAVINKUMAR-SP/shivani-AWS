@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { MailOpen, BellRing, Eye, Check, X, FileText } from 'lucide-react';
 import CustomDropdown from '../components/CustomDropdown';
 import { toast } from 'react-toastify';
+import { getInitials } from '../utils/helpers';
+import PhoneInputWithCountry from '../components/PhoneInputWithCountry';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
@@ -25,7 +27,7 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, appli
     <div className="flex justify-between items-start mb-5">
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-xl uppercase">
-          {company?.charAt(0) || 'C'}
+          {getInitials(company || 'C')}
         </div>
         <div>
           <h3 className="font-bold text-slate-900 text-lg line-clamp-1">{title}</h3>
@@ -146,7 +148,7 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
           </div>
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-            <input type="tel" value={profile.phoneNo} onChange={e => setProfile({...profile, phoneNo: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="+1 (555) 000-0000" />
+            <PhoneInputWithCountry value={profile.phoneNo || ''} onChange={val => setProfile({...profile, phoneNo: val})} placeholder="+91 9876543210" />
           </div>
         </div>
         <div>
@@ -282,7 +284,7 @@ const ApplicationsTrackerSection = ({ applications }) => (
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-xl uppercase">
-                {app.job?.company?.charAt(0) || 'C'}
+                {getInitials(app.job?.company || 'C')}
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 text-lg">{app.job?.title}</h3>
@@ -344,7 +346,7 @@ const NotificationsSection = ({ notifications }) => (
 );
 
 const ViewProfileSection = ({ profile, user, onEdit }) => {
-  const initials = profile?.name ? profile.name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'U');
+  const initials = profile?.name ? getInitials(profile.name) : getInitials(user?.email || 'U');
   
   return (
   <div className="max-w-4xl space-y-6">
@@ -643,7 +645,7 @@ const JobSeekerDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8">
+      <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
         {/* Mobile Navigation Tabs */}
         <div className="lg:hidden mb-6">
           <select 
@@ -686,7 +688,7 @@ const JobSeekerDashboard = () => {
               <>
                 {/* Stats Bar */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-8">
-                  <div className="card p-4 md:p-6 flex items-center justify-between border-l-4 border-blue-500">
+                  <div className="card p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-l-4 border-blue-500">
                     <div>
                       <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Applied Jobs</p>
                       <h3 className="text-2xl font-bold text-slate-900">{stats.appliedCount}</h3>
@@ -695,7 +697,7 @@ const JobSeekerDashboard = () => {
                       <Briefcase className="w-6 h-6" />
                     </div>
                   </div>
-                  <div className="card p-4 md:p-6 flex items-center justify-between border-l-4 border-green-500">
+                  <div className="card p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-l-4 border-green-500">
                     <div>
                       <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Shortlisted</p>
                       <h3 className="text-2xl font-bold text-slate-900">{stats.shortlistedCount}</h3>
@@ -704,7 +706,7 @@ const JobSeekerDashboard = () => {
                       <Check className="w-6 h-6" />
                     </div>
                   </div>
-                  <div className="card p-4 md:p-6 flex items-center justify-between border-l-4 border-purple-500">
+                  <div className="card p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-l-4 border-purple-500">
                     <div>
                       <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Matching Jobs</p>
                       <h3 className="text-2xl font-bold text-slate-900">{stats.matchingCount}</h3>

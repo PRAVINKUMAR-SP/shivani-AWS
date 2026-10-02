@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Moon, Sun, User as UserIcon, LogOut, Shield, Briefcase, Menu, X, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { getInitials } from '../utils/helpers';
 
 const Header = ({ onLoginClick }) => {
   const { user, logout } = useAuth();
@@ -56,8 +57,8 @@ const Header = ({ onLoginClick }) => {
   }, []);
 
   // Helper to get initials
-  const getInitials = () => {
-    if (user.name && user.name.length >= 2) return user.name.substring(0, 2).toUpperCase();
+  const getUserInitials = () => {
+    if (user.name) return getInitials(user.name);
     return user.email.substring(0, 2).toUpperCase();
   };
 
@@ -126,7 +127,7 @@ const Header = ({ onLoginClick }) => {
               
               <Link to={user.role === 'SEEKER' ? '/seeker-dashboard' : user.role === 'EMPLOYER' ? '/employer-dashboard' : '/admin-dashboard'} className="text-slate-700 font-medium hover:text-blue-600 flex items-center gap-2">
                 <div className="w-9 h-9 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white/20 dark:ring-slate-800">
-                  {getInitials()}
+                  {getUserInitials()}
                 </div>
               </Link>
               <button onClick={logout} className="text-slate-400 hover:text-red-500 dark:text-slate-300 dark:hover:text-red-400 transition-colors p-2" title="Logout">

@@ -3,6 +3,7 @@ import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, Chec
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import CustomDropdown from '../components/CustomDropdown';
+import PhoneInputWithCountry from '../components/PhoneInputWithCountry';
 import { toast } from 'react-toastify';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
@@ -230,7 +231,7 @@ const EmployerDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8">
+      <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
         {/* Mobile Navigation Tabs */}
         <div className="lg:hidden mb-6">
           <select 
@@ -318,7 +319,7 @@ const EmployerDashboard = () => {
                 </div>
                 <div className="divide-y divide-slate-100 dark:divide-slate-800">
                   {jobs.slice(0, 5).map(job => (
-                    <div key={job.id} className="p-6 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <div key={job.id} className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                       <div>
                         <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">{job.title}</h3>
                         <div className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex gap-4">
@@ -654,7 +655,7 @@ const EmployerDashboard = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-                      <input type="tel" value={profile.phoneNo || ''} onChange={e => setProfile({...profile, phoneNo: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" />
+                      <PhoneInputWithCountry value={profile.phoneNo || ''} onChange={val => setProfile({...profile, phoneNo: val})} />
                     </div>
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Location</label>

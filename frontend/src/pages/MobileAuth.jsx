@@ -29,6 +29,8 @@ const MobileAuth = () => {
     }
   }, []);
 
+  const [returnUrl, setReturnUrl] = useState('');
+
   const handleGoogleResponse = async (accessToken) => {
     try {
       const data = await loginWithGoogle(accessToken, role);
@@ -38,10 +40,13 @@ const MobileAuth = () => {
         if (data.companyName) {
           url += `&companyName=${encodeURIComponent(data.companyName)}`;
         }
+        setReturnUrl(url);
         window.location.href = url;
       } else if (data && data.requireDetails) {
         toast.error("Please register your account first on the website before logging into the app via Google.");
-        window.location.href = `shivaniapp://login?error=not_registered`;
+        const url = `shivaniapp://login?error=not_registered`;
+        setReturnUrl(url);
+        window.location.href = url;
       }
     } catch (err) {
       toast.error("Login failed. Please try again.");
@@ -66,13 +71,27 @@ const MobileAuth = () => {
         <p className="text-slate-500">
           Click the button below to securely authenticate with Google and return to the Shivani Tech app.
         </p>
-        <button 
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm disabled:opacity-50"
-        >
-          {loading ? 'Processing...' : 'Continue with Google'}
-        </button>
+        {returnUrl ? (
+          <div className="space-y-4">
+            <div className="p-4 bg-green-50 text-green-700 rounded-xl text-sm">
+              Authentication successful! If you are not automatically redirected, please click the button below.
+            </div>
+            <button 
+              onClick={() => window.location.href = returnUrl}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors font-semibold text-white shadow-sm"
+            >
+              Return to App
+            </button>
+          </div>
+        ) : (
+          <button 
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors font-semibold text-slate-700 shadow-sm disabled:opacity-50"
+          >
+            {loading ? 'Processing...' : 'Continue with Google'}
+          </button>
+        )}
       </div>
     </div>
   );

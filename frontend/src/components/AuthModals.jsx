@@ -11,6 +11,7 @@ const GoogleIcon = () => (
 );
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import CountryCodeDropdown from './CountryCodeDropdown';
 
 import { useGoogleLogin } from '@react-oauth/google';
 import { Capacitor } from '@capacitor/core';
@@ -29,11 +30,20 @@ const AuthModals = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
+  const [countryCode, setCountryCode] = useState('+91');
   const [companyName, setCompanyName] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [googleToken, setGoogleToken] = useState('');
   const [currentRole, setCurrentRole] = useState('SEEKER');
+
+  useEffect(() => {
+    if (isOpen) {
+      setStep('select-role');
+      setError('');
+      setSuccess('');
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isNative) return;
@@ -137,7 +147,8 @@ const AuthModals = ({ isOpen, onClose }) => {
     }
     setError('');
     try {
-      await register(name, email, password, role, phoneNo, companyName);
+      const fullPhone = `${countryCode} ${phoneNo}`;
+      await register(name, email, password, role, fullPhone, companyName);
       setStep(redirectStep);
       setSuccess('Registration successful! Please login.');
     } catch (err) {
@@ -284,8 +295,11 @@ const AuthModals = ({ isOpen, onClose }) => {
                 <div>
                   <input type="text" placeholder="Full Name" value={name} onChange={(e) => { const val = e.target.value; if (/^[a-zA-Z\s]*$/.test(val)) setName(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
-                <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                <div className="flex bg-slate-50 border border-slate-200 rounded-xl focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
+                  <div className="flex items-center px-3 border-r border-slate-200 bg-slate-100">
+                    <CountryCodeDropdown value={countryCode} onChange={setCountryCode} className="text-sm bg-transparent" />
+                  </div>
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 bg-transparent border-none focus:outline-none" required />
                 </div>
                 <div>
                   <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
@@ -376,8 +390,11 @@ const AuthModals = ({ isOpen, onClose }) => {
                 <div>
                   <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
-                <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                <div className="flex bg-slate-50 border border-slate-200 rounded-xl focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
+                  <div className="flex items-center px-3 border-r border-slate-200 bg-slate-100">
+                    <CountryCodeDropdown value={countryCode} onChange={setCountryCode} className="text-sm bg-transparent" />
+                  </div>
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 bg-transparent border-none focus:outline-none" required />
                 </div>
                 <div>
                   <input type="email" placeholder="Work Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
@@ -451,7 +468,8 @@ const AuthModals = ({ isOpen, onClose }) => {
                   }
                   setError('');
                   try {
-                      const data = await loginWithGoogle(googleToken, 'SEEKER', phoneNo, name);
+                      const fullPhone = `${countryCode} ${phoneNo}`;
+                      const data = await loginWithGoogle(googleToken, 'SEEKER', fullPhone, name);
                       onClose();
                       navigate('/seeker-dashboard');
                   } catch (err) {
@@ -464,8 +482,11 @@ const AuthModals = ({ isOpen, onClose }) => {
                 <div>
                   <input type="email" value={email} disabled className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-100 cursor-not-allowed" />
                 </div>
-                <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                <div className="flex bg-slate-50 border border-slate-200 rounded-xl focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
+                  <div className="flex items-center px-3 border-r border-slate-200 bg-slate-100">
+                    <CountryCodeDropdown value={countryCode} onChange={setCountryCode} className="text-sm bg-transparent" />
+                  </div>
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 bg-transparent border-none focus:outline-none" required />
                 </div>
                 <button type="submit" className="btn-primary w-full">Complete Registration</button>
               </form>
@@ -492,7 +513,8 @@ const AuthModals = ({ isOpen, onClose }) => {
                   }
                   setError('');
                   try {
-                      const data = await loginWithGoogle(googleToken, 'EMPLOYER', phoneNo, name, companyName);
+                      const fullPhone = `${countryCode} ${phoneNo}`;
+                      const data = await loginWithGoogle(googleToken, 'EMPLOYER', fullPhone, name, companyName);
                       if (data && data.token) {
                           onClose();
                           navigate('/employer-dashboard');
@@ -512,8 +534,11 @@ const AuthModals = ({ isOpen, onClose }) => {
                 <div>
                   <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                 </div>
-                <div>
-                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
+                <div className="flex bg-slate-50 border border-slate-200 rounded-xl focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
+                  <div className="flex items-center px-3 border-r border-slate-200 bg-slate-100">
+                    <CountryCodeDropdown value={countryCode} onChange={setCountryCode} className="text-sm bg-transparent" />
+                  </div>
+                  <input type="tel" placeholder="Mobile Number" value={phoneNo} onChange={(e) => { const val = e.target.value; if (/^\d{0,10}$/.test(val)) setPhoneNo(val); }} className="w-full px-4 py-3.5 bg-transparent border-none focus:outline-none" required />
                 </div>
                 <button type="submit" className="btn-primary w-full">Complete Registration</button>
               </form>

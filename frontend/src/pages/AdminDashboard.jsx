@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'react-toastify';
+import { getInitials } from '../utils/helpers';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
@@ -21,7 +22,7 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
 );
 
 const StatCard = ({ title, count, icon: Icon, iconColor, bgColor }) => (
-  <div className="card p-6 flex items-center justify-between group relative overflow-hidden">
+  <div className="card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 group relative overflow-hidden">
     <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full ${bgColor} opacity-20 group-hover:scale-150 transition-transform duration-500`}></div>
     <div className="relative z-10">
       <h3 className="text-slate-500 dark:text-slate-400 font-medium mb-1">{title}</h3>
@@ -368,7 +369,7 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8">
+      <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
         {/* Mobile Navigation Tabs */}
         <div className="lg:hidden mb-6">
           <select 
@@ -526,7 +527,7 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {usersList.filter(u => userRoleFilter === 'All Roles' || u.role === userRoleFilter).map((u) => {
-                    const initials = (u.name || "User").substring(0, 2).toUpperCase();
+                    const initials = getInitials(u.name || "User");
                     const bgColors = ['bg-orange-100 text-orange-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-yellow-100 text-yellow-600'];
                     const avatarColor = bgColors[u.id % bgColors.length];
                     
@@ -778,7 +779,7 @@ const AdminDashboard = () => {
                 <p className="text-sm text-slate-500 mb-6 flex-1">
                   Enable maintenance mode to temporarily disable login and registration for all users except administrators. Use this during system upgrades or to halt API access during critical errors.
                 </p>
-                <div className="flex items-center justify-between bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
                   <div>
                     <div className="font-medium text-slate-800">Status</div>
                     <div className={`text-sm mt-1 ${maintenanceMode ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}`}>
@@ -914,7 +915,7 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {applicantsList.map((app) => {
-                    const initials = (app.seekerName || "User").substring(0, 2).toUpperCase();
+                    const initials = getInitials(app.seekerName || "User");
                     const bgColors = ['bg-orange-100 text-orange-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-yellow-100 text-yellow-600'];
                     const avatarColor = bgColors[app.id % bgColors.length];
                     
@@ -1004,7 +1005,7 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {testResults.map((result) => {
-                    const initials = (result.name || "User").substring(0, 2).toUpperCase();
+                    const initials = getInitials(result.name || "User");
                     const percentage = Math.round((result.score / result.totalQuestions) * 100);
                     return (
                       <tr key={result.id} className="hover:bg-slate-50 transition-colors">
@@ -1065,7 +1066,7 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {messagesList.map((msg) => {
-                    const initials = (msg.name || "User").substring(0, 2).toUpperCase();
+                    const initials = getInitials(msg.name || "User");
                     return (
                       <tr key={msg.id} className="hover:bg-slate-50 transition-colors">
                         <td className="px-6 py-4">

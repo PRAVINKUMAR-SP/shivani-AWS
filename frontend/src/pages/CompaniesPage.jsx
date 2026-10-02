@@ -1,11 +1,12 @@
 import React from 'react';
 import { Star, Building2, MapPin, Users } from 'lucide-react';
+import { getInitials } from '../utils/helpers';
 
 const CompanyCard = ({ name, description, location, employees, rating, logoColor }) => (
   <div className="card p-6 flex flex-col hover:-translate-y-1 transition-transform">
     <div className="flex items-start justify-between mb-4">
       <div className={`w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-2xl text-white ${logoColor}`}>
-        {name.charAt(0)}
+        {getInitials(name)}
       </div>
       <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-lg text-sm font-semibold">
         <Star className="w-4 h-4 fill-current" /> {rating}

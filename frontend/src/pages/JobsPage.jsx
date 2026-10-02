@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getInitials } from '../utils/helpers';
 import { Search, MapPin, Briefcase, Bookmark as BookmarkIcon } from 'lucide-react';
 import axios from 'axios';
 
@@ -7,7 +8,7 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time }) => 
     <div className="flex justify-between items-start mb-5">
       <div className="flex items-center gap-4">
         <div className="w-14 h-14 bg-slate-50 border border-slate-100 text-slate-700 rounded-2xl flex items-center justify-center font-bold text-2xl uppercase shadow-sm">
-          {company?.charAt(0) || 'C'}
+          {getInitials(company) || 'C'}
         </div>
         <div>
           <h3 className="font-bold text-slate-900 text-lg line-clamp-1">{title}</h3>
