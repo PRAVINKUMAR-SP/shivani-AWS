@@ -122,4 +122,8 @@ public class EmailService {
             sendHtmlEmail(toEmail, "Employer Account Status Update", body);
         }
     }
+
+    public void sendCustomHtmlEmail(String toEmail, String subject, String bodyContent) {
+        sendHtmlEmail(toEmail, subject, bodyContent);
+    }
 }

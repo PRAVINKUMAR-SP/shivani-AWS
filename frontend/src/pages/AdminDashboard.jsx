@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity } from 'lucide-react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity, Mail } from 'lucide-react';
 import CustomDropdown from '../components/CustomDropdown';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -50,6 +50,9 @@ const AdminDashboard = () => {
   const [applicantsList, setApplicantsList] = useState(() => JSON.parse(sessionStorage.getItem('admin_applicants')) || []);
   const [testResults, setTestResults] = useState(() => JSON.parse(sessionStorage.getItem('admin_tests')) || []);
   const [messagesList, setMessagesList] = useState(() => JSON.parse(sessionStorage.getItem('admin_messages')) || []);
+  const [mailHistory, setMailHistory] = useState([]);
+  const [mailForm, setMailForm] = useState({ to: '', subject: '', content: '' });
+  const [isSendingMail, setIsSendingMail] = useState(false);
   const [systemHealth, setSystemHealth] = useState(null);
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -147,7 +150,8 @@ const AdminDashboard = () => {
         (activeTab === 'jobs' && jobsList.length === 0) ||
         (activeTab === 'applicants' && applicantsList.length === 0) ||
         (activeTab === 'test_results' && testResults.length === 0) ||
-        (activeTab === 'messages' && messagesList.length === 0);
+        (activeTab === 'messages' && messagesList.length === 0) ||
+        (activeTab === 'mail' && mailHistory.length === 0);
 
       if (needsLoading) {
         setIsLoading(true);
@@ -161,6 +165,7 @@ const AdminDashboard = () => {
         activeTab === 'applicants' ? fetchApplicants() : Promise.resolve(),
         activeTab === 'test_results' ? fetchTestResults() : Promise.resolve(),
         activeTab === 'messages' ? fetchMessages() : Promise.resolve(),
+        activeTab === 'mail' ? (fetchMailHistory(), usersList.length === 0 ? fetchUsers() : Promise.resolve()) : Promise.resolve(),
         activeTab === 'settings' ? fetchSystemSettings() : Promise.resolve()
       ]);
       
@@ -206,6 +211,35 @@ const AdminDashboard = () => {
       sessionStorage.setItem('admin_messages', JSON.stringify(res.data));
     } catch (err) {
       console.error("Error fetching messages:", err);
+    }
+  };
+
+  const fetchMailHistory = async () => {
+    try {
+      const res = await axios.get('/api/admin/mail/history');
+      setMailHistory(res.data);
+    } catch (err) {
+      console.error("Error fetching mail history:", err);
+    }
+  };
+
+  const sendAdminMail = async (e) => {
+    e.preventDefault();
+    if (!mailForm.to || !mailForm.subject || !mailForm.content) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    setIsSendingMail(true);
+    try {
+      await axios.post('/api/admin/mail/send', mailForm);
+      toast.success("Email sent successfully!");
+      setMailForm({ to: '', subject: '', content: '' });
+      fetchMailHistory();
+    } catch (err) {
+      console.error("Error sending mail:", err);
+      toast.error("Failed to send email");
+    } finally {
+      setIsSendingMail(false);
     }
   };
 
@@ -361,6 +395,7 @@ const AdminDashboard = () => {
           <SidebarItem icon={FileText} label="Applicants" active={activeTab === 'applicants'} onClick={() => setActiveTab('applicants')} />
           <SidebarItem icon={CheckCircle} label="Test Results" active={activeTab === 'test_results'} onClick={() => setActiveTab('test_results')} />
           <SidebarItem icon={MessageSquare} label="Messages" active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} />
+          <SidebarItem icon={Mail} label="Mail Inbox" active={activeTab === 'mail'} onClick={() => setActiveTab('mail')} />
           <SidebarItem icon={Settings} label="System Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
         </div>
         
@@ -385,6 +420,7 @@ const AdminDashboard = () => {
             <option value="applicants">Applicants</option>
             <option value="test_results">Skill Test Results</option>
             <option value="messages">Contact Messages</option>
+            <option value="mail">Mail Inbox</option>
             <option value="settings">Settings</option>
           </select>
         </div>
@@ -1098,6 +1134,100 @@ const AdminDashboard = () => {
                   )}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+        {activeTab === 'mail' && (
+          <div className="space-y-6">
+            <div className="card p-6">
+              <div className="flex items-center gap-2 mb-6">
+                <Mail className="w-5 h-5 text-blue-600" />
+                <h2 className="text-xl font-bold text-slate-900">Compose Mail</h2>
+              </div>
+              <form onSubmit={sendAdminMail} className="space-y-4 max-w-3xl">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Select Recipient (Registered User)</label>
+                  <select 
+                    value={mailForm.to}
+                    onChange={(e) => setMailForm({...mailForm, to: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  >
+                    <option value="">-- Select a User --</option>
+                    {usersList.map(u => (
+                      <option key={u.id} value={u.email}>{u.name || 'User'} ({u.email}) - {u.role}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Subject</label>
+                  <input 
+                    type="text" 
+                    value={mailForm.subject}
+                    onChange={(e) => setMailForm({...mailForm, subject: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter email subject"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Message Content (HTML Supported)</label>
+                  <textarea 
+                    value={mailForm.content}
+                    onChange={(e) => setMailForm({...mailForm, content: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[150px]"
+                    placeholder="<p>Hello,</p><p>This is a custom message.</p>"
+                    required
+                  />
+                </div>
+                <div className="pt-2">
+                  <button 
+                    type="submit" 
+                    disabled={isSendingMail}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors"
+                  >
+                    {isSendingMail ? (
+                      <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Sending...</>
+                    ) : (
+                      <><Mail className="w-4 h-4" /> Send Email</>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div className="card overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 bg-white">
+                <h2 className="text-xl font-bold text-slate-900">Sent Mails History</h2>
+                <p className="text-sm text-slate-500 mt-1">History of all emails sent from the admin dashboard.</p>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                    <tr>
+                      <th className="px-6 py-4">Recipient</th>
+                      <th className="px-6 py-4">Subject</th>
+                      <th className="px-6 py-4">Date Sent</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white">
+                    {mailHistory.map((mail) => (
+                      <tr key={mail.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4 font-medium text-slate-900">{mail.recipientEmail}</td>
+                        <td className="px-6 py-4 text-slate-800">{mail.subject}</td>
+                        <td className="px-6 py-4 text-sm text-slate-500">
+                          {new Date(mail.sentAt).toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                    {mailHistory.length === 0 && (
+                      <tr>
+                        <td colSpan="3" className="px-6 py-12 text-center text-slate-500">No emails sent yet.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}

@@ -8,9 +8,13 @@ import com.shivanitech.jobportal.repository.SavedJobRepository;
 import com.shivanitech.jobportal.repository.InviteRepository;
 import com.shivanitech.jobportal.model.SavedJob;
 import com.shivanitech.jobportal.model.Invite;
+import com.shivanitech.jobportal.model.AdminMail;
+import com.shivanitech.jobportal.repository.AdminMailRepository;
 import com.shivanitech.jobportal.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +62,9 @@ public class AdminController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private AdminMailRepository adminMailRepository;
 
     @GetMapping("/stats")
     public ResponseEntity<?> getStats(Principal principal) {
@@ -277,5 +284,37 @@ public class AdminController {
     @GetMapping("/messages")
     public ResponseEntity<?> getAllMessages(Principal principal) {
         return ResponseEntity.ok(contactMessageRepository.findAllByOrderByCreatedAtDesc());
+    }
+
+    @PostMapping("/mail/send")
+    public ResponseEntity<?> sendAdminMail(@RequestBody Map<String, String> payload, Principal principal) {
+        String to = payload.get("to");
+        String subject = payload.get("subject");
+        String content = payload.get("content");
+
+        if (to == null || subject == null || content == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing required fields."));
+        }
+
+        try {
+            // Send email via AWS SES
+            emailService.sendCustomHtmlEmail(to, subject, content);
+
+            // Save to database
+            AdminMail mail = new AdminMail();
+            mail.setRecipientEmail(to);
+            mail.setSubject(subject);
+            mail.setContent(content);
+            adminMailRepository.save(mail);
+
+            return ResponseEntity.ok(Map.of("message", "Email sent successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("message", "Failed to send email: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/mail/history")
+    public ResponseEntity<?> getAdminMailHistory(Principal principal) {
+        return ResponseEntity.ok(adminMailRepository.findAllByOrderBySentAtDesc());
     }
 }

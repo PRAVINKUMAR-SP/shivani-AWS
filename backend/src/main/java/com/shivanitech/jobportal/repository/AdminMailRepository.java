@@ -1,0 +1,12 @@
+package com.shivanitech.jobportal.repository;
+
+import com.shivanitech.jobportal.model.AdminMail;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface AdminMailRepository extends JpaRepository<AdminMail, Long> {
+    List<AdminMail> findAllByOrderBySentAtDesc();
+}
