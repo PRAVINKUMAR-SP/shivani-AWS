@@ -49,16 +49,31 @@ const AuthModals = ({ isOpen, onClose }) => {
     if (!isNative) return;
     
     const urlListener = App.addListener('appUrlOpen', async event => {
-      const url = new URL(event.url);
-      if (url.protocol === 'shivaniapp:') {
-        const tokenStr = url.searchParams.get('token');
-        const roleStr = url.searchParams.get('role');
-        
-        if (tokenStr) {
-          await Browser.close();
-          localStorage.setItem('token', tokenStr);
-          window.location.reload();
+      try {
+        const url = new URL(event.url);
+        if (url.protocol === 'shivaniapp:') {
+          const tokenStr = url.searchParams.get('token');
+          const roleStr = url.searchParams.get('role');
+          const companyNameStr = url.searchParams.get('companyName');
+          const errorStr = url.searchParams.get('error');
+
+          await Browser.close().catch(() => {});
+          
+          if (errorStr === 'not_registered') {
+             toast.error("Please register your account first on the website before logging into the app via Google.");
+             return;
+          }
+          
+          if (tokenStr) {
+            localStorage.setItem('token', tokenStr);
+            if (companyNameStr) {
+              localStorage.setItem('user_info', JSON.stringify({ companyName: companyNameStr }));
+            }
+            window.location.href = roleStr === 'SEEKER' ? '/seeker-dashboard' : roleStr === 'EMPLOYER' ? '/employer-dashboard' : '/admin-dashboard';
+          }
         }
+      } catch (e) {
+        console.error('Error handling deep link:', e);
       }
     });
 
