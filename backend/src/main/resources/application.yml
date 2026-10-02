@@ -20,7 +20,18 @@ spring:
       enabled: true
       max-file-size: 5MB
       max-request-size: 5MB
-  
+  mail:
+    host: e3ex2xyn2gzd.hkph.mail-manager-smtp.amazonaws.com
+    port: 587
+    username: inp-my6wj4wgmab6xbwpwuwhqerj
+    password: "Pravin007@"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 server:
   port: 8081
   compression:
@@ -37,14 +48,3 @@ aws:
   secretKey: ${AWS_SECRET_ACCESS_KEY:}
   region: ${AWS_REGION:ap-south-1}
 
-  mail:
-    host: e3ex2xyn2gzd.hkph.mail-manager-smtp.amazonaws.com
-    port: 587
-    username: inp-my6wj4wgmab6xbwpwuwhqerj
-    password: "Pravin007@"
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
