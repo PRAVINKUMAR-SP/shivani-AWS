@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Briefcase, Mail, Bookmark, Bell, Settings, User, LogOut, Search, MapPin, SlidersHorizontal, Bookmark as BookmarkIcon } from 'lucide-react';
+import { Home, Briefcase, Mail, Bookmark, Bell, Settings, User, LogOut, Search, MapPin, SlidersHorizontal, Bookmark as BookmarkIcon, Menu, X } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { MailOpen, BellRing, Eye, Check, X, FileText } from 'lucide-react';
@@ -441,6 +441,7 @@ const JobSeekerDashboard = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [filterType, setFilterType] = useState('All');
   const [filterSalary, setFilterSalary] = useState('All');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [stats, setStats] = useState(() => JSON.parse(sessionStorage.getItem('js_stats')) || { appliedCount: 0, shortlistedCount: 0, matchingCount: 0 });
   const { logout, user } = useAuth();
   
@@ -612,16 +613,26 @@ const JobSeekerDashboard = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex lg:sticky lg:top-[80px] lg:h-[calc(100vh-80px)] overflow-y-auto transition-colors duration-300 z-10">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
+            <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
+            <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+        </div>
         <div className="space-y-1 mb-8">
-          <SidebarItem icon={Home} label="Home" active={activeTab === 'home'} onClick={() => setActiveTab('home')} />
-          <SidebarItem icon={Briefcase} label="Applied" active={activeTab === 'applied'} onClick={() => setActiveTab('applied')} />
-          <SidebarItem icon={FileText} label="Track Applications" active={activeTab === 'applications_tracker'} onClick={() => setActiveTab('applications_tracker')} />
-          <SidebarItem icon={BookmarkIcon} label="Saved Jobs" active={activeTab === 'saved'} onClick={() => setActiveTab('saved')} />
-          <SidebarItem icon={Bell} label="Notifications" active={activeTab === 'notifications'} onClick={() => setActiveTab('notifications')} />
-          <SidebarItem icon={Settings} label="Profile Settings" active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} />
-          <SidebarItem icon={User} label="Profile" active={activeTab === 'view_profile'} onClick={() => setActiveTab('view_profile')} />
+          <SidebarItem icon={Home} label="Home" active={activeTab === 'home'} onClick={() => { setActiveTab('home'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Briefcase} label="Applied" active={activeTab === 'applied'} onClick={() => { setActiveTab('applied'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={FileText} label="Track Applications" active={activeTab === 'applications_tracker'} onClick={() => { setActiveTab('applications_tracker'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={BookmarkIcon} label="Saved Jobs" active={activeTab === 'saved'} onClick={() => { setActiveTab('saved'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Bell} label="Notifications" active={activeTab === 'notifications'} onClick={() => { setActiveTab('notifications'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Settings} label="Profile Settings" active={activeTab === 'profile'} onClick={() => { setActiveTab('profile'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={User} label="Profile" active={activeTab === 'view_profile'} onClick={() => { setActiveTab('view_profile'); setIsSidebarOpen(false); }} />
         </div>
         
         <div className="mt-auto">
@@ -640,28 +651,25 @@ const JobSeekerDashboard = () => {
               <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2 leading-tight">Complete your profile to stand out to employers.</p>
             )}
           </div>
-
+          
+          <button onClick={logout} className="flex items-center gap-3 text-red-600 dark:text-red-400 font-semibold px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg w-full transition-colors mt-2">
+            <LogOut className="w-5 h-5" />
+            Logout
+          </button>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
-        {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden mb-6">
-          <select 
-            value={activeTab} 
-            onChange={(e) => setActiveTab(e.target.value)}
-            className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-blue-500 transition-colors appearance-none"
-            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
+        {/* Mobile Navigation Header */}
+        <div className="lg:hidden mb-6 flex items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
           >
-            <option value="home">Home</option>
-            <option value="applied">Applied Jobs</option>
-            <option value="applications_tracker">Track Applications</option>
-            <option value="saved">Saved Jobs</option>
-            <option value="notifications">Notifications</option>
-            <option value="profile">Profile Settings</option>
-            <option value="view_profile">View Profile</option>
-          </select>
+             <Menu className="w-6 h-6" />
+          </button>
+          <span className="font-bold text-lg text-slate-800 dark:text-white capitalize">{activeTab.replace('_', ' ')}</span>
         </div>
 
         {loading ? (

@@ -57,7 +57,7 @@ function App() {
       
       // Call our new backend endpoint
       // Ensure this URL is correct for your production environment eventually
-      const response = await fetch('http://localhost:8081/api/app-version');
+      const response = await fetch('https://shivanitech.in/api/app-version');
       const data = await response.json();
       
       // Basic version check (e.g. if current is 1.0.0 and latest is 1.0.1)

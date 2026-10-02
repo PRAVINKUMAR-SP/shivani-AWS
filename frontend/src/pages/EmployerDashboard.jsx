@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Plus, Edit, Trash2, Download, Star, Mail, Phone, MapPin, IndianRupee } from 'lucide-react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Plus, Edit, Trash2, Download, Star, Mail, Phone, MapPin, IndianRupee, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import CustomDropdown from '../components/CustomDropdown';
@@ -41,6 +41,7 @@ const EmployerDashboard = () => {
   const [stats, setStats] = useState(() => JSON.parse(sessionStorage.getItem('emp_stats')) || { activeListings: 0, totalApplications: 0 });
   const [filterJob, setFilterJob] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // New Job Form State
   const [showForm, setShowForm] = useState(false);
@@ -212,14 +213,24 @@ const EmployerDashboard = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex lg:sticky lg:top-[80px] lg:h-[calc(100vh-80px)] overflow-y-auto transition-colors duration-300 z-10">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
+            <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
+            <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+        </div>
         <div className="space-y-1 mb-8">
-          <SidebarItem icon={Home} label="Dashboard" active={activeTab === 'Dashboard'} onClick={() => { setActiveTab('Dashboard'); setShowForm(false); }} />
-          <SidebarItem icon={Plus} label="Post a Job" active={activeTab === 'Post a Job'} onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); }} />
-          <SidebarItem icon={Briefcase} label="My Listings" active={activeTab === 'My Listings'} onClick={() => setActiveTab('My Listings')} />
-          <SidebarItem icon={Users} label="Applicants" active={activeTab === 'Applicants'} onClick={() => setActiveTab('Applicants')} />
-          <SidebarItem icon={Settings} label="Profile Settings" active={activeTab === 'Profile Settings'} onClick={() => setActiveTab('Profile Settings')} />
+          <SidebarItem icon={Home} label="Dashboard" active={activeTab === 'Dashboard'} onClick={() => { setActiveTab('Dashboard'); setShowForm(false); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Plus} label="Post a Job" active={activeTab === 'Post a Job'} onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Briefcase} label="My Listings" active={activeTab === 'My Listings'} onClick={() => { setActiveTab('My Listings'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Users} label="Applicants" active={activeTab === 'Applicants'} onClick={() => { setActiveTab('Applicants'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Settings} label="Profile Settings" active={activeTab === 'Profile Settings'} onClick={() => { setActiveTab('Profile Settings'); setIsSidebarOpen(false); }} />
         </div>
         
         <div className="mt-auto">
@@ -232,32 +243,15 @@ const EmployerDashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
-        {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden mb-6">
-          <select 
-            value={activeTab} 
-            onChange={(e) => {
-              const tab = e.target.value;
-              if (tab === 'Dashboard') {
-                setShowForm(false);
-                setActiveTab('Dashboard');
-              } else if (tab === 'Post a Job') {
-                setEditingJobId(null); 
-                setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); 
-                setActiveTab('Post a Job');
-              } else {
-                setActiveTab(tab);
-              }
-            }}
-            className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-blue-500 transition-colors appearance-none"
-            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
+        {/* Mobile Navigation Header */}
+        <div className="lg:hidden mb-6 flex items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
           >
-            <option value="Dashboard">Dashboard</option>
-            <option value="Post a Job">Post Job</option>
-            <option value="My Listings">Listings</option>
-            <option value="Applicants">Applicants</option>
-            <option value="Profile Settings">Settings</option>
-          </select>
+             <Menu className="w-6 h-6" />
+          </button>
+          <span className="font-bold text-lg text-slate-800 dark:text-white">{activeTab}</span>
         </div>
 
         {isLoading ? (

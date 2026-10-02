@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity, Mail } from 'lucide-react';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity, Mail, Menu, X } from 'lucide-react';
 import CustomDropdown from '../components/CustomDropdown';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -57,6 +57,7 @@ const AdminDashboard = () => {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [userRoleFilter, setUserRoleFilter] = useState('All Roles');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [timeRange, setTimeRange] = useState('Daily');
   const [chartData, setChartData] = useState(() => JSON.parse(sessionStorage.getItem('admin_chart')) || {
     'Daily': [],
@@ -385,44 +386,49 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 hidden lg:flex lg:sticky lg:top-[80px] lg:h-[calc(100vh-80px)] overflow-y-auto transition-colors duration-300 z-10">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
+            <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
+            <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+        </div>
         <div className="space-y-1 mb-8">
-          <SidebarItem icon={Home} label="Admin Overview" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
-          <SidebarItem icon={Users} label="Manage Users" active={activeTab === 'users'} onClick={() => setActiveTab('users')} />
-          <SidebarItem icon={Briefcase} label="Employers" active={activeTab === 'employers'} onClick={() => setActiveTab('employers')} />
-          <SidebarItem icon={Briefcase} label="Platform Jobs" active={activeTab === 'jobs'} onClick={() => setActiveTab('jobs')} />
-          <SidebarItem icon={FileText} label="Applicants" active={activeTab === 'applicants'} onClick={() => setActiveTab('applicants')} />
-          <SidebarItem icon={CheckCircle} label="Test Results" active={activeTab === 'test_results'} onClick={() => setActiveTab('test_results')} />
-          <SidebarItem icon={MessageSquare} label="Messages" active={activeTab === 'messages'} onClick={() => setActiveTab('messages')} />
-          <SidebarItem icon={Mail} label="Mail Inbox" active={activeTab === 'mail'} onClick={() => setActiveTab('mail')} />
-          <SidebarItem icon={Settings} label="System Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+          <SidebarItem icon={Home} label="Admin Overview" active={activeTab === 'overview'} onClick={() => { setActiveTab('overview'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Users} label="Manage Users" active={activeTab === 'users'} onClick={() => { setActiveTab('users'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Briefcase} label="Employers" active={activeTab === 'employers'} onClick={() => { setActiveTab('employers'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Briefcase} label="Platform Jobs" active={activeTab === 'jobs'} onClick={() => { setActiveTab('jobs'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={FileText} label="Applicants" active={activeTab === 'applicants'} onClick={() => { setActiveTab('applicants'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={CheckCircle} label="Test Results" active={activeTab === 'test_results'} onClick={() => { setActiveTab('test_results'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={MessageSquare} label="Messages" active={activeTab === 'messages'} onClick={() => { setActiveTab('messages'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Mail} label="Mail Inbox" active={activeTab === 'mail'} onClick={() => { setActiveTab('mail'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Settings} label="System Settings" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }} />
         </div>
         
         <div className="mt-auto">
+          <button onClick={logout} className="flex items-center gap-3 text-red-600 dark:text-red-400 font-semibold px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg w-full transition-colors">
+            <LogOut className="w-5 h-5" />
+            Logout
+          </button>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
-        {/* Mobile Navigation Tabs */}
-        <div className="lg:hidden mb-6">
-          <select 
-            value={activeTab} 
-            onChange={(e) => setActiveTab(e.target.value)}
-            className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 transition-colors appearance-none"
-            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
+        {/* Mobile Navigation Header */}
+        <div className="lg:hidden mb-6 flex items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
           >
-            <option value="overview">Overview</option>
-            <option value="users">Users Management</option>
-            <option value="employers">Employers Management</option>
-            <option value="jobs">Jobs Management</option>
-            <option value="applicants">Applicants</option>
-            <option value="test_results">Skill Test Results</option>
-            <option value="messages">Contact Messages</option>
-            <option value="mail">Mail Inbox</option>
-            <option value="settings">Settings</option>
-          </select>
+             <Menu className="w-6 h-6" />
+          </button>
+          <span className="font-bold text-lg text-slate-800 dark:text-white capitalize">{activeTab.replace('_', ' ')}</span>
         </div>
 
         {isLoading ? (
