@@ -6,6 +6,7 @@ import com.shivanitech.jobportal.model.User;
 import com.shivanitech.jobportal.repository.ApplicationRepository;
 import com.shivanitech.jobportal.repository.JobRepository;
 import com.shivanitech.jobportal.repository.UserRepository;
+import com.shivanitech.jobportal.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public class ApplicationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/{jobId}")
     public ResponseEntity<?> applyForJob(@PathVariable Long jobId, Principal principal) {
@@ -48,6 +52,16 @@ public class ApplicationController {
         application.setSeeker(seeker);
         
         applicationRepository.save(application);
+        
+        try {
+            emailService.sendJobAppliedEmail(seeker.getEmail(), job.getTitle());
+            if (job.getEmployer() != null && job.getEmployer().getEmail() != null) {
+                emailService.sendEmployerNewApplicationEmail(job.getEmployer().getEmail(), seeker.getName(), job.getTitle());
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to send application emails: " + e.getMessage());
+        }
+
         return ResponseEntity.ok("Successfully applied!");
     }
 
@@ -92,6 +106,13 @@ public class ApplicationController {
 
         application.setStatus(status);
         applicationRepository.save(application);
+
+        try {
+            emailService.sendApplicationStatusUpdateEmail(application.getSeeker().getEmail(), application.getJob().getTitle(), status);
+        } catch (Exception e) {
+            System.err.println("Failed to send status update email: " + e.getMessage());
+        }
+
         return ResponseEntity.ok("Status updated successfully");
     }
 }

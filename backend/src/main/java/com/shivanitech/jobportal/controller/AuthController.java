@@ -9,6 +9,7 @@ import com.shivanitech.jobportal.repository.UserRepository;
 import com.shivanitech.jobportal.security.CustomUserDetails;
 import com.shivanitech.jobportal.security.JwtUtils;
 import com.shivanitech.jobportal.service.SystemStateService;
+import com.shivanitech.jobportal.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,9 @@ public class AuthController {
 
     @Autowired
     SystemStateService systemStateService;
+
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -118,6 +122,12 @@ public class AuthController {
         }
 
         userRepository.save(user);
+        
+        try {
+            emailService.sendRegistrationSuccessEmail(user.getEmail(), user.getName());
+        } catch (Exception e) {
+            System.err.println("Failed to send welcome email: " + e.getMessage());
+        }
 
         return ResponseEntity.ok("User registered successfully!");
     }
@@ -188,6 +198,12 @@ public class AuthController {
                     }
                     userRepository.save(user);
                     isNewUser = true;
+
+                    try {
+                        emailService.sendRegistrationSuccessEmail(user.getEmail(), user.getName());
+                    } catch (Exception e) {
+                        System.err.println("Failed to send welcome email for Google user: " + e.getMessage());
+                    }
                 }
 
                 if (user.getRole() == Role.EMPLOYER && Boolean.FALSE.equals(user.getIsApproved())) {

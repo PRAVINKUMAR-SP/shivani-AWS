@@ -8,6 +8,7 @@ import com.shivanitech.jobportal.repository.SavedJobRepository;
 import com.shivanitech.jobportal.repository.InviteRepository;
 import com.shivanitech.jobportal.model.SavedJob;
 import com.shivanitech.jobportal.model.Invite;
+import com.shivanitech.jobportal.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,6 +55,9 @@ public class AdminController {
 
     @Autowired
     private InviteRepository inviteRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/stats")
     public ResponseEntity<?> getStats(Principal principal) {
@@ -258,6 +262,13 @@ public class AdminController {
             User user = userOpt.get();
             user.setIsApproved(isApproved);
             userRepository.save(user);
+            
+            try {
+                emailService.sendEmployerApprovalEmail(user.getEmail(), isApproved);
+            } catch (Exception e) {
+                System.err.println("Failed to send employer approval email: " + e.getMessage());
+            }
+
             return ResponseEntity.ok(user);
         }
         return ResponseEntity.notFound().build();

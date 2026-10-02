@@ -9,6 +9,7 @@ import com.shivanitech.jobportal.repository.SavedJobRepository;
 import com.shivanitech.jobportal.repository.InviteRepository;
 import com.shivanitech.jobportal.model.SavedJob;
 import com.shivanitech.jobportal.model.Invite;
+import com.shivanitech.jobportal.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,9 @@ public class JobController {
 
     @Autowired
     private InviteRepository inviteRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     public List<Job> getAllJobs() {
@@ -79,6 +83,13 @@ public class JobController {
         
         job.setEmployer(employer);
         Job savedJob = jobRepository.save(job);
+        
+        try {
+            emailService.sendJobPostedEmail(employer.getEmail(), savedJob.getTitle());
+        } catch (Exception e) {
+            System.err.println("Failed to send job posted email: " + e.getMessage());
+        }
+
         return ResponseEntity.ok(savedJob);
     }
 

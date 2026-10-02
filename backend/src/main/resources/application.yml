@@ -36,3 +36,15 @@ aws:
   accessKeyId: ${AWS_ACCESS_KEY_ID:}
   secretKey: ${AWS_SECRET_ACCESS_KEY:}
   region: ${AWS_REGION:ap-south-1}
+
+  mail:
+    host: e3ex2xyn2gzd.hkph.mail-manager-smtp.amazonaws.com
+    port: 587
+    username: inp-my6wj4wgmab6xbwpwuwhqerj
+    password: "Pravin007@"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

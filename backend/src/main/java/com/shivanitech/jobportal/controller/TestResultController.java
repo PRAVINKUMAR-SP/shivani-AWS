@@ -4,6 +4,7 @@ import com.shivanitech.jobportal.model.TestResult;
 import com.shivanitech.jobportal.model.User;
 import com.shivanitech.jobportal.repository.TestResultRepository;
 import com.shivanitech.jobportal.repository.UserRepository;
+import com.shivanitech.jobportal.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,9 @@ public class TestResultController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/submit")
     public ResponseEntity<?> submitResult(@RequestBody Map<String, Integer> payload, Principal principal) {
         if (principal == null) return ResponseEntity.status(401).body("Unauthorized");
@@ -34,6 +38,13 @@ public class TestResultController {
         result.setScore(payload.get("score"));
         result.setTotalQuestions(payload.get("totalQuestions"));
         testResultRepository.save(result);
+        
+        try {
+            String scoreText = payload.get("score") + "/" + payload.get("totalQuestions");
+            emailService.sendTestCompletedEmail(userOpt.get().getEmail(), "Technical Assessment", scoreText);
+        } catch (Exception e) {
+            System.err.println("Failed to send test completed email: " + e.getMessage());
+        }
         
         return ResponseEntity.ok("Result saved successfully");
     }
