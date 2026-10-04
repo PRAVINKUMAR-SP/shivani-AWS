@@ -802,7 +802,7 @@ const JobSeekerDashboard = () => {
               </div>
             )}
           </>
-        )
+        )}
 {activeTab === 'home' && (
               <>
                 {/* Stats Bar */}
@@ -929,8 +929,7 @@ const JobSeekerDashboard = () => {
                 )}
               </>
             )}
-}
-      </main>
+        </main>
     </div>
   );
 };
