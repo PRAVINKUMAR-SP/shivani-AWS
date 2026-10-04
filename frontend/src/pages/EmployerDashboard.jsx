@@ -230,15 +230,10 @@ const EmployerDashboard = () => {
           <SidebarItem icon={Plus} label="Post a Job" active={activeTab === 'Post a Job'} onClick={() => { setEditingJobId(null); setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' }); setActiveTab('Post a Job'); setIsSidebarOpen(false); }} />
           <SidebarItem icon={Briefcase} label="My Listings" active={activeTab === 'My Listings'} onClick={() => { setActiveTab('My Listings'); setIsSidebarOpen(false); }} />
           <SidebarItem icon={Users} label="Applicants" active={activeTab === 'Applicants'} onClick={() => { setActiveTab('Applicants'); setIsSidebarOpen(false); }} />
-          <SidebarItem icon={Settings} label="Profile Settings" active={activeTab === 'Profile Settings'} onClick={() => { setActiveTab('Profile Settings'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Settings} label="Profile" active={activeTab === 'Profile'} onClick={() => { setActiveTab('Profile'); setIsSidebarOpen(false); }} />
         </div>
         
-        <div className="mt-auto">
-          <button onClick={logout} className="flex items-center gap-3 text-red-600 dark:text-red-400 font-semibold px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg w-full transition-colors">
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
-        </div>
+
       </aside>
 
       {/* Main Content */}
@@ -581,9 +576,9 @@ const EmployerDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'Profile Settings' && (
+        {activeTab === 'Profile' && (
           <div className="card p-8 max-w-4xl">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Profile Settings</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Profile</h2>
             {profileMessage && (
               <div className="mb-6 bg-green-50 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
                 <CheckCircle className="w-5 h-5" />
@@ -603,7 +598,7 @@ const EmployerDashboard = () => {
               
               <div className="flex flex-col md:flex-row gap-8 items-start">
                 <div className="w-full md:w-1/3 flex flex-col items-center">
-                  <div className="w-32 h-32 rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-300 relative group cursor-pointer">
+                  <div className="w-32 h-32 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-300 relative group cursor-pointer">
                     {profile.profilePicUrl ? (
                       <img src={profile.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Company Logo" className="w-full h-full object-cover" />
                     ) : (
@@ -637,15 +632,15 @@ const EmployerDashboard = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Company Name</label>
-                      <input type="text" value={profile.companyName || ''} onChange={e => setProfile({...profile, companyName: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                      <input type="text" value={profile.companyName || ''} onChange={e => setProfile({...profile, companyName: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm hover:border-slate-300" required />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Employer Name</label>
-                      <input type="text" value={profile.name || ''} onChange={e => setProfile({...profile, name: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                      <input type="text" value={profile.name || ''} onChange={e => setProfile({...profile, name: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm hover:border-slate-300" required />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
-                      <input type="email" value={profile.email || ''} readOnly className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 outline-none cursor-not-allowed" title="Email cannot be changed" />
+                      <input type="email" value={profile.email || ''} readOnly className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 outline-none cursor-not-allowed shadow-sm" title="Email cannot be changed" />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
@@ -653,7 +648,7 @@ const EmployerDashboard = () => {
                     </div>
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Location</label>
-                      <input type="text" value={profile.location || ''} onChange={e => setProfile({...profile, location: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. New York, USA" />
+                      <input type="text" value={profile.location || ''} onChange={e => setProfile({...profile, location: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm hover:border-slate-300" placeholder="e.g. New York, USA" />
                     </div>
                   </div>
                 </div>
@@ -661,7 +656,7 @@ const EmployerDashboard = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Company Description</label>
-                <textarea value={profile.companyDescription || ''} onChange={e => setProfile({...profile, companyDescription: e.target.value})} rows="4" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none resize-none"></textarea>
+                <textarea value={profile.companyDescription || ''} onChange={e => setProfile({...profile, companyDescription: e.target.value})} rows="4" className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm hover:border-slate-300 resize-none"></textarea>
               </div>
               <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors">
                 Save Changes

@@ -40,7 +40,7 @@ const PhoneInputWithCountry = ({ value = '', onChange, className = '', placehold
   };
 
   return (
-    <div className={`flex bg-slate-50 border border-slate-200 rounded-xl focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden ${className}`}>
+    <div className={`flex bg-slate-50 border border-slate-200 rounded-xl focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all shadow-sm hover:border-slate-300 overflow-hidden ${className}`}>
       <div className="flex items-center px-3 border-r border-slate-200 bg-slate-100">
         <CountryCodeDropdown value={countryCode} onChange={handleCodeChange} className="text-sm bg-transparent" />
       </div>
@@ -49,7 +49,7 @@ const PhoneInputWithCountry = ({ value = '', onChange, className = '', placehold
         placeholder={placeholder}
         value={phoneNumber} 
         onChange={handlePhoneChange} 
-        className="w-full px-4 py-3 bg-transparent border-none focus:outline-none" 
+        className="w-full px-4 py-3.5 bg-transparent border-none focus:outline-none" 
       />
     </div>
   );

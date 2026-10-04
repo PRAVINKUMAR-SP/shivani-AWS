@@ -22,12 +22,12 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   </button>
 );
 
-const JobCard = ({ id, title, company, location, salary, type, tags, time, applied, appStatus, saved, onApply, onSave }) => (
+const JobCard = ({ id, title, company, logo, location, salary, type, tags, time, applied, appStatus, saved, onApply, onSave }) => (
   <div className="card p-6 flex flex-col">
     <div className="flex justify-between items-start mb-5">
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-xl uppercase">
-          {getInitials(company || 'C')}
+        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl uppercase overflow-hidden border border-slate-100 shadow-sm">
+          {logo ? <img src={logo.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Logo" className="w-full h-full object-cover" /> : getInitials(company || 'C')}
         </div>
         <div>
           <h3 className="font-bold text-slate-900 text-lg line-clamp-1">{title}</h3>
@@ -141,14 +141,46 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
         </div>
       )}
       <form onSubmit={handleSave} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Full Name</label>
-            <input type="text" value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" required />
+        <div className="flex flex-col md:flex-row gap-8 items-start mb-6">
+          <div className="w-full md:w-1/3 flex flex-col items-center">
+            <div className="w-32 h-32 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-300 relative group cursor-pointer">
+              {profile.profilePicUrl ? (
+                <img src={profile.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="text-slate-400 flex flex-col items-center">
+                  <User className="w-8 h-8 mb-2" />
+                  <span className="text-xs font-semibold">Upload Photo</span>
+                </div>
+              )}
+              <input 
+                type="file" 
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+                  const formData = new FormData();
+                  formData.append('file', file);
+                  try {
+                    const res = await axios.post('/api/upload/profile-pic', formData);
+                    setProfile({...profile, profilePicUrl: res.data.url});
+                  } catch (err) {
+                    toast.error('Failed to upload picture');
+                  }
+                }}
+              />
+            </div>
+            <p className="text-xs text-slate-500 mt-3 text-center">JPG, PNG or GIF (Max 5MB)</p>
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-            <PhoneInputWithCountry value={profile.phoneNo || ''} onChange={val => setProfile({...profile, phoneNo: val})} placeholder="+91 9876543210" />
+          <div className="w-full md:w-2/3 grid grid-cols-1 gap-6">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Full Name</label>
+              <input type="text" value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" required />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
+              <PhoneInputWithCountry value={profile.phoneNo || ''} onChange={val => setProfile({...profile, phoneNo: val})} placeholder="+91 9876543210" />
+            </div>
           </div>
         </div>
         <div>
@@ -283,8 +315,8 @@ const ApplicationsTrackerSection = ({ applications }) => (
         <div key={app.id} className="card p-6 flex flex-col group cursor-pointer hover:border-blue-200 transition-all">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-xl uppercase">
-                {getInitials(app.job?.company || 'C')}
+              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl uppercase overflow-hidden border border-slate-100 shadow-sm">
+                {app.job?.employer?.profilePicUrl ? <img src={app.job.employer.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Logo" className="w-full h-full object-cover" /> : getInitials(app.job?.company || 'C')}
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 text-lg">{app.job?.title}</h3>
@@ -631,8 +663,7 @@ const JobSeekerDashboard = () => {
           <SidebarItem icon={FileText} label="Track Applications" active={activeTab === 'applications_tracker'} onClick={() => { setActiveTab('applications_tracker'); setIsSidebarOpen(false); }} />
           <SidebarItem icon={BookmarkIcon} label="Saved Jobs" active={activeTab === 'saved'} onClick={() => { setActiveTab('saved'); setIsSidebarOpen(false); }} />
           <SidebarItem icon={Bell} label="Notifications" active={activeTab === 'notifications'} onClick={() => { setActiveTab('notifications'); setIsSidebarOpen(false); }} />
-          <SidebarItem icon={Settings} label="Profile Settings" active={activeTab === 'profile'} onClick={() => { setActiveTab('profile'); setIsSidebarOpen(false); }} />
-          <SidebarItem icon={User} label="Profile" active={activeTab === 'view_profile'} onClick={() => { setActiveTab('view_profile'); setIsSidebarOpen(false); }} />
+                    <SidebarItem icon={User} label="Profile" active={activeTab === 'view_profile'} onClick={() => { setActiveTab('view_profile'); setIsSidebarOpen(false); }} />
         </div>
         
         <div className="mt-auto">
@@ -692,7 +723,87 @@ const JobSeekerDashboard = () => {
           <NotificationsSection notifications={notifications} />
         ) : (
           <>
-            {activeTab === 'home' && (
+            
+
+            {/* Recommended / Search Jobs */}
+            <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+                  {activeTab === 'applied' ? 'Applied Jobs' : 
+                   activeTab === 'saved' ? 'Saved Jobs' : 
+                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Search Results' : 'Search Jobs'}
+                </h1>
+                <p className="text-slate-500 mt-1">
+                  {activeTab === 'applied' ? 'Jobs you have submitted applications for' : 
+                   activeTab === 'saved' ? 'Jobs you have bookmarked for later' : 
+                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Jobs matching your search criteria' : 'Based on your profile and preferences'}
+                </p>
+              </div>
+              <button className="text-blue-600 font-semibold hover:text-blue-700 text-sm">
+                View all
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {jobs.filter(job => 
+                  ((activeTab === 'home' && !appliedJobs.includes(job.id)) || 
+                  (activeTab === 'applied' && appliedJobs.includes(job.id)) ||
+                  (activeTab === 'saved' && savedJobs.includes(job.id))) &&
+                  (job.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                   job.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                   job.description?.toLowerCase().includes(searchQuery.toLowerCase())) &&
+                  (job.location?.toLowerCase().includes(locationQuery.toLowerCase())) &&
+                  (filterType === 'All' || job.type === filterType) &&
+                  (filterSalary === 'All' || (job.salary && parseInt(job.salary.replace(/[^0-9]/g, '')) >= parseInt(filterSalary)))
+                ).length === 0 && (
+                  <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm mt-4">
+                    <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
+                      <Briefcase className="w-10 h-10 text-blue-500" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No jobs found</h3>
+                    <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-6 text-sm">
+                      {activeTab === 'applied' ? "You haven't applied to any jobs yet. Start exploring and kickstart your career!" 
+                      : activeTab === 'saved' ? "You haven't saved any jobs yet. Bookmark jobs you're interested in to view them later."
+                      : "We couldn't find any jobs matching your search criteria. Try adjusting your filters or check back later!"}
+                    </p>
+                    {activeTab !== 'home' && (
+                      <button onClick={() => setActiveTab('home')} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 dark:shadow-none">
+                        Explore Jobs
+                      </button>
+                    )}
+                  </div>
+                )}
+                {jobs
+                  .filter(job => 
+                    ((activeTab === 'home' && !appliedJobs.includes(job.id)) || 
+                    (activeTab === 'applied' && appliedJobs.includes(job.id)) ||
+                    (activeTab === 'saved' && savedJobs.includes(job.id))) &&
+                    (job.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                     job.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                     job.description?.toLowerCase().includes(searchQuery.toLowerCase())) &&
+                    (job.location?.toLowerCase().includes(locationQuery.toLowerCase())) &&
+                    (filterType === 'All' || job.type === filterType) &&
+                    (filterSalary === 'All' || (job.salary && parseInt(job.salary.replace(/[^0-9]/g, '')) >= parseInt(filterSalary)))
+                  )
+                  .map((job) => (
+                    <JobCard logo={job.employer?.profilePicUrl} 
+                      key={job.id} 
+                      {...job} 
+                      applied={appliedJobs.includes(job.id)}
+                      appStatus={applicationStatuses[job.id]}
+                      saved={savedJobs.includes(job.id)}
+                      onApply={handleApply}
+                      onSave={handleSave}
+                    />
+                  ))}
+              </div>
+            )}
+          </>
+        )
+{activeTab === 'home' && (
               <>
                 {/* Stats Bar */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-8">
@@ -818,85 +929,7 @@ const JobSeekerDashboard = () => {
                 )}
               </>
             )}
-
-            {/* Recommended / Search Jobs */}
-            <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-                  {activeTab === 'applied' ? 'Applied Jobs' : 
-                   activeTab === 'saved' ? 'Saved Jobs' : 
-                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Search Results' : 'Search Jobs'}
-                </h1>
-                <p className="text-slate-500 mt-1">
-                  {activeTab === 'applied' ? 'Jobs you have submitted applications for' : 
-                   activeTab === 'saved' ? 'Jobs you have bookmarked for later' : 
-                   (searchQuery || locationQuery || filterType !== 'All' || filterSalary !== 'All') ? 'Jobs matching your search criteria' : 'Based on your profile and preferences'}
-                </p>
-              </div>
-              <button className="text-blue-600 font-semibold hover:text-blue-700 text-sm">
-                View all
-              </button>
-            </div>
-
-            {loading ? (
-              <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {jobs.filter(job => 
-                  ((activeTab === 'home' && !appliedJobs.includes(job.id)) || 
-                  (activeTab === 'applied' && appliedJobs.includes(job.id)) ||
-                  (activeTab === 'saved' && savedJobs.includes(job.id))) &&
-                  (job.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                   job.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                   job.description?.toLowerCase().includes(searchQuery.toLowerCase())) &&
-                  (job.location?.toLowerCase().includes(locationQuery.toLowerCase())) &&
-                  (filterType === 'All' || job.type === filterType) &&
-                  (filterSalary === 'All' || (job.salary && parseInt(job.salary.replace(/[^0-9]/g, '')) >= parseInt(filterSalary)))
-                ).length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm mt-4">
-                    <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
-                      <Briefcase className="w-10 h-10 text-blue-500" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No jobs found</h3>
-                    <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-6 text-sm">
-                      {activeTab === 'applied' ? "You haven't applied to any jobs yet. Start exploring and kickstart your career!" 
-                      : activeTab === 'saved' ? "You haven't saved any jobs yet. Bookmark jobs you're interested in to view them later."
-                      : "We couldn't find any jobs matching your search criteria. Try adjusting your filters or check back later!"}
-                    </p>
-                    {activeTab !== 'home' && (
-                      <button onClick={() => setActiveTab('home')} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 dark:shadow-none">
-                        Explore Jobs
-                      </button>
-                    )}
-                  </div>
-                )}
-                {jobs
-                  .filter(job => 
-                    ((activeTab === 'home' && !appliedJobs.includes(job.id)) || 
-                    (activeTab === 'applied' && appliedJobs.includes(job.id)) ||
-                    (activeTab === 'saved' && savedJobs.includes(job.id))) &&
-                    (job.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                     job.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                     job.description?.toLowerCase().includes(searchQuery.toLowerCase())) &&
-                    (job.location?.toLowerCase().includes(locationQuery.toLowerCase())) &&
-                    (filterType === 'All' || job.type === filterType) &&
-                    (filterSalary === 'All' || (job.salary && parseInt(job.salary.replace(/[^0-9]/g, '')) >= parseInt(filterSalary)))
-                  )
-                  .map((job) => (
-                    <JobCard 
-                      key={job.id} 
-                      {...job} 
-                      applied={appliedJobs.includes(job.id)}
-                      appStatus={applicationStatuses[job.id]}
-                      saved={savedJobs.includes(job.id)}
-                      onApply={handleApply}
-                      onSave={handleSave}
-                    />
-                  ))}
-              </div>
-            )}
-          </>
-        )}
+}
       </main>
     </div>
   );

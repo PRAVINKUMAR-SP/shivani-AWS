@@ -129,8 +129,55 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{id}")
+    @org.springframework.transaction.annotation.Transactional
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        if (userRepository.existsById(id)) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            
+            // If it's an employer, delete their jobs and related entities first
+            List<Job> employerJobs = jobRepository.findByEmployerId(id);
+            if(employerJobs != null && !employerJobs.isEmpty()) {
+                for (Job job : employerJobs) {
+                    List<Application> apps = applicationRepository.findByJobId(job.getId());
+                    if(apps != null && !apps.isEmpty()) {
+                        applicationRepository.deleteAll(apps);
+                    }
+                    List<SavedJob> saved = savedJobRepository.findByJobId(job.getId());
+                    if(saved != null && !saved.isEmpty()) {
+                        savedJobRepository.deleteAll(saved);
+                    }
+                    List<Invite> jobInvites = inviteRepository.findByJobId(job.getId());
+                    if(jobInvites != null && !jobInvites.isEmpty()) {
+                        inviteRepository.deleteAll(jobInvites);
+                    }
+                    jobRepository.delete(job);
+                }
+            }
+            
+            // Delete employer invites
+            List<Invite> empInvites = inviteRepository.findByEmployer(user);
+            if(empInvites != null && !empInvites.isEmpty()) {
+                inviteRepository.deleteAll(empInvites);
+            }
+
+            // Delete seeker invites
+            List<Invite> seekerInvites = inviteRepository.findBySeeker(user);
+            if(seekerInvites != null && !seekerInvites.isEmpty()) {
+                inviteRepository.deleteAll(seekerInvites);
+            }
+
+            // If it's a job seeker, delete their applications and saved jobs
+            List<Application> userApps = applicationRepository.findBySeekerId(id);
+            if(userApps != null && !userApps.isEmpty()) {
+                applicationRepository.deleteAll(userApps);
+            }
+
+            List<SavedJob> userSaved = savedJobRepository.findBySeeker(user);
+            if(userSaved != null && !userSaved.isEmpty()) {
+                savedJobRepository.deleteAll(userSaved);
+            }
+            
             userRepository.deleteById(id);
             return ResponseEntity.ok("User deleted");
         }
@@ -245,6 +292,7 @@ public class AdminController {
             map.put("phoneNo", emp.getPhoneNo());
             map.put("email", emp.getEmail());
             map.put("isApproved", emp.getIsApproved());
+            map.put("status", emp.getStatus());
             
             List<Job> employerJobs = jobRepository.findByEmployerId(emp.getId());
             map.put("totalJobs", employerJobs.size());
@@ -263,11 +311,16 @@ public class AdminController {
     }
 
     @PutMapping("/employers/{id}/status")
-    public ResponseEntity<?> updateEmployerStatus(@PathVariable Long id, @RequestParam boolean isApproved) {
+    public ResponseEntity<?> updateEmployerStatus(@PathVariable Long id, @RequestParam boolean isApproved, @RequestParam(required = false) String status) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent() && userOpt.get().getRole() == Role.EMPLOYER) {
             User user = userOpt.get();
             user.setIsApproved(isApproved);
+            if (status != null) {
+                user.setStatus(status);
+            } else {
+                user.setStatus(isApproved ? "APPROVED" : "PENDING");
+            }
             userRepository.save(user);
             
             try {

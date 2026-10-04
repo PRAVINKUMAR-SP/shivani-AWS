@@ -17,6 +17,7 @@ public class TestResult {
     
     private int score;
     private int totalQuestions;
+    private String testTitle;
     
     private LocalDateTime completedAt = LocalDateTime.now();
     
@@ -33,6 +34,9 @@ public class TestResult {
     
     public int getTotalQuestions() { return totalQuestions; }
     public void setTotalQuestions(int totalQuestions) { this.totalQuestions = totalQuestions; }
+    
+    public String getTestTitle() { return testTitle; }
+    public void setTestTitle(String testTitle) { this.testTitle = testTitle; }
     
     public LocalDateTime getCompletedAt() { return completedAt; }
     public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }

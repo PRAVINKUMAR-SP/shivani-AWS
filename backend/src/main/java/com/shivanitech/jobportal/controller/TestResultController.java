@@ -27,7 +27,7 @@ public class TestResultController {
     private EmailService emailService;
 
     @PostMapping("/submit")
-    public ResponseEntity<?> submitResult(@RequestBody Map<String, Integer> payload, Principal principal) {
+    public ResponseEntity<?> submitResult(@RequestBody Map<String, Object> payload, Principal principal) {
         if (principal == null) return ResponseEntity.status(401).body("Unauthorized");
         
         Optional<User> userOpt = userRepository.findByEmail(principal.getName());
@@ -35,13 +35,15 @@ public class TestResultController {
         
         TestResult result = new TestResult();
         result.setUser(userOpt.get());
-        result.setScore(payload.get("score"));
-        result.setTotalQuestions(payload.get("totalQuestions"));
+        result.setScore(Integer.parseInt(payload.get("score").toString()));
+        result.setTotalQuestions(Integer.parseInt(payload.get("totalQuestions").toString()));
+        if(payload.containsKey("testTitle")) result.setTestTitle(payload.get("testTitle").toString());
         testResultRepository.save(result);
         
         try {
             String scoreText = payload.get("score") + "/" + payload.get("totalQuestions");
-            emailService.sendTestCompletedEmail(userOpt.get().getEmail(), "Technical Assessment", scoreText);
+            String title = payload.containsKey("testTitle") ? payload.get("testTitle").toString() : "Technical Assessment";
+            emailService.sendTestCompletedEmail(userOpt.get().getEmail(), title, scoreText);
         } catch (Exception e) {
             System.err.println("Failed to send test completed email: " + e.getMessage());
         }
@@ -59,6 +61,7 @@ public class TestResultController {
             map.put("id", r.getId());
             map.put("score", r.getScore());
             map.put("totalQuestions", r.getTotalQuestions());
+            map.put("testTitle", r.getTestTitle());
             map.put("completedAt", r.getCompletedAt());
             if (r.getUser() != null) {
                 map.put("name", r.getUser().getName());

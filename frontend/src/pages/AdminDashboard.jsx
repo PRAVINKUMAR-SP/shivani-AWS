@@ -64,6 +64,7 @@ const AdminDashboard = () => {
     'Monthly': [],
     'Yearly': []
   });
+  const [jobTitleFilter, setJobTitleFilter] = useState('');
   const [isLoading, setIsLoading] = useState(() => !sessionStorage.getItem('admin_stats'));
 
   useEffect(() => {
@@ -346,18 +347,22 @@ const AdminDashboard = () => {
       }
     }
 
-    const headers = ['NO', 'Name', 'Email', 'Phone', 'Role', 'Test Result', 'Resume URL'];
+    const headers = ['NO', 'Name', 'Email', 'Phone', 'Role', 'Test Title', 'Test Result', 'Resume URL'];
     const csvRows = [headers.join(',')];
 
-    const usersToExport = selectedUsers.length > 0 ? usersList.filter(u => selectedUsers.includes(u.id)) : usersList;
+    const usersToExport = selectedUsers.length > 0 
+      ? usersList.filter(u => selectedUsers.includes(u.id)) 
+      : usersList.filter(u => userRoleFilter === 'All Roles' || u.role === userRoleFilter);
 
     usersToExport.forEach((u, index) => {
       // Find the most recent test result or all of them. Let's find the best one or just the first one.
       const userTests = currentTestResults.filter(tr => tr.email === u.email);
       let testScoreStr = 'N/A';
+        let testTitleStr = 'N/A';
       if (userTests.length > 0) {
         // Just show the most recent or highest? Let's just show the first one found (most recent usually)
         testScoreStr = `${userTests[0].score}/${userTests[0].totalQuestions}`;
+          testTitleStr = userTests[0].testTitle || 'General Test';
       }
       
       const phoneStr = u.phoneNo ? `="${u.phoneNo}"` : 'N/A';
@@ -380,6 +385,66 @@ const AdminDashboard = () => {
     const a = document.createElement('a');
     a.href = url;
     a.download = 'users.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const exportEmployersToExcel = () => {
+    const headers = ['NO', 'Name', 'Email', 'Phone', 'Company Name', 'Total Jobs', 'Shortlisted', 'Status'];
+    const csvRows = [headers.join(',')];
+
+    employersList.forEach((emp, index) => {
+      const row = [
+        index + 1,
+        `"${emp.name || ''}"`,
+        `"${emp.email || ''}"`,
+        `="${emp.phoneNo || ''}"`,
+        `"${emp.companyName || ''}"`,
+        emp.totalJobs || 0,
+        emp.shortlistedCount || 0,
+        `"${emp.status ? emp.status : (emp.isApproved ? 'APPROVED' : 'PENDING')}"`
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    const csvData = csvRows.join('\n');
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'employers.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const exportJobsToExcel = () => {
+    const headers = ['NO', 'Job Title', 'Company', 'Employer Name', 'Date Posted', 'Applicants', 'Selected'];
+    const csvRows = [headers.join(',')];
+    
+    const jobsToExport = jobTitleFilter 
+      ? jobsList.filter(j => (j.title || '').toLowerCase().includes(jobTitleFilter.toLowerCase()))
+      : jobsList;
+
+    jobsToExport.forEach((job, index) => {
+      const dateObj = job.postedAt ? new Date(job.postedAt) : new Date();
+      const row = [
+        index + 1,
+        `"${job.title || ''}"`,
+        `"${job.company || ''}"`,
+        `"${job.employerName || ''}"`,
+        `"${dateObj.toLocaleDateString()}"`,
+        job.applicantsCount || 0,
+        job.selectedCount || 0
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    const csvData = csvRows.join('\n');
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'platform_jobs.csv';
     a.click();
     window.URL.revokeObjectURL(url);
   };
@@ -407,7 +472,7 @@ const AdminDashboard = () => {
           <SidebarItem icon={CheckCircle} label="Test Results" active={activeTab === 'test_results'} onClick={() => { setActiveTab('test_results'); setIsSidebarOpen(false); }} />
           <SidebarItem icon={MessageSquare} label="Messages" active={activeTab === 'messages'} onClick={() => { setActiveTab('messages'); setIsSidebarOpen(false); }} />
           <SidebarItem icon={Mail} label="Mail Inbox" active={activeTab === 'mail'} onClick={() => { setActiveTab('mail'); setIsSidebarOpen(false); }} />
-          <SidebarItem icon={Settings} label="System Settings" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }} />
+          <SidebarItem icon={Settings} label="Settings" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }} />
         </div>
         
         <div className="mt-auto">
@@ -544,9 +609,9 @@ const AdminDashboard = () => {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                   <tr>
-                    <th className="px-6 py-4 w-12 text-center">
+                    <th className="px-6 py-4 w-12 text-center font-bold">
                       <input 
                         type="checkbox"
                         checked={usersList.length > 0 && selectedUsers.length === usersList.length}
@@ -560,11 +625,11 @@ const AdminDashboard = () => {
                         className="w-4 h-4 text-blue-600 rounded border-gray-300 cursor-pointer"
                       />
                     </th>
-                    <th className="px-6 py-4">Name</th>
-                    <th className="px-6 py-4">Email</th>
-                    <th className="px-6 py-4">Phone</th>
-                    <th className="px-6 py-4">Role</th>
-                    <th className="px-6 py-4 text-center">Actions</th>
+                    <th className="px-6 py-4 text-center font-bold">Name</th>
+                    <th className="px-6 py-4 text-center font-bold">Email</th>
+                    <th className="px-6 py-4 text-center font-bold">Phone</th>
+                    <th className="px-6 py-4 text-center font-bold">Role</th>
+                    <th className="px-6 py-4 text-center font-bold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -683,29 +748,36 @@ const AdminDashboard = () => {
                 </div>
                 <p className="text-sm text-slate-500 mt-1">Review pending employers and manage registered companies.</p>
               </div>
+              <button 
+                onClick={exportEmployersToExcel}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
+              >
+                <Download className="w-4 h-4" />
+                Export to Excel
+              </button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                   <tr>
-                    <th className="px-6 py-4">Employer Details</th>
-                    <th className="px-6 py-4">Company Info</th>
-                    <th className="px-6 py-4 text-center">Jobs Posted</th>
-                    <th className="px-6 py-4 text-center">Shortlisted</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-center">Actions</th>
+                    <th className="px-6 py-4 text-center font-bold">Employer Details</th>
+                    <th className="px-6 py-4 text-center font-bold">Company Info</th>
+                    <th className="px-6 py-4 text-center font-bold">Jobs Posted</th>
+                    <th className="px-6 py-4 text-center font-bold">Shortlisted</th>
+                    <th className="px-6 py-4 text-center font-bold">Status</th>
+                    <th className="px-6 py-4 text-center font-bold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {employersList.map((emp) => {
                     return (
                     <tr key={emp.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <div className="font-semibold text-slate-900">{emp.name || "N/A"}</div>
                         <div className="text-xs text-slate-500 mt-1">{emp.email}</div>
                         <div className="text-xs text-slate-500">{emp.phoneNo || "N/A"}</div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-center">
                         <div className="font-semibold text-slate-800">{emp.companyName || "N/A"}</div>
                       </td>
                       <td className="px-6 py-4 text-center font-semibold text-blue-600">
@@ -718,18 +790,20 @@ const AdminDashboard = () => {
                         <div className="w-32 inline-block">
                           <CustomDropdown
                             options={[
-                              { value: 'Approved', label: 'Approved' },
-                              { value: 'Pending', label: 'Pending' }
+                              { value: 'APPROVED', label: 'APPROVED' },
+                              { value: 'PENDING', label: 'PENDING' },
+                              { value: 'REJECTED', label: 'REJECTED' }
                             ]}
-                            value={emp.isApproved ? 'Approved' : 'Pending'}
+                            value={emp.status ? emp.status : (emp.isApproved ? 'APPROVED' : 'PENDING')}
                             colorMap={{
-                              'Approved': 'bg-green-50 text-green-700 border-green-200 hover:border-green-300',
-                              'Pending': 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:border-yellow-300'
+                              'APPROVED': 'bg-green-50 text-green-700 border-green-200 hover:border-green-300',
+                              'PENDING': 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:border-yellow-300',
+                              'REJECTED': 'bg-red-50 text-red-700 border-red-200 hover:border-red-300'
                             }}
                             onChange={async (newStatus) => {
                               try {
-                                const isApp = newStatus === 'Approved';
-                                await axios.put(`/api/admin/employers/${emp.id}/status?isApproved=${isApp}`);
+                                const isApp = newStatus === 'APPROVED';
+                                await axios.put(`/api/admin/employers/${emp.id}/status?isApproved=${isApp}&status=${newStatus}`);
                                 fetchEmployers();
                               } catch (err) {
                                 toast.error("Failed to update status");
@@ -855,30 +929,46 @@ const AdminDashboard = () => {
                 </div>
                 <p className="text-sm text-slate-500 mt-1">Manage and monitor all active job postings.</p>
               </div>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="text"
+                  placeholder="Filter by Job Title..."
+                  value={jobTitleFilter}
+                  onChange={(e) => setJobTitleFilter(e.target.value)}
+                  className="bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button 
+                  onClick={exportJobsToExcel}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Export to Excel
+                </button>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                   <tr>
-                    <th className="px-6 py-4">Job Title</th>
-                    <th className="px-6 py-4">Employer</th>
-                    <th className="px-6 py-4">Date Posted</th>
-                    <th className="px-6 py-4">Applicants</th>
-                    <th className="px-6 py-4">Selected</th>
-                    <th className="px-6 py-4 text-center">Actions</th>
+                    <th className="px-6 py-4 text-center font-bold">Job Title</th>
+                    <th className="px-6 py-4 text-center font-bold">Employer</th>
+                    <th className="px-6 py-4 text-center font-bold">Date Posted</th>
+                    <th className="px-6 py-4 text-center font-bold">Applicants</th>
+                    <th className="px-6 py-4 text-center font-bold">Selected</th>
+                    <th className="px-6 py-4 text-center font-bold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
-                  {jobsList.map((job) => {
+                  {(jobTitleFilter ? jobsList.filter(j => (j.title || '').toLowerCase().includes(jobTitleFilter.toLowerCase())) : jobsList).map((job) => {
                     const dateObj = job.postedAt ? new Date(job.postedAt) : new Date();
                     return (
                       <tr key={job.id} className="hover:bg-slate-50 transition-colors group">
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 text-center">
                           <div className="font-semibold text-slate-900">{job.title}</div>
                           <div className="text-sm text-slate-500">{job.company}</div>
                         </td>
-                        <td className="px-6 py-4 font-medium text-slate-700">{job.employerName}</td>
-                        <td className="px-6 py-4 text-slate-500 text-sm">{dateObj.toLocaleDateString()}</td>
+                        <td className="px-6 py-4 font-medium text-slate-700 text-center">{job.employerName}</td>
+                        <td className="px-6 py-4 text-slate-500 text-sm text-center">{dateObj.toLocaleDateString()}</td>
                         <td className="px-6 py-4">
                           <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
                             {job.applicantsCount}
@@ -945,14 +1035,15 @@ const AdminDashboard = () => {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                   <tr>
-                    <th className="px-6 py-4">Applicant</th>
-                    <th className="px-6 py-4">Job Info</th>
-                    <th className="px-6 py-4">Contact</th>
-                    <th className="px-6 py-4">Skills / Location</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Resume</th>
+                    <th className="px-6 py-4 text-center font-bold">Applicant</th>
+                    <th className="px-6 py-4 text-center font-bold">Job Info</th>
+                    <th className="px-6 py-4 text-center font-bold">Contact</th>
+                      <th className="px-6 py-4 text-center font-bold">Test Title</th>
+                    <th className="px-6 py-4 text-center font-bold">Skills / Location</th>
+                    <th className="px-6 py-4 text-center font-bold">Status</th>
+                    <th className="px-6 py-4 text-center font-bold">Resume</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -1037,12 +1128,13 @@ const AdminDashboard = () => {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                   <tr>
-                    <th className="px-6 py-4">User</th>
-                    <th className="px-6 py-4">Contact</th>
-                    <th className="px-6 py-4">Score</th>
-                    <th className="px-6 py-4">Date Taken</th>
+                    <th className="px-6 py-4 text-center font-bold">User</th>
+                    <th className="px-6 py-4 text-center font-bold">Contact</th>
+                      <th className="px-6 py-4 text-center font-bold">Test Title</th>
+                    <th className="px-6 py-4 text-center font-bold">Score</th>
+                    <th className="px-6 py-4 text-center font-bold">Date Taken</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -1098,12 +1190,13 @@ const AdminDashboard = () => {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                   <tr>
-                    <th className="px-6 py-4">Sender</th>
-                    <th className="px-6 py-4">Contact</th>
-                    <th className="px-6 py-4">Subject & Message</th>
-                    <th className="px-6 py-4">Date</th>
+                    <th className="px-6 py-4 text-center font-bold">Sender</th>
+                    <th className="px-6 py-4 text-center font-bold">Contact</th>
+                      <th className="px-6 py-4 text-center font-bold">Test Title</th>
+                    <th className="px-6 py-4 text-center font-bold">Subject & Message</th>
+                    <th className="px-6 py-4 text-center font-bold">Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -1209,11 +1302,11 @@ const AdminDashboard = () => {
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
-                  <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                  <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                     <tr>
-                      <th className="px-6 py-4">Recipient</th>
-                      <th className="px-6 py-4">Subject</th>
-                      <th className="px-6 py-4">Date Sent</th>
+                      <th className="px-6 py-4 text-center font-bold">Recipient</th>
+                      <th className="px-6 py-4 text-center font-bold">Subject</th>
+                      <th className="px-6 py-4 text-center font-bold">Date Sent</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 bg-white">

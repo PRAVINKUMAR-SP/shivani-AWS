@@ -27,7 +27,18 @@ function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    // Scroll immediately
     window.scrollTo(0, 0);
+    
+    // Also try scrolling after a tiny delay in case rendering is slightly delayed
+    setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      // Fallback for custom scrolling containers if any
+      const mainContent = document.querySelector('.min-h-\[100dvh\]');
+      if (mainContent) {
+        mainContent.scrollTo(0, 0);
+      }
+    }, 10);
   }, [pathname]);
 
   return null;
@@ -145,7 +156,7 @@ function App() {
       <Router>
         <ScrollToTop />
         <ToastContainer 
-          position="top-left"
+          position="top-right"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}

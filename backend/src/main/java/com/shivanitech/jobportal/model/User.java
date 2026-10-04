@@ -46,6 +46,8 @@ public class User {
     @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean isApproved = true;
 
+    private String status = "PENDING";
+
     // Education specific
     private String collegeName;
     private String course;
