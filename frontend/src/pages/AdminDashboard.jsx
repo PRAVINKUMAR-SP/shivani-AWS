@@ -608,10 +608,10 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+              <table className="w-full text-center table-auto">
+                <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 w-12 text-center font-bold">
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">
                       <input 
                         type="checkbox"
                         checked={usersList.length > 0 && selectedUsers.length === usersList.length}
@@ -625,11 +625,11 @@ const AdminDashboard = () => {
                         className="w-4 h-4 text-blue-600 rounded border-gray-300 cursor-pointer"
                       />
                     </th>
-                    <th className="px-6 py-4 text-center font-bold">Name</th>
-                    <th className="px-6 py-4 text-center font-bold">Email</th>
-                    <th className="px-6 py-4 text-center font-bold">Phone</th>
-                    <th className="px-6 py-4 text-center font-bold">Role</th>
-                    <th className="px-6 py-4 text-center font-bold">Actions</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Name</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Email</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Phone</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Role</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -640,7 +640,7 @@ const AdminDashboard = () => {
                     
                     return (
                     <tr key={u.id} className={`hover:bg-slate-50 transition-colors group ${selectedUsers.includes(u.id) ? 'bg-blue-50' : ''}`}>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-4 py-4 text-center align-middle">
                         <input 
                           type="checkbox"
                           checked={selectedUsers.includes(u.id)}
@@ -654,7 +654,7 @@ const AdminDashboard = () => {
                           className="w-4 h-4 text-blue-600 rounded border-gray-300 cursor-pointer"
                         />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4 text-center align-middle">
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${avatarColor}`}>
                             {initials}
@@ -662,14 +662,14 @@ const AdminDashboard = () => {
                           <span className="font-semibold text-slate-900">{u.name || "Anonymous User"}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-slate-500 flex items-center gap-2">
+                      <td className="px-4 py-4 text-center align-middle text-slate-500 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4 text-slate-400" />
                         {u.email}
                       </td>
-                      <td className="px-6 py-4 text-slate-500 text-sm">
+                      <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">
                         {u.phoneNo || <span className="text-slate-400 italic">N/A</span>}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4 text-center align-middle">
                         <div className="w-32">
                           <CustomDropdown
                             options={[
@@ -694,7 +694,7 @@ const AdminDashboard = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-4 py-4 text-center align-middle">
                         <div className="flex items-center justify-center gap-3 transition-opacity">
                           <button 
                             className="text-slate-400 hover:text-red-600 transition-colors p-1" 
@@ -757,36 +757,36 @@ const AdminDashboard = () => {
               </button>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+              <table className="w-full text-center table-auto">
+                <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 text-center font-bold">Employer Details</th>
-                    <th className="px-6 py-4 text-center font-bold">Company Info</th>
-                    <th className="px-6 py-4 text-center font-bold">Jobs Posted</th>
-                    <th className="px-6 py-4 text-center font-bold">Shortlisted</th>
-                    <th className="px-6 py-4 text-center font-bold">Status</th>
-                    <th className="px-6 py-4 text-center font-bold">Actions</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Employer Details</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Company Info</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Jobs Posted</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Shortlisted</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Status</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {employersList.map((emp) => {
                     return (
                     <tr key={emp.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-4 py-4 text-center align-middle">
                         <div className="font-semibold text-slate-900">{emp.name || "N/A"}</div>
                         <div className="text-xs text-slate-500 mt-1">{emp.email}</div>
                         <div className="text-xs text-slate-500">{emp.phoneNo || "N/A"}</div>
                       </td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-4 py-4 text-center align-middle">
                         <div className="font-semibold text-slate-800">{emp.companyName || "N/A"}</div>
                       </td>
-                      <td className="px-6 py-4 text-center font-semibold text-blue-600">
+                      <td className="px-4 py-4 text-center align-middle font-semibold text-blue-600">
                         {emp.totalJobs}
                       </td>
-                      <td className="px-6 py-4 text-center font-semibold text-green-600">
+                      <td className="px-4 py-4 text-center align-middle font-semibold text-green-600">
                         {emp.shortlistedCount}
                       </td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-4 py-4 text-center align-middle">
                         <div className="w-32 inline-block">
                           <CustomDropdown
                             options={[
@@ -812,7 +812,7 @@ const AdminDashboard = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-4 py-4 text-center align-middle">
                         <div className="flex items-center justify-center gap-2">
                           <button 
                             onClick={async () => {
@@ -947,15 +947,15 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+              <table className="w-full text-center table-auto">
+                <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 text-center font-bold">Job Title</th>
-                    <th className="px-6 py-4 text-center font-bold">Employer</th>
-                    <th className="px-6 py-4 text-center font-bold">Date Posted</th>
-                    <th className="px-6 py-4 text-center font-bold">Applicants</th>
-                    <th className="px-6 py-4 text-center font-bold">Selected</th>
-                    <th className="px-6 py-4 text-center font-bold">Actions</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Job Title</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Employer</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Date Posted</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Applicants</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Selected</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -963,23 +963,23 @@ const AdminDashboard = () => {
                     const dateObj = job.postedAt ? new Date(job.postedAt) : new Date();
                     return (
                       <tr key={job.id} className="hover:bg-slate-50 transition-colors group">
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-4 py-4 text-center align-middle">
                           <div className="font-semibold text-slate-900">{job.title}</div>
                           <div className="text-sm text-slate-500">{job.company}</div>
                         </td>
-                        <td className="px-6 py-4 font-medium text-slate-700 text-center">{job.employerName}</td>
-                        <td className="px-6 py-4 text-slate-500 text-sm text-center">{dateObj.toLocaleDateString()}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle font-medium text-slate-700">{job.employerName}</td>
+                        <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">{dateObj.toLocaleDateString()}</td>
+                        <td className="px-4 py-4 text-center align-middle">
                           <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
                             {job.applicantsCount}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">
                             {job.selectedCount}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-4 py-4 text-center align-middle">
                           <div className="flex items-center justify-center gap-3 transition-opacity">
                             <button 
                               className="text-slate-400 hover:text-red-600 transition-colors p-1" 
@@ -1034,16 +1034,16 @@ const AdminDashboard = () => {
               </button>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+              <table className="w-full text-center table-auto">
+                <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 text-center font-bold">Applicant</th>
-                    <th className="px-6 py-4 text-center font-bold">Job Info</th>
-                    <th className="px-6 py-4 text-center font-bold">Contact</th>
-                      <th className="px-6 py-4 text-center font-bold">Test Title</th>
-                    <th className="px-6 py-4 text-center font-bold">Skills / Location</th>
-                    <th className="px-6 py-4 text-center font-bold">Status</th>
-                    <th className="px-6 py-4 text-center font-bold">Resume</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Applicant</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Job Info</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Contact</th>
+                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Test Title</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Skills / Location</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Status</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Resume</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -1054,7 +1054,7 @@ const AdminDashboard = () => {
                     
                     return (
                       <tr key={app.id} className="hover:bg-slate-50 transition-colors group">
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${avatarColor}`}>
                               {initials}
@@ -1062,19 +1062,19 @@ const AdminDashboard = () => {
                             <span className="font-semibold text-slate-900">{app.seekerName}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <div className="font-semibold text-slate-900">{app.jobTitle}</div>
                           <div className="text-sm text-slate-500">{app.jobCompany}</div>
                         </td>
-                        <td className="px-6 py-4 text-slate-500 text-sm">
+                        <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">
                           <div>{app.seekerEmail}</div>
                           <div>{app.seekerPhone}</div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-slate-500">
+                        <td className="px-4 py-4 text-center align-middle text-sm text-slate-500">
                           <div className="truncate max-w-[200px]" title={app.seekerSkills}>{app.seekerSkills || 'N/A'}</div>
                           <div className="text-xs mt-1">{app.seekerLocation || 'N/A'}</div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <span className={`whitespace-nowrap inline-block px-3 py-1 rounded-full text-xs font-semibold ${
                             app.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
                             app.status === 'RESUME VIEWED' ? 'bg-blue-100 text-blue-700' :
@@ -1086,7 +1086,7 @@ const AdminDashboard = () => {
                             {app.status || 'PENDING'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="px-4 py-4 text-center align-middle text-right">
                           {app.resumeUrl ? (
                             <a 
                               href={app.resumeUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} 
@@ -1127,14 +1127,14 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+              <table className="w-full text-center table-auto">
+                <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 text-center font-bold">User</th>
-                    <th className="px-6 py-4 text-center font-bold">Contact</th>
-                      <th className="px-6 py-4 text-center font-bold">Test Title</th>
-                    <th className="px-6 py-4 text-center font-bold">Score</th>
-                    <th className="px-6 py-4 text-center font-bold">Date Taken</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">User</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Contact</th>
+                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Test Title</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Score</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Date Taken</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -1143,7 +1143,7 @@ const AdminDashboard = () => {
                     const percentage = Math.round((result.score / result.totalQuestions) * 100);
                     return (
                       <tr key={result.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-blue-100 text-blue-600">
                               {initials}
@@ -1151,16 +1151,16 @@ const AdminDashboard = () => {
                             <span className="font-semibold text-slate-900">{result.name || "Anonymous User"}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-slate-500 text-sm">
+                        <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">
                           <div>{result.email}</div>
                           <div>{result.phoneNo || 'N/A'}</div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${percentage >= 70 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                             {result.score} / {result.totalQuestions} ({percentage}%)
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-slate-500 text-sm">
+                        <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">
                           {new Date(result.completedAt).toLocaleString()}
                         </td>
                       </tr>
@@ -1189,14 +1189,14 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+              <table className="w-full text-center table-auto">
+                <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 text-center font-bold">Sender</th>
-                    <th className="px-6 py-4 text-center font-bold">Contact</th>
-                      <th className="px-6 py-4 text-center font-bold">Test Title</th>
-                    <th className="px-6 py-4 text-center font-bold">Subject & Message</th>
-                    <th className="px-6 py-4 text-center font-bold">Date</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Sender</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Contact</th>
+                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Test Title</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Subject & Message</th>
+                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -1204,7 +1204,7 @@ const AdminDashboard = () => {
                     const initials = getInitials(msg.name || "User");
                     return (
                       <tr key={msg.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-indigo-100 text-indigo-600">
                               {initials}
@@ -1212,15 +1212,15 @@ const AdminDashboard = () => {
                             <span className="font-semibold text-slate-900">{msg.name || "Anonymous"}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-slate-500 text-sm">
+                        <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">
                           <div>{msg.email}</div>
                           <div>{msg.phone || 'N/A'}</div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 text-center align-middle">
                           <div className="font-semibold text-slate-800 text-sm mb-1">{msg.subject || 'No Subject'}</div>
                           <div className="text-slate-500 text-xs max-w-md truncate" title={msg.message}>{msg.message}</div>
                         </td>
-                        <td className="px-6 py-4 text-slate-500 text-sm">
+                        <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">
                           {new Date(msg.createdAt).toLocaleString()}
                         </td>
                       </tr>
@@ -1301,20 +1301,20 @@ const AdminDashboard = () => {
                 <p className="text-sm text-slate-500 mt-1">History of all emails sent from the admin dashboard.</p>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead className="bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+                <table className="w-full text-center table-auto">
+                  <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                     <tr>
-                      <th className="px-6 py-4 text-center font-bold">Recipient</th>
-                      <th className="px-6 py-4 text-center font-bold">Subject</th>
-                      <th className="px-6 py-4 text-center font-bold">Date Sent</th>
+                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Recipient</th>
+                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Subject</th>
+                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Date Sent</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 bg-white">
                     {mailHistory.map((mail) => (
                       <tr key={mail.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 font-medium text-slate-900">{mail.recipientEmail}</td>
-                        <td className="px-6 py-4 text-slate-800">{mail.subject}</td>
-                        <td className="px-6 py-4 text-sm text-slate-500">
+                        <td className="px-4 py-4 text-center align-middle font-medium text-slate-900">{mail.recipientEmail}</td>
+                        <td className="px-4 py-4 text-center align-middle text-slate-800">{mail.subject}</td>
+                        <td className="px-4 py-4 text-center align-middle text-sm text-slate-500">
                           {new Date(mail.sentAt).toLocaleString()}
                         </td>
                       </tr>
