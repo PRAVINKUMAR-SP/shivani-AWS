@@ -1040,7 +1040,6 @@ const AdminDashboard = () => {
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Applicant</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Job Info</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Contact</th>
-                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Test Title</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Skills / Location</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Status</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Resume</th>
@@ -1194,7 +1193,6 @@ const AdminDashboard = () => {
                   <tr>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Sender</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Contact</th>
-                      <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Test Title</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Subject & Message</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Date</th>
                   </tr>
