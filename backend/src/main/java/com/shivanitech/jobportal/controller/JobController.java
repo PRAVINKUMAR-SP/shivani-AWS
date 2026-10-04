@@ -13,6 +13,10 @@ import com.shivanitech.jobportal.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.shivanitech.jobportal.model.Notification;
+import com.shivanitech.jobportal.repository.NotificationRepository;
+import com.shivanitech.jobportal.repository.UserRepository;
+
 
 import java.security.Principal;
 import java.util.List;
@@ -24,6 +28,10 @@ public class JobController {
 
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private UserRepository userRepository;
     
     @Autowired
     private UserRepository userRepository;

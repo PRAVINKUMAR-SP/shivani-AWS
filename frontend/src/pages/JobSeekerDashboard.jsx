@@ -347,7 +347,7 @@ const ApplicationsTrackerSection = ({ applications }) => (
 );
 
 
-const NotificationsSection = ({ notifications }) => (
+const NotificationsSection = ({ notifications, markAsRead }) => (
   <div className="max-w-4xl space-y-6">
     <div className="mb-8">
       <h1 className="text-2xl font-bold text-slate-900">Notifications</h1>
@@ -459,6 +459,22 @@ const ViewProfileSection = ({ profile, user, onEdit }) => {
   </div>
 )};
 
+
+const getRelativeTime = (dateString) => {
+  if (!dateString) return 'Recently posted';
+  const postedDate = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - postedDate) / 1000);
+  
+  if (diffInSeconds < 60) return 'Just now';
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+  const diffInDays = Math.floor(diffInSeconds / 86400);
+  if (diffInDays < 30) return `${diffInDays}d ago`;
+  const diffInMonths = Math.floor(diffInDays / 30);
+  return `${diffInMonths}mo ago`;
+};
+
 const JobSeekerDashboard = () => {
   const [jobs, setJobs] = useState(() => JSON.parse(sessionStorage.getItem('js_jobs')) || []);
   const [appliedJobs, setAppliedJobs] = useState(() => JSON.parse(sessionStorage.getItem('js_applied')) || []);
@@ -569,6 +585,18 @@ const JobSeekerDashboard = () => {
       sessionStorage.setItem('js_saved', JSON.stringify(ids));
     } catch (err) {
       console.error('Failed to fetch saved jobs', err);
+    }
+  };
+
+  
+  const markAsRead = async (id) => {
+    try {
+      await axios.put(`/api/seeker/notifications/${id}/read`);
+      const updated = notifications.map(n => n.id === id ? { ...n, read: true } : n);
+      setNotifications(updated);
+      sessionStorage.setItem('js_notifs', JSON.stringify(updated));
+    } catch(err) {
+      console.error('Failed to mark read', err);
     }
   };
 
@@ -720,7 +748,7 @@ const JobSeekerDashboard = () => {
         ) : activeTab === 'applications_tracker' ? (
           <ApplicationsTrackerSection applications={applicationsList} />
         ) : activeTab === 'notifications' ? (
-          <NotificationsSection notifications={notifications} />
+          <NotificationsSection notifications={notifications} markAsRead={markAsRead} />
         ) : (
           <>
             

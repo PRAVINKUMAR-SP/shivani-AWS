@@ -113,4 +113,22 @@ public class SeekerActionController {
         List<Notification> notifications = notificationRepository.findByUserOrderByCreatedAtDesc(seeker);
         return ResponseEntity.ok(notifications);
     }
+
+    @PutMapping("/notifications/{id}/read")
+    public ResponseEntity<?> markNotificationAsRead(@PathVariable Long id, Principal principal) {
+        User seeker = getSeeker(principal);
+        if (seeker == null) return ResponseEntity.status(401).build();
+
+        java.util.Optional<Notification> opt = notificationRepository.findById(id);
+        if (opt.isPresent()) {
+            Notification n = opt.get();
+            if (n.getUser().getId().equals(seeker.getId())) {
+                n.setRead(true);
+                notificationRepository.save(n);
+                return ResponseEntity.ok(n);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

@@ -35,6 +35,7 @@ public class UserController {
         if (request.getName() != null) user.setName(request.getName());
         if (request.getPhoneNo() != null) user.setPhoneNo(request.getPhoneNo());
         if (request.getResumeUrl() != null) user.setResumeUrl(request.getResumeUrl());
+        if (request.getProfilePicUrl() != null) user.setProfilePicUrl(request.getProfilePicUrl());
         if (request.getCompanyName() != null) user.setCompanyName(request.getCompanyName());
         if (request.getCompanyDescription() != null) user.setCompanyDescription(request.getCompanyDescription());
         if (request.getSkills() != null) user.setSkills(request.getSkills());

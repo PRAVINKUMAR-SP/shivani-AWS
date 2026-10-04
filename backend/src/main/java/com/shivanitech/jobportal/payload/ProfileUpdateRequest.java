@@ -4,6 +4,10 @@ import lombok.Data;
 
 @Data
 public class ProfileUpdateRequest {
+    private String profilePicUrl;
+    public String getProfilePicUrl() { return profilePicUrl; }
+    public void setProfilePicUrl(String profilePicUrl) { this.profilePicUrl = profilePicUrl; }
+
     private String name;
     private String phoneNo;
     private String resumeUrl;

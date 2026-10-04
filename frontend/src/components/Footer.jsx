@@ -21,8 +21,8 @@ const Footer = () => {
             Empowering careers and connecting top talent with industry-leading companies globally. Your dream job is just a click away.
           </p>
           <div className="flex gap-3">
-            {[XIcon, LinkedinIcon, FacebookIcon, InstagramIcon].map((Icon, idx) => (
-              <a key={idx} href="#" className="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-[#3b82f6] flex items-center justify-center text-slate-300 hover:text-white transition-all duration-300">
+            {[LinkedinIcon].map((Icon, idx) => (
+              <a key={idx} href="https://www.linkedin.com/in/ashokthekumar?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-[#3b82f6] flex items-center justify-center text-slate-300 hover:text-white transition-all duration-300">
                 <Icon width="15" height="15" />
               </a>
             ))}
@@ -62,6 +62,10 @@ const Footer = () => {
             <li className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" />
               <span>+91 97907 04999</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" />
+              <span>044-26170051</span>
             </li>
             <li className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-blue-500 flex-shrink-0" />
