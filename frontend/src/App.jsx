@@ -168,7 +168,7 @@ function App() {
           theme="colored"
         />
         {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-        <div className="min-h-[100dvh] bg-slate-50 flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] overflow-x-hidden w-full relative">
+        <div className="min-h-[100dvh] bg-slate-50 flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] w-full relative">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
           
           <div className="flex-1 w-full max-w-full">

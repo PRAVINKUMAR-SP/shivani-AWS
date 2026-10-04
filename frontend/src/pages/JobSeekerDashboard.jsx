@@ -22,8 +22,18 @@ const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   </button>
 );
 
-const JobCard = ({ id, title, company, logo, location, salary, type, tags, time, applied, appStatus, saved, onApply, onSave }) => (
-  <div className="card p-6 flex flex-col">
+const JobCard = ({ id, title, company, logo, location, salary, type, tags, time, applied, appStatus, saved, onApply, onSave, postedAt }) => {
+  const getRelativeTime = () => {
+    if (time) return time;
+    if (!postedAt) return 'Recently posted';
+    const diff = Math.floor((new Date() - new Date(postedAt)) / (1000 * 60 * 60 * 24));
+    if (diff === 0) return 'Recently posted';
+    if (diff === 1) return '1d ago';
+    return `${diff}d ago`;
+  };
+
+  return (
+    <div className="card p-6 flex flex-col">
     <div className="flex justify-between items-start mb-5">
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl uppercase overflow-hidden border border-slate-100 shadow-sm">
@@ -59,7 +69,7 @@ const JobCard = ({ id, title, company, logo, location, salary, type, tags, time,
     </div>
     
     <div className="flex justify-between items-center mt-auto pt-2">
-      <span className="text-slate-400 text-sm font-medium">{time || 'Recently posted'}</span>
+      <span className="text-slate-400 text-sm font-medium">{getRelativeTime()}</span>
       {applied ? (
         <span className={`whitespace-nowrap font-semibold text-[13px] px-4 py-2.5 rounded-lg flex items-center gap-1.5 ${
           appStatus === 'PENDING' || !appStatus ? 'bg-yellow-50 text-yellow-600' :
@@ -81,7 +91,8 @@ const JobCard = ({ id, title, company, logo, location, salary, type, tags, time,
       )}
     </div>
   </div>
-);
+  );
+};
 
 const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
   const [uploading, setUploading] = useState(false);
@@ -147,9 +158,9 @@ const ProfileSettings = ({ profile, setProfile, onSave, message, loading }) => {
               {profile.profilePicUrl ? (
                 <img src={profile.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <div className="text-slate-400 flex flex-col items-center">
-                  <User className="w-8 h-8 mb-2" />
-                  <span className="text-xs font-semibold">Upload Photo</span>
+                <div className="text-blue-600 bg-blue-50 w-full h-full flex flex-col items-center justify-center font-bold text-4xl uppercase">
+                  {getInitials(profile.name || 'User')}
+                  <span className="text-[10px] text-slate-500 mt-1 absolute bottom-4 capitalize">Click to upload</span>
                 </div>
               )}
               <input 
@@ -320,7 +331,7 @@ const ApplicationsTrackerSection = ({ applications }) => (
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 text-lg">{app.job?.title}</h3>
-                <p className="text-slate-500 text-sm mt-0.5">{app.job?.company} • {app.job?.location}</p>
+                <p className="text-slate-500 text-sm mt-0.5"><span className="capitalize">{app.job?.company}</span> • {app.job?.location}</p>
                 <div className="flex items-center gap-2 mt-3 text-sm text-slate-600">
                   <span className="flex items-center gap-1"><FileText className="w-4 h-4 text-slate-400" /> Applied {new Date(app.appliedAt).toLocaleDateString()}</span>
                 </div>
@@ -398,7 +409,7 @@ const ViewProfileSection = ({ profile, user, onEdit }) => {
           {initials}
         </div>
         <div className="flex-1">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white">{profile?.name || 'Your Name'}</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white capitalize">{profile?.name || 'Your Name'}</h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 mt-1">{profile?.jobRole || 'Your Job Role'}</p>
           
           <div className="flex flex-wrap gap-4 mt-4 text-sm text-slate-500 dark:text-slate-400">
@@ -678,7 +689,7 @@ const JobSeekerDashboard = () => {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-20 lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
             <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
             <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
@@ -710,11 +721,6 @@ const JobSeekerDashboard = () => {
               <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2 leading-tight">Complete your profile to stand out to employers.</p>
             )}
           </div>
-          
-          <button onClick={logout} className="flex items-center gap-3 text-red-600 dark:text-red-400 font-semibold px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg w-full transition-colors mt-2">
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
         </div>
       </aside>
 

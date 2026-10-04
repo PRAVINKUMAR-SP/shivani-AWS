@@ -456,7 +456,7 @@ const AdminDashboard = () => {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-20 lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
             <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
             <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
@@ -476,10 +476,6 @@ const AdminDashboard = () => {
         </div>
         
         <div className="mt-auto">
-          <button onClick={logout} className="flex items-center gap-3 text-red-600 dark:text-red-400 font-semibold px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg w-full transition-colors">
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
         </div>
       </aside>
 
@@ -663,7 +659,7 @@ const AdminDashboard = () => {
                               initials
                             )}
                           </div>
-                          <span className="font-semibold text-slate-900">{u.name || "Anonymous User"}</span>
+                          <span className="font-semibold text-slate-900 capitalize">{u.name || "Anonymous User"}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4 text-center align-middle text-slate-500 flex items-center gap-2">
@@ -764,7 +760,7 @@ const AdminDashboard = () => {
               <table className="w-full text-center table-auto">
                 <thead className="bg-slate-100 text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
-                    <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Employer Details</th>
+                    <th className="px-4 py-4 text-left font-bold whitespace-nowrap align-middle">Employer Details</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Company Info</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Jobs Posted</th>
                     <th className="px-4 py-4 text-center font-bold whitespace-nowrap align-middle">Shortlisted</th>
@@ -774,15 +770,29 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
                   {employersList.map((emp) => {
+                    const initials = getInitials(emp.name || "Employer");
+                    const bgColors = ['bg-orange-100 text-orange-600', 'bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-yellow-100 text-yellow-600'];
+                    const avatarColor = bgColors[(emp.id || 0) % bgColors.length] || bgColors[0];
                     return (
                     <tr key={emp.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-4 py-4 text-center align-middle">
-                        <div className="font-semibold text-slate-900">{emp.name || "N/A"}</div>
-                        <div className="text-xs text-slate-500 mt-1">{emp.email}</div>
-                        <div className="text-xs text-slate-500">{emp.phoneNo || "N/A"}</div>
+                      <td className="px-4 py-4 align-middle">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${avatarColor} overflow-hidden flex-shrink-0`}>
+                            {emp.profilePicUrl ? (
+                              <img src={emp.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                              initials
+                            )}
+                          </div>
+                          <div className="flex flex-col text-left">
+                            <span className="font-semibold text-slate-900 capitalize">{emp.name || "N/A"}</span>
+                            <span className="text-xs text-slate-500">{emp.email}</span>
+                            <span className="text-xs text-slate-500">{emp.phoneNo || "N/A"}</span>
+                          </div>
+                        </div>
                       </td>
                       <td className="px-4 py-4 text-center align-middle">
-                        <div className="font-semibold text-slate-800">{emp.companyName || "N/A"}</div>
+                        <div className="font-semibold text-slate-800 capitalize">{emp.companyName || "N/A"}</div>
                       </td>
                       <td className="px-4 py-4 text-center align-middle font-semibold text-blue-600">
                         {emp.totalJobs}
@@ -969,9 +979,9 @@ const AdminDashboard = () => {
                       <tr key={job.id} className="hover:bg-slate-50 transition-colors group">
                         <td className="px-4 py-4 text-center align-middle">
                           <div className="font-semibold text-slate-900">{job.title}</div>
-                          <div className="text-sm text-slate-500">{job.company}</div>
+                          <div className="text-sm text-slate-500 capitalize">{job.company}</div>
                         </td>
-                        <td className="px-4 py-4 text-center align-middle font-medium text-slate-700">{job.employerName}</td>
+                        <td className="px-4 py-4 text-center align-middle font-medium text-slate-700 capitalize">{job.employerName}</td>
                         <td className="px-4 py-4 text-center align-middle text-slate-500 text-sm">{dateObj.toLocaleDateString()}</td>
                         <td className="px-4 py-4 text-center align-middle">
                           <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
@@ -1062,7 +1072,7 @@ const AdminDashboard = () => {
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${avatarColor}`}>
                               {initials}
                             </div>
-                            <span className="font-semibold text-slate-900">{app.seekerName}</span>
+                            <span className="font-semibold text-slate-900 capitalize">{app.seekerName}</span>
                           </div>
                         </td>
                         <td className="px-4 py-4 text-center align-middle">

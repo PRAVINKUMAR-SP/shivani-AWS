@@ -5,6 +5,7 @@ import axios from 'axios';
 import CustomDropdown from '../components/CustomDropdown';
 import PhoneInputWithCountry from '../components/PhoneInputWithCountry';
 import { toast } from 'react-toastify';
+import { getInitials } from '../utils/helpers';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button 
@@ -218,7 +219,7 @@ const EmployerDashboard = () => {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-20 lg:w-64 lg:flex lg:h-[calc(100vh-80px)] overflow-y-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
             <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
             <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
@@ -261,7 +262,7 @@ const EmployerDashboard = () => {
               <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-blue-600 shrink-0" />
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Employer Dashboard</h1>
             </div>
-            <p className="text-slate-500 text-sm md:text-base">Welcome back, {user?.name || user?.email?.split('@')[0]}. Manage your job listings.</p>
+            <p className="text-slate-500 text-sm md:text-base">Welcome back, <span className="capitalize">{user?.name || user?.email?.split('@')[0]}</span>. Manage your job listings.</p>
           </div>
           <button 
             onClick={() => {
@@ -510,19 +511,28 @@ const EmployerDashboard = () => {
                 .filter(app => !filterStatus || app.status === filterStatus)
                 .map(app => (
                 <div key={app.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:bg-slate-50 transition-colors gap-4 sm:gap-0">
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-900">{app.seeker?.name || 'Applicant'}</h3>
-                    <div className="text-sm text-slate-500 mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                      <span>Applied for: <span className="font-medium text-blue-600">{app.job?.title}</span></span>
-                      {app.seeker?.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {app.seeker.email}</span>}
-                      {app.seeker?.phoneNo && <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {app.seeker.phoneNo}</span>}
+                  <div className="flex gap-4 items-start">
+                    <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold overflow-hidden border border-slate-100 flex-shrink-0">
+                      {app.seeker?.profilePicUrl ? (
+                        <img src={app.seeker.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        getInitials(app.seeker?.name || 'Applicant')
+                      )}
                     </div>
-                    {(app.seeker?.collegeName || app.seeker?.skills) && (
-                      <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                        {app.seeker?.collegeName && <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded-md">{app.seeker.collegeName}</span>}
-                        {app.seeker?.skills && <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-medium">Skills: {app.seeker.skills}</span>}
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900 capitalize">{app.seeker?.name || 'Applicant'}</h3>
+                      <div className="text-sm text-slate-500 mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                        <span>Applied for: <span className="font-medium text-blue-600">{app.job?.title}</span></span>
+                        {app.seeker?.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {app.seeker.email}</span>}
+                        {app.seeker?.phoneNo && <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {app.seeker.phoneNo}</span>}
                       </div>
-                    )}
+                      {(app.seeker?.collegeName || app.seeker?.skills) && (
+                        <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                          {app.seeker?.collegeName && <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded-md">{app.seeker.collegeName}</span>}
+                          {app.seeker?.skills && <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-medium">Skills: {app.seeker.skills}</span>}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
                     <div className="w-[160px] inline-block mb-2">
@@ -602,9 +612,9 @@ const EmployerDashboard = () => {
                     {profile.profilePicUrl ? (
                       <img src={profile.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Company Logo" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="text-slate-400 flex flex-col items-center">
-                        <Users className="w-8 h-8 mb-2" />
-                        <span className="text-xs font-semibold">Upload Logo</span>
+                      <div className="text-blue-600 bg-blue-50 w-full h-full flex flex-col items-center justify-center font-bold text-4xl uppercase">
+                        {getInitials(profile.name || profile.companyName || 'Employer')}
+                        <span className="text-[10px] text-slate-500 mt-1 absolute bottom-4 capitalize">Click to upload</span>
                       </div>
                     )}
                     <input 

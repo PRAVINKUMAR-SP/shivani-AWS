@@ -18,7 +18,7 @@ const CompanyCard = ({ company, onClick }) => (
         <Star className="w-4 h-4 fill-current" /> 4.5
       </div>
     </div>
-    <h3 className="text-xl font-bold text-slate-900 mb-2">{company.companyName || company.name || 'Unknown Company'}</h3>
+    <h3 className="text-xl font-bold text-slate-900 mb-2 capitalize">{company.companyName || company.name || 'Unknown Company'}</h3>
     <p className="text-slate-500 text-sm mb-6 flex-1 line-clamp-3">{company.companyDescription || 'A great company looking for top talent.'}</p>
     
     <div className="space-y-2 mb-6">
