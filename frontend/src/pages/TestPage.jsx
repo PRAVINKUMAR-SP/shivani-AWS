@@ -97,9 +97,8 @@ const TestPage = () => {
           <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-green-100 text-green-600"><CheckCircle className="w-10 h-10" /></div>
           <h2 className="text-3xl font-bold text-slate-900">Test Completed!</h2>
           <p className="text-slate-500 text-lg">You have successfully completed the {selectedCategory?.title} Assessment.</p>
-          <div className="bg-slate-100 rounded-2xl p-6 mb-6">
-            <p className="text-sm text-slate-500 mb-1">Your Score</p>
-            <p className="text-4xl font-black text-blue-600">{score} <span className="text-2xl text-slate-400">/ {selectedCategory?.qBank.length}</span></p>
+          <div className="bg-slate-100 rounded-2xl p-6 mb-6 border border-slate-200">
+            <p className="text-lg text-slate-700 font-medium">Your results have been securely recorded and submitted to the administration.</p>
           </div>
           <button onClick={() => navigate('/seeker-dashboard')} className="w-full btn-primary">Go to Dashboard</button>
         </div>

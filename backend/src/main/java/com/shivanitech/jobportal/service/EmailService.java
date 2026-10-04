@@ -94,10 +94,10 @@ public class EmailService {
 
     public void sendTestCompletedEmail(String toEmail, String testName, String score) {
         String body = "<h3>Skill Test Completed</h3>"
-                + "<p>You have successfully completed the <strong style='color: #0056b3;'>" + testName + "</strong> test.</p>"
-                + "<p>Your final score is: <strong style='font-size: 20px; color: green;'>" + score + "</strong></p>"
-                + "<p>Great job! This score will be visible on your profile and to employers you apply to.</p>";
-        sendHtmlEmail(toEmail, "Skill Test Results: " + testName, body);
+                + "<p>You have successfully completed the <strong style='color: #0056b3;'>" + testName + "</strong> assessment.</p>"
+                + "<p>Your results have been securely recorded and submitted to the administration.</p>"
+                + "<p>Thank you for taking the time to complete the test!</p>";
+        sendHtmlEmail(toEmail, "Skill Test Completed: " + testName, body);
     }
 
     public void sendJobPostedEmail(String toEmail, String jobTitle) {
