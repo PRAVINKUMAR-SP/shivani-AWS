@@ -63,7 +63,7 @@ const Header = ({ onLoginClick }) => {
   };
 
   return (
-    <header className="glass-header sticky top-0 z-50 w-full transition-all duration-200">
+    <header className="glass-header sticky top-0 z-[60] w-full transition-all duration-200">
       <div className="px-4 sm:px-6 lg:px-8 w-full h-20 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/" className="flex items-center gap-3">
