@@ -219,7 +219,7 @@ const EmployerDashboard = () => {
       )}
 
       {/* Sidebar */}
-      <aside className={`max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-20 lg:w-64 lg:flex lg:h-[calc(100vh-80px)] lg:z-[40] overflow-y-auto ${isSidebarOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-[100] w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out overflow-y-auto lg:sticky lg:inset-auto lg:top-20 lg:w-64 lg:max-w-none lg:h-[calc(100vh-80px)] lg:z-[40] lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
             <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
             <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
