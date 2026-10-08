@@ -961,6 +961,8 @@ const JobSeekerDashboard = () => {
                   ))}
               </div>
             )}
+          </>
+        )}
         </main>
     </div>
   );
