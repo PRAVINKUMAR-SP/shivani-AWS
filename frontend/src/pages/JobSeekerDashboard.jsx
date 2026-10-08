@@ -520,8 +520,13 @@ const JobSeekerDashboard = () => {
 
   useEffect(() => {
     const handleToggle = () => setIsSidebarOpen(prev => !prev);
+    const handleNotifications = () => setActiveTab('notifications');
     window.addEventListener('toggle-dashboard-sidebar', handleToggle);
-    return () => window.removeEventListener('toggle-dashboard-sidebar', handleToggle);
+    window.addEventListener('open-notifications', handleNotifications);
+    return () => {
+      window.removeEventListener('toggle-dashboard-sidebar', handleToggle);
+      window.removeEventListener('open-notifications', handleNotifications);
+    };
   }, []);
 
   useEffect(() => {
@@ -689,7 +694,7 @@ const JobSeekerDashboard = () => {
   const completionPercentage = calculateCompletion();
 
   return (
-    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300 pb-[70px] lg:pb-0">
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)}></div>
       )}
@@ -964,6 +969,30 @@ const JobSeekerDashboard = () => {
           </>
         )}
         </main>
+
+        {/* Bottom Navigation (Mobile Only) */}
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50 flex justify-between items-center h-[65px] px-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]">
+          <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'home' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <Home className={`w-5 h-5 ${activeTab === 'home' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Home</span>
+          </button>
+          <button onClick={() => setActiveTab('applied')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'applied' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <Briefcase className={`w-5 h-5 ${activeTab === 'applied' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Applied</span>
+          </button>
+          <button onClick={() => setActiveTab('applications_tracker')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'applications_tracker' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <FileText className={`w-5 h-5 ${activeTab === 'applications_tracker' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Track</span>
+          </button>
+          <button onClick={() => setActiveTab('saved')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'saved' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <BookmarkIcon className={`w-5 h-5 ${activeTab === 'saved' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Saved</span>
+          </button>
+          <button onClick={() => setActiveTab('view_profile')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'view_profile' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <User className={`w-5 h-5 ${activeTab === 'view_profile' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Profile</span>
+          </button>
+        </nav>
     </div>
   );
 };

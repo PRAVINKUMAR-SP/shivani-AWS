@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Moon, Sun, User as UserIcon, LogOut, Shield, Briefcase, Menu, X, CheckCircle } from 'lucide-react';
+import { Moon, Sun, User as UserIcon, LogOut, Shield, Briefcase, Menu, X, CheckCircle, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { getInitials } from '../utils/helpers';
@@ -112,6 +112,20 @@ const Header = ({ onLoginClick }) => {
         
         {/* Right Section */}
         <div className="flex items-center gap-2 lg:gap-4 ml-auto lg:ml-0">
+          {user && (
+            <button 
+              onClick={() => {
+                if (location.pathname.includes('-dashboard')) {
+                  window.dispatchEvent(new CustomEvent('open-notifications'));
+                } else {
+                  navigate(user.role === 'SEEKER' ? '/seeker-dashboard' : '/employer-dashboard');
+                }
+              }}
+              className="text-slate-500 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors relative"
+            >
+              <Bell className="w-5 h-5" />
+            </button>
+          )}
           <button 
             onClick={() => setIsDark(!isDark)}
             className="text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white p-2 -mr-2 lg:mr-0 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
