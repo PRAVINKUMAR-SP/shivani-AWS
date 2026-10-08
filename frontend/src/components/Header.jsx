@@ -64,11 +64,22 @@ const Header = ({ onLoginClick }) => {
 
   return (
     <header className="glass-header sticky top-0 z-[60] w-full transition-all duration-200 border-b border-slate-200/50 dark:border-slate-800/50">
-      <div className="px-4 sm:px-6 lg:px-8 w-full h-16 lg:h-20 flex justify-between items-center">
-        <div className="flex items-center">
+      <div className="px-4 sm:px-6 lg:px-8 w-full h-16 lg:h-20 flex justify-between items-center relative">
+        {/* Mobile Menu Button (Left on mobile) */}
+        <div className="flex items-center lg:hidden">
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white p-2 -ml-2 rounded-full transition-colors"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Logo (Center on mobile, Left on desktop) */}
+        <div className="flex items-center lg:flex-1 justify-center absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none">
           <Link to="/" className="flex items-center gap-3">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="Shivani Technologies Logo" className="h-10 w-auto rounded-full" />
+              <img src="/logo.png" alt="Shivani Technologies Logo" className="h-9 lg:h-10 w-auto rounded-full" />
               <span className="text-xl font-bold text-blue-700 dark:text-blue-400 uppercase tracking-tight hidden sm:block transition-colors">Shivani Technologies</span>
             </div>
           </Link>
@@ -93,16 +104,17 @@ const Header = ({ onLoginClick }) => {
           </nav>
         </div>
         
-        <div className="flex items-center gap-4">
+        {/* Right Section */}
+        <div className="flex items-center gap-2 lg:gap-4 ml-auto lg:ml-0">
           <button 
             onClick={() => setIsDark(!isDark)}
-            className="text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white p-2 -mr-2 lg:mr-0 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
           
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3">
               {user.role === 'ADMIN' && (
                 <div className="relative" ref={dropdownRef}>
                   <button onClick={() => setRoleMenuOpen(!roleMenuOpen)} className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white px-4 py-1.5 rounded-lg font-semibold text-sm shadow-sm transition-all duration-300">
@@ -142,14 +154,6 @@ const Header = ({ onLoginClick }) => {
               Sign in
             </button>
           )}
-
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
         </div>
       </div>
 
@@ -184,6 +188,14 @@ const Header = ({ onLoginClick }) => {
               <Link to="/employer-dashboard" onClick={() => setMobileMenuOpen(false)} className="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-base font-semibold flex items-center gap-2">
                 <Briefcase className="w-4 h-4" /> Employer Dashboard
               </Link>
+            </div>
+          )}
+          
+          {user && (
+            <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-4">
+              <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="text-red-500 hover:text-red-600 dark:text-red-400 text-base font-semibold flex items-center gap-2 w-full text-left">
+                <LogOut className="w-5 h-5" /> Logout
+              </button>
             </div>
           )}
         </div>

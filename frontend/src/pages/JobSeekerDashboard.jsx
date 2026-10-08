@@ -749,33 +749,33 @@ const JobSeekerDashboard = () => {
 
 {activeTab === 'home' && (
               <>
-                {/* Stats Bar */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-8">
-                  <div className="card p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-l-4 border-blue-500">
-                    <div>
-                      <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Applied Jobs</p>
-                      <h3 className="text-2xl font-bold text-slate-900">{stats.appliedCount}</h3>
+                {/* Stats Bar (Compact on Mobile) */}
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mb-6">
+                  <div className="card p-3 sm:p-4 md:p-6 flex flex-col items-center text-center justify-center border-t-2 border-l-0 sm:border-t-0 sm:border-l-4 border-blue-500 sm:flex-row sm:justify-between sm:text-left gap-1 sm:gap-0 relative overflow-hidden">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full sm:rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 sm:order-last mb-1 sm:mb-0">
+                      <Briefcase className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                      <Briefcase className="w-6 h-6" />
+                    <div>
+                      <h3 className="text-lg sm:text-2xl font-bold text-slate-900 leading-none sm:leading-tight">{stats.appliedCount}</h3>
+                      <p className="text-[10px] sm:text-sm font-medium text-slate-500 mt-1 sm:mt-1 leading-tight whitespace-nowrap">Applied</p>
                     </div>
                   </div>
-                  <div className="card p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-l-4 border-green-500">
-                    <div>
-                      <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Shortlisted</p>
-                      <h3 className="text-2xl font-bold text-slate-900">{stats.shortlistedCount}</h3>
+                  <div className="card p-3 sm:p-4 md:p-6 flex flex-col items-center text-center justify-center border-t-2 border-l-0 sm:border-t-0 sm:border-l-4 border-green-500 sm:flex-row sm:justify-between sm:text-left gap-1 sm:gap-0 relative overflow-hidden">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full sm:rounded-xl bg-green-50 text-green-600 flex items-center justify-center shrink-0 sm:order-last mb-1 sm:mb-0">
+                      <Check className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <div className="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center shrink-0">
-                      <Check className="w-6 h-6" />
+                    <div>
+                      <h3 className="text-lg sm:text-2xl font-bold text-slate-900 leading-none sm:leading-tight">{stats.shortlistedCount}</h3>
+                      <p className="text-[10px] sm:text-sm font-medium text-slate-500 mt-1 sm:mt-1 leading-tight whitespace-nowrap">Shortlist</p>
                     </div>
                   </div>
-                  <div className="card p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-l-4 border-purple-500">
-                    <div>
-                      <p className="text-sm font-medium text-slate-500 mb-1 leading-tight">Matching Jobs</p>
-                      <h3 className="text-2xl font-bold text-slate-900">{stats.matchingCount}</h3>
+                  <div className="card p-3 sm:p-4 md:p-6 flex flex-col items-center text-center justify-center border-t-2 border-l-0 sm:border-t-0 sm:border-l-4 border-purple-500 sm:flex-row sm:justify-between sm:text-left gap-1 sm:gap-0 relative overflow-hidden">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 sm:order-last mb-1 sm:mb-0">
+                      <Search className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-                      <Search className="w-6 h-6" />
+                    <div>
+                      <h3 className="text-lg sm:text-2xl font-bold text-slate-900 leading-none sm:leading-tight">{stats.matchingCount}</h3>
+                      <p className="text-[10px] sm:text-sm font-medium text-slate-500 mt-1 sm:mt-1 leading-tight whitespace-nowrap">Matches</p>
                     </div>
                   </div>
                 </div>
