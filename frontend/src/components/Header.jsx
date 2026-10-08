@@ -63,8 +63,8 @@ const Header = ({ onLoginClick }) => {
   };
 
   return (
-    <header className="glass-header sticky top-0 z-[60] w-full transition-all duration-200">
-      <div className="px-4 sm:px-6 lg:px-8 w-full h-20 flex justify-between items-center">
+    <header className="glass-header sticky top-0 z-[60] w-full transition-all duration-200 border-b border-slate-200/50 dark:border-slate-800/50">
+      <div className="px-4 sm:px-6 lg:px-8 w-full h-16 lg:h-20 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/" className="flex items-center gap-3">
             <div className="flex items-center gap-3">
@@ -155,7 +155,7 @@ const Header = ({ onLoginClick }) => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-20 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg py-4 px-4 flex flex-col space-y-4 max-h-[calc(100dvh-80px)] overflow-y-auto z-50">
+        <div className="lg:hidden absolute top-16 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg py-4 px-4 flex flex-col space-y-4 max-h-[calc(100dvh-64px)] overflow-y-auto z-50">
           <Link to="/companies" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Companies</Link>
           <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Services</Link>
           <Link to="/financial" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Financial</Link>

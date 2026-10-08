@@ -683,19 +683,13 @@ const JobSeekerDashboard = () => {
   const completionPercentage = calculateCompletion();
 
   return (
-    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300 pb-16 lg:pb-0">
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)}></div>
       )}
 
-      {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-[100] w-4/5 max-w-[300px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transition-transform duration-300 ease-in-out overflow-y-auto lg:sticky lg:inset-auto lg:top-20 lg:w-64 lg:max-w-none lg:h-[calc(100vh-80px)] lg:z-[40] lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex justify-between items-center mb-8 lg:hidden pb-4 border-b border-slate-100 dark:border-slate-800">
-            <span className="font-bold text-xl text-slate-800 dark:text-white">Menu</span>
-            <button onClick={() => setIsSidebarOpen(false)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
-              <X className="w-5 h-5" />
-            </button>
-        </div>
+      {/* Sidebar (Desktop Only) */}
+      <aside className={`hidden lg:flex lg:sticky lg:inset-auto lg:top-20 lg:w-64 lg:max-w-none lg:h-[calc(100vh-80px)] lg:z-[40] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col p-4 transition-transform duration-300 ease-in-out overflow-y-auto`}>
         <div className="space-y-1 mb-8">
           <SidebarItem icon={Home} label="Home" active={activeTab === 'home'} onClick={() => { setActiveTab('home'); setIsSidebarOpen(false); }} />
           <SidebarItem icon={Briefcase} label="Applied" active={activeTab === 'applied'} onClick={() => { setActiveTab('applied'); setIsSidebarOpen(false); }} />
@@ -727,13 +721,7 @@ const JobSeekerDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
         {/* Mobile Navigation Header */}
-        <div className="lg:hidden mb-6 flex items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-          <button 
-            onClick={() => setIsSidebarOpen(true)}
-            className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
-          >
-             <Menu className="w-6 h-6" />
-          </button>
+        <div className="lg:hidden mb-6 flex items-center justify-center bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 sticky top-[72px] z-30">
           <span className="font-bold text-lg text-slate-800 dark:text-white capitalize">{activeTab.replace('_', ' ')}</span>
         </div>
 
@@ -964,6 +952,33 @@ const JobSeekerDashboard = () => {
           </>
         )}
         </main>
+
+        {/* Bottom Navigation (Mobile Only - Naukri Style) */}
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50 flex justify-between items-center h-[65px] px-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]">
+          <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'home' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <Home className={`w-5 h-5 ${activeTab === 'home' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Home</span>
+          </button>
+          <button onClick={() => setActiveTab('applied')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'applied' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <Briefcase className={`w-5 h-5 ${activeTab === 'applied' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Applied</span>
+          </button>
+          <button onClick={() => setActiveTab('saved')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'saved' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <BookmarkIcon className={`w-5 h-5 ${activeTab === 'saved' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Saved</span>
+          </button>
+          <button onClick={() => setActiveTab('notifications')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors relative ${activeTab === 'notifications' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <Bell className={`w-5 h-5 ${activeTab === 'notifications' ? 'fill-blue-100' : ''}`} />
+            {notifications.filter(n => !n.read).length > 0 && (
+              <span className="absolute top-2 right-1/4 w-2 h-2 bg-red-500 rounded-full"></span>
+            )}
+            <span className="text-[10px] font-semibold">Alerts</span>
+          </button>
+          <button onClick={() => setActiveTab('view_profile')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'view_profile' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
+            <User className={`w-5 h-5 ${activeTab === 'view_profile' ? 'fill-blue-100' : ''}`} />
+            <span className="text-[10px] font-semibold">Profile</span>
+          </button>
+        </nav>
     </div>
   );
 };
