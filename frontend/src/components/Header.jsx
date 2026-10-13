@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Moon, Sun, User as UserIcon, LogOut, Shield, Briefcase, Menu, X, CheckCircle, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { getInitials } from '../utils/helpers';
 const Header = ({ onLoginClick }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [testCompleted, setTestCompleted] = useState(false);
@@ -111,14 +112,43 @@ const Header = ({ onLoginClick }) => {
         </div>
         
         {/* Right Section */}
-        <div className="flex items-center gap-2 lg:gap-4 ml-auto lg:ml-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 ml-auto lg:ml-0">
+          {/* Admin View Switcher (Visible on both mobile & desktop) */}
+          {user && user.role === 'ADMIN' && (
+            <div className="relative" ref={dropdownRef}>
+              <button 
+                onClick={() => setRoleMenuOpen(!roleMenuOpen)} 
+                className="flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg font-semibold text-xs sm:text-sm shadow-sm transition-all duration-300"
+                title="Switch Portal"
+              >
+                <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 
+                <span>{getAdminViewText()}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform ${roleMenuOpen ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              {roleMenuOpen && (
+                <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-900 shadow-xl rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden w-52 z-50 py-1">
+                  <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Switch Portal</div>
+                  <Link to="/admin-dashboard" onClick={() => setRoleMenuOpen(false)} className={`flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors ${location.pathname.includes('/admin-dashboard') ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 font-bold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-purple-600'}`}>
+                    <Shield className="w-4 h-4 text-purple-600 dark:text-purple-400" /> Admin Dashboard
+                  </Link>
+                  <Link to="/employer-dashboard" onClick={() => setRoleMenuOpen(false)} className={`flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors ${location.pathname.includes('/employer-dashboard') ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-bold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600'}`}>
+                    <Briefcase className="w-4 h-4 text-blue-600 dark:text-blue-400" /> Employer Dashboard
+                  </Link>
+                  <Link to="/seeker-dashboard" onClick={() => setRoleMenuOpen(false)} className={`flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors ${location.pathname.includes('/seeker-dashboard') ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300 font-bold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-green-600'}`}>
+                    <UserIcon className="w-4 h-4 text-green-600 dark:text-green-400" /> Seeker Dashboard
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
+
           {user && (
             <button 
               onClick={() => {
                 if (location.pathname.includes('-dashboard')) {
                   window.dispatchEvent(new CustomEvent('open-notifications'));
                 } else {
-                  navigate(user.role === 'SEEKER' ? '/seeker-dashboard' : '/employer-dashboard');
+                  navigate(user.role === 'SEEKER' ? '/seeker-dashboard' : user.role === 'EMPLOYER' ? '/employer-dashboard' : '/admin-dashboard');
                 }
               }}
               className="text-slate-500 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors relative"
@@ -128,42 +158,26 @@ const Header = ({ onLoginClick }) => {
           )}
           <button 
             onClick={() => setIsDark(!isDark)}
-            className="text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white p-2 -mr-2 lg:mr-0 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="text-slate-400 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
           
           {user ? (
-            <div className="hidden lg:flex items-center gap-3">
-              {user.role === 'ADMIN' && (
-                <div className="relative" ref={dropdownRef}>
-                  <button onClick={() => setRoleMenuOpen(!roleMenuOpen)} className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white px-4 py-1.5 rounded-lg font-semibold text-sm shadow-sm transition-all duration-300">
-                    <Shield className="w-4 h-4" /> {getAdminViewText()}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform ${roleMenuOpen ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
-                  </button>
-                  {roleMenuOpen && (
-                    <div className="absolute top-full mt-2 right-0 bg-white shadow-lg rounded-xl border border-slate-100 overflow-hidden w-48 z-50">
-                      <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Switch View</div>
-                      <Link to="/admin-dashboard" onClick={() => setRoleMenuOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-purple-50 hover:text-purple-700 font-medium">Admin Dashboard</Link>
-                      <Link to="/employer-dashboard" onClick={() => setRoleMenuOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 font-medium">Employer Dashboard</Link>
-                      <Link to="/seeker-dashboard" onClick={() => setRoleMenuOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-green-50 hover:text-green-700 font-medium">Seeker Dashboard</Link>
-                    </div>
-                  )}
-                </div>
-              )}
+            <div className="flex items-center gap-2 lg:gap-3">
               {user.role === 'EMPLOYER' && (
-                <Link to="/employer-dashboard" className="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg font-semibold text-sm transition-colors">
+                <Link to="/employer-dashboard" className="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-1.5 rounded-lg font-semibold text-xs sm:text-sm transition-colors">
                   <Briefcase className="w-4 h-4" /> Employer
                 </Link>
               )}
               
               <Link to={user.role === 'SEEKER' ? '/seeker-dashboard' : user.role === 'EMPLOYER' ? '/employer-dashboard' : '/admin-dashboard'} className="text-slate-700 font-medium hover:text-blue-600 flex items-center gap-2">
-                <div className="w-9 h-9 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white/20 dark:ring-slate-800">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-sm ring-2 ring-white/20 dark:ring-slate-800">
                   {getUserInitials()}
                 </div>
               </Link>
-              <button onClick={logout} className="text-slate-400 hover:text-red-500 dark:text-slate-300 dark:hover:text-red-400 transition-colors p-2" title="Logout">
-                <LogOut className="w-5 h-5" />
+              <button onClick={logout} className="text-slate-400 hover:text-red-500 dark:text-slate-300 dark:hover:text-red-400 transition-colors p-1.5 sm:p-2" title="Logout">
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           ) : (

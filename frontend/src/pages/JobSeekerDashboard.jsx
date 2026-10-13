@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Briefcase, Mail, Bookmark, Bell, Settings, User, LogOut, Search, MapPin, SlidersHorizontal, Bookmark as BookmarkIcon, Menu } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Home, Briefcase, Mail, Bookmark, Bell, Settings, User, LogOut, Search, MapPin, SlidersHorizontal, Bookmark as BookmarkIcon, Menu, Shield } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { MailOpen, BellRing, Eye, Check, X, FileText } from 'lucide-react';
@@ -716,6 +717,32 @@ const JobSeekerDashboard = () => {
                     <SidebarItem icon={User} label="Profile" active={activeTab === 'view_profile'} onClick={() => { setActiveTab('view_profile'); setIsSidebarOpen(false); }} />
         </div>
         
+        {user?.role === 'ADMIN' && (
+          <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+            <div className="px-3 mb-2 text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5" /> Admin Navigation
+            </div>
+            <div className="space-y-1">
+              <Link 
+                to="/admin-dashboard" 
+                onClick={() => setIsSidebarOpen(false)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors"
+              >
+                <Shield className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <span>Admin Dashboard</span>
+              </Link>
+              <Link 
+                to="/employer-dashboard" 
+                onClick={() => setIsSidebarOpen(false)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+              >
+                <Briefcase className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <span>Employer Dashboard</span>
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className="mt-auto">
           <div className="mb-6 px-4">
             <div className="flex justify-between items-center mb-2">

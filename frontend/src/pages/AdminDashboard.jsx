@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity, Mail, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Home, Users, Briefcase, FileText, MessageSquare, Settings, LogOut, CheckCircle, Shield, Trash2, Edit2, Download, Activity, Mail, Menu, X, User } from 'lucide-react';
 import CustomDropdown from '../components/CustomDropdown';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -481,6 +482,30 @@ const AdminDashboard = () => {
           <SidebarItem icon={Settings} label="Settings" active={activeTab === 'settings'} onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }} />
         </div>
         
+        <div className="pt-4 mt-2 mb-8 border-t border-slate-100 dark:border-slate-800">
+          <div className="px-3 mb-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            Switch Portal
+          </div>
+          <div className="space-y-1">
+            <Link 
+              to="/employer-dashboard" 
+              onClick={() => setIsSidebarOpen(false)}
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+            >
+              <Briefcase className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <span>Employer Portal</span>
+            </Link>
+            <Link 
+              to="/seeker-dashboard" 
+              onClick={() => setIsSidebarOpen(false)}
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors"
+            >
+              <User className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <span>Seeker Portal</span>
+            </Link>
+          </div>
+        </div>
+
         <div className="mt-auto">
         </div>
       </aside>
