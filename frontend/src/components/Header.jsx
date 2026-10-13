@@ -169,7 +169,7 @@ const Header = ({ onLoginClick }) => {
           ) : (
             <button 
               onClick={onLoginClick}
-              className="text-blue-600 font-bold text-base hover:text-blue-700 px-5 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+              className="text-blue-600 dark:text-blue-400 font-bold text-sm sm:text-base hover:text-blue-700 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors whitespace-nowrap"
             >
               Sign in
             </button>
@@ -180,6 +180,7 @@ const Header = ({ onLoginClick }) => {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && !location.pathname.includes('-dashboard') && (
         <div className="lg:hidden absolute top-16 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg py-4 px-4 flex flex-col space-y-4 max-h-[calc(100dvh-64px)] overflow-y-auto z-50">
+          <Link to="/jobs" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Explore Jobs</Link>
           <Link to="/companies" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Companies</Link>
           <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Services</Link>
           <Link to="/financial" onClick={() => setMobileMenuOpen(false)} className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-base font-semibold">Financial</Link>
@@ -211,10 +212,19 @@ const Header = ({ onLoginClick }) => {
             </div>
           )}
           
-          {user && (
+          {user ? (
             <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-4">
               <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="text-red-500 hover:text-red-600 dark:text-red-400 text-base font-semibold flex items-center gap-2 w-full text-left">
                 <LogOut className="w-5 h-5" /> Logout
+              </button>
+            </div>
+          ) : (
+            <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800">
+              <button 
+                onClick={() => { setMobileMenuOpen(false); onLoginClick(); }}
+                className="w-full btn-primary py-2.5 text-center text-sm font-semibold"
+              >
+                Sign in / Register
               </button>
             </div>
           )}

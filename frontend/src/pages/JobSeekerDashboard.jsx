@@ -283,24 +283,24 @@ const ApplicationTimeline = ({ currentStatus }) => {
   const isRejected = currentStatus === 'REJECTED';
 
   return (
-    <div className="flex w-full items-center justify-between relative z-0 mt-8">
-      <div className="absolute h-1 bg-slate-100 w-[80%] left-[10%] top-3 -z-10"></div>
-      <div className={`absolute h-1 bg-green-500 top-3 -z-10 transition-all duration-500 ${isRejected ? 'hidden' : ''}`} style={{ width: `${(currentIndex / 3) * 80}%`, left: '10%' }}></div>
+    <div className="flex w-full items-center justify-between relative z-0 mt-6 sm:mt-8 px-1">
+      <div className="absolute h-1 bg-slate-100 dark:bg-slate-700 w-[80%] left-[10%] top-3 sm:top-3.5 -z-10"></div>
+      <div className={`absolute h-1 bg-green-500 top-3 sm:top-3.5 -z-10 transition-all duration-500 ${isRejected ? 'hidden' : ''}`} style={{ width: `${(currentIndex / 3) * 80}%`, left: '10%' }}></div>
       
       {steps.map((step, idx) => {
         const isCompleted = idx < currentIndex && !isRejected;
         const isActive = idx === currentIndex && !isRejected;
         return (
-          <div key={step} className="flex flex-col items-center gap-2 bg-white px-2">
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 ${
-              isRejected && idx === currentIndex ? 'bg-red-50 text-red-600 border-red-500' :
-              isActive ? 'bg-blue-50 text-blue-600 border-blue-500' :
-              isCompleted ? 'bg-green-50 text-green-600 border-green-500' : 
-              'bg-slate-50 text-slate-400 border-slate-200'
+          <div key={step} className="flex flex-col items-center gap-1.5 sm:gap-2 bg-white dark:bg-slate-800 px-1 sm:px-2 max-w-[70px] sm:max-w-none text-center">
+            <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold border-2 transition-colors duration-300 ${
+              isRejected && idx === currentIndex ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-500' :
+              isActive ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-500' :
+              isCompleted ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-500' : 
+              'bg-slate-50 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700'
             }`}>
               {isCompleted ? '✓' : isRejected && idx === currentIndex ? '✕' : (idx + 1)}
             </div>
-            <span className={`text-[10px] whitespace-nowrap font-bold ${isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-slate-400'}`}>
+            <span className={`text-[8px] sm:text-[10px] leading-tight font-bold break-words sm:whitespace-nowrap ${isActive ? 'text-blue-600 dark:text-blue-400' : isCompleted ? 'text-green-600 dark:text-green-400' : 'text-slate-400'}`}>
               {step}
             </span>
           </div>
@@ -694,7 +694,7 @@ const JobSeekerDashboard = () => {
   const completionPercentage = calculateCompletion();
 
   return (
-    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300 pb-[70px] lg:pb-0">
+    <div className="flex min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300 pb-[85px] lg:pb-0">
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)}></div>
       )}
@@ -737,11 +737,6 @@ const JobSeekerDashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
-        {/* Mobile Navigation Header */}
-        <div className="lg:hidden mb-6 flex items-center justify-center bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 sticky top-[72px] z-30">
-          <span className="font-bold text-lg text-slate-800 dark:text-white capitalize">{activeTab.replace('_', ' ')}</span>
-        </div>
-
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-600"></div>
@@ -798,16 +793,16 @@ const JobSeekerDashboard = () => {
                 </div>
 
                 {/* Search Bar Area */}
-                <div className="max-w-4xl mb-8 flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1 flex flex-col sm:flex-row sm:items-center bg-white border border-slate-200 rounded-2xl sm:rounded-full p-2 sm:pl-6 sm:pr-2 sm:py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
-                    <div className="flex items-center px-4 sm:px-0 py-3 sm:py-0 border-b sm:border-b-0 sm:border-r border-slate-100 flex-1">
+                <div className="max-w-4xl mb-6 sm:mb-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <div className="flex-1 flex flex-col sm:flex-row sm:items-center bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-2xl sm:rounded-full p-2 sm:pl-6 sm:pr-2 sm:py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+                    <div className="flex items-center px-4 sm:px-0 py-3 sm:py-0 border-b sm:border-b-0 sm:border-r border-slate-100 dark:border-slate-750 flex-1">
                       <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
                       <input 
                         type="text" 
                         placeholder="Job title..." 
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="flex-1 min-w-0 outline-none text-slate-700 bg-transparent text-sm sm:text-base"
+                        className="flex-1 min-w-0 outline-none text-slate-800 dark:text-slate-100 placeholder:text-slate-400 bg-transparent text-sm sm:text-base"
                       />
                     </div>
                     <div className="flex items-center px-4 sm:px-4 py-3 sm:py-0 flex-1">
@@ -817,19 +812,19 @@ const JobSeekerDashboard = () => {
                         placeholder="Location" 
                         value={locationQuery}
                         onChange={(e) => setLocationQuery(e.target.value)}
-                        className="flex-1 min-w-0 outline-none text-slate-700 bg-transparent text-sm sm:text-base"
+                        className="flex-1 min-w-0 outline-none text-slate-800 dark:text-slate-100 placeholder:text-slate-400 bg-transparent text-sm sm:text-base"
                       />
                     </div>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-2 px-4 sm:px-8 rounded-xl sm:rounded-full transition-colors whitespace-nowrap sm:ml-2 text-sm sm:text-base w-full sm:w-auto mt-2 sm:mt-0">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-2 px-4 sm:px-8 rounded-xl sm:rounded-full transition-colors whitespace-nowrap sm:ml-2 text-sm sm:text-base w-full sm:w-auto mt-2 sm:mt-0 shadow-sm">
                       Search
                     </button>
                   </div>
                   <button 
                     onClick={() => setShowFilters(!showFilters)}
-                    className={`border font-semibold py-3 px-6 rounded-full transition-colors shadow-sm flex items-center gap-2 whitespace-nowrap h-fit mt-1 ${
+                    className={`border font-semibold py-3 px-6 rounded-2xl sm:rounded-full transition-colors shadow-sm flex items-center justify-center gap-2 whitespace-nowrap h-fit mt-1 w-full sm:w-auto ${
                       showFilters || filterType !== 'All' || filterSalary !== 'All' 
-                        ? 'bg-blue-50 border-blue-200 text-blue-700' 
-                        : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700'
+                        ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300' 
+                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200'
                     }`}
                   >
                     <SlidersHorizontal className="w-4 h-4" />
@@ -844,19 +839,19 @@ const JobSeekerDashboard = () => {
 
                 {/* Extended Filters Panel */}
                 {showFilters && (
-                  <div className="max-w-4xl mb-8 p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                  <div className="max-w-4xl mb-8 p-5 sm:p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="font-bold text-slate-900">Advanced Filters</h3>
+                      <h3 className="font-bold text-slate-900 dark:text-white">Advanced Filters</h3>
                       <button 
                         onClick={() => { setFilterType('All'); setFilterSalary('All'); }}
-                        className="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors"
+                        className="text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                       >
                         Clear all
                       </button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                       <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Job Type</label>
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Job Type</label>
                         <CustomDropdown 
                           value={filterType}
                           onChange={setFilterType}
@@ -867,11 +862,11 @@ const JobSeekerDashboard = () => {
                             { value: 'Contract', label: 'Contract' },
                             { value: 'Internship', label: 'Internship' }
                           ]}
-                          defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                          defaultColorClass="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-400"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Minimum Salary</label>
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Minimum Salary</label>
                         <CustomDropdown 
                           value={filterSalary}
                           onChange={setFilterSalary}
@@ -882,7 +877,7 @@ const JobSeekerDashboard = () => {
                             { value: '200000', label: '₹2,00,000+' },
                             { value: '500000', label: '₹5,00,000+' }
                           ]}
-                          defaultColorClass="bg-white border-slate-200 text-slate-700 hover:border-blue-400"
+                          defaultColorClass="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-400"
                         />
                       </div>
                     </div>
@@ -971,26 +966,26 @@ const JobSeekerDashboard = () => {
         </main>
 
         {/* Bottom Navigation (Mobile Only) */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50 flex justify-between items-center h-[65px] px-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]">
-          <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'home' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
-            <Home className={`w-5 h-5 ${activeTab === 'home' ? 'fill-blue-100' : ''}`} />
-            <span className="text-[10px] font-semibold">Home</span>
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 z-50 flex justify-between items-center h-[65px] px-1 sm:px-2 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)]">
+          <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center justify-center flex-1 h-full py-1 space-y-1 transition-colors ${activeTab === 'home' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>
+            <Home className={`w-5 h-5 ${activeTab === 'home' ? 'fill-blue-100 dark:fill-blue-900/50' : ''}`} />
+            <span className="text-[10px] tracking-tight">Home</span>
           </button>
-          <button onClick={() => setActiveTab('applied')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'applied' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
-            <Briefcase className={`w-5 h-5 ${activeTab === 'applied' ? 'fill-blue-100' : ''}`} />
-            <span className="text-[10px] font-semibold">Applied</span>
+          <button onClick={() => setActiveTab('applied')} className={`flex flex-col items-center justify-center flex-1 h-full py-1 space-y-1 transition-colors ${activeTab === 'applied' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>
+            <Briefcase className={`w-5 h-5 ${activeTab === 'applied' ? 'fill-blue-100 dark:fill-blue-900/50' : ''}`} />
+            <span className="text-[10px] tracking-tight">Applied</span>
           </button>
-          <button onClick={() => setActiveTab('applications_tracker')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'applications_tracker' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
-            <FileText className={`w-5 h-5 ${activeTab === 'applications_tracker' ? 'fill-blue-100' : ''}`} />
-            <span className="text-[10px] font-semibold">Track</span>
+          <button onClick={() => setActiveTab('applications_tracker')} className={`flex flex-col items-center justify-center flex-1 h-full py-1 space-y-1 transition-colors ${activeTab === 'applications_tracker' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>
+            <FileText className={`w-5 h-5 ${activeTab === 'applications_tracker' ? 'fill-blue-100 dark:fill-blue-900/50' : ''}`} />
+            <span className="text-[10px] tracking-tight">Track</span>
           </button>
-          <button onClick={() => setActiveTab('saved')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'saved' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
-            <BookmarkIcon className={`w-5 h-5 ${activeTab === 'saved' ? 'fill-blue-100' : ''}`} />
-            <span className="text-[10px] font-semibold">Saved</span>
+          <button onClick={() => setActiveTab('saved')} className={`flex flex-col items-center justify-center flex-1 h-full py-1 space-y-1 transition-colors ${activeTab === 'saved' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>
+            <BookmarkIcon className={`w-5 h-5 ${activeTab === 'saved' ? 'fill-blue-100 dark:fill-blue-900/50' : ''}`} />
+            <span className="text-[10px] tracking-tight">Saved</span>
           </button>
-          <button onClick={() => setActiveTab('view_profile')} className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${activeTab === 'view_profile' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}>
-            <User className={`w-5 h-5 ${activeTab === 'view_profile' ? 'fill-blue-100' : ''}`} />
-            <span className="text-[10px] font-semibold">Profile</span>
+          <button onClick={() => setActiveTab('view_profile')} className={`flex flex-col items-center justify-center flex-1 h-full py-1 space-y-1 transition-colors ${activeTab === 'view_profile' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>
+            <User className={`w-5 h-5 ${activeTab === 'view_profile' ? 'fill-blue-100 dark:fill-blue-900/50' : ''}`} />
+            <span className="text-[10px] tracking-tight">Profile</span>
           </button>
         </nav>
     </div>

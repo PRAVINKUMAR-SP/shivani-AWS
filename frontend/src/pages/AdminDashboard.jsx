@@ -68,6 +68,12 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(() => !sessionStorage.getItem('admin_stats'));
 
   useEffect(() => {
+    const handleToggle = () => setIsSidebarOpen(prev => !prev);
+    window.addEventListener('toggle-dashboard-sidebar', handleToggle);
+    return () => window.removeEventListener('toggle-dashboard-sidebar', handleToggle);
+  }, []);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeTab]);
 
@@ -481,37 +487,26 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
-        {/* Mobile Navigation Header */}
-        <div className="lg:hidden mb-6 flex items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-          <button 
-            onClick={() => setIsSidebarOpen(true)}
-            className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
-          >
-             <Menu className="w-6 h-6" />
-          </button>
-          <span className="font-bold text-lg text-slate-800 dark:text-white capitalize">{activeTab.replace('_', ' ')}</span>
-        </div>
-
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-indigo-600"></div>
           </div>
         ) : (
           <>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Shield className="w-6 h-6 md:w-8 md:h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <Shield className="w-6 h-6 md:w-8 md:h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
+                </div>
+                <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">Welcome System Administrator.</p>
+              </div>
             </div>
-            <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">Welcome System Administrator.</p>
-          </div>
-        </div>
 
         {activeTab === 'overview' && (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 mb-8">
               <StatCard title="Total Users" count={stats.totalUsers} icon={Users} bgColor="bg-blue-50" iconColor="text-blue-600" />
               <StatCard title="Job Seekers" count={stats.totalSeekers} icon={Users} bgColor="bg-yellow-50" iconColor="text-yellow-600" />
               <StatCard title="Employers" count={stats.totalEmployers} icon={Briefcase} bgColor="bg-green-50" iconColor="text-green-600" />
@@ -519,18 +514,18 @@ const AdminDashboard = () => {
               <StatCard title="Applications" count={stats.totalApplications} icon={FileText} bgColor="bg-pink-50" iconColor="text-pink-600" />
             </div>
             
-            <div className="card p-6 min-h-[400px] flex flex-col">
+            <div className="card p-4 sm:p-6 min-h-[350px] sm:min-h-[400px] flex flex-col">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">Platform Growth</h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm">Visualizing user registrations and applications.</p>
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">Platform Growth</h2>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">Visualizing user registrations and applications.</p>
                 </div>
-                <div className="flex bg-slate-100 dark:bg-slate-700/50 rounded-lg p-1">
+                <div className="flex bg-slate-100 dark:bg-slate-700/50 rounded-lg p-1 self-stretch sm:self-auto justify-center">
                   {['Daily', 'Monthly', 'Yearly'].map(range => (
                     <button
                       key={range}
                       onClick={() => setTimeRange(range)}
-                      className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                      className={`px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                         timeRange === range ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
@@ -540,7 +535,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
               
-              <div className="w-full h-[350px] mt-4">
+              <div className="w-full h-[240px] sm:h-[350px] mt-2 sm:mt-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData[timeRange]} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>

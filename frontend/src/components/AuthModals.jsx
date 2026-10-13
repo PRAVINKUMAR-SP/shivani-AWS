@@ -192,8 +192,8 @@ const AuthModals = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="card w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 shadow-xl">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-3 sm:p-4">
+      <div className="card w-full max-w-md max-h-[90dvh] overflow-y-auto animate-in fade-in zoom-in duration-200 shadow-xl">
         
         {/* Header */}
         <div className="flex justify-end p-4">

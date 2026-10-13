@@ -108,24 +108,24 @@ const TestPage = () => {
 
   if (!testStarted) {
     return (
-      <div className="bg-slate-50 min-h-[calc(100vh-80px)] py-12 px-4">
+      <div className="bg-slate-50 dark:bg-[#0f172a] min-h-[calc(100vh-80px)] py-8 sm:py-12 px-4 transition-colors duration-300">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-4 mb-12">
-            <h1 className="text-4xl font-bold text-slate-900">Skill Assessments</h1>
-            <p className="text-slate-500 text-lg max-w-2xl mx-auto">Select a specialized domain test to validate your technical expertise and stand out to top employers.</p>
+          <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">Skill Assessments</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">Select a specialized domain test to validate your technical expertise and stand out to top employers.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {CATEGORIES.map(cat => {
               const Icon = cat.icon;
               return (
-                <div key={cat.id} className="card p-6 flex flex-col items-center text-center hover:-translate-y-2 transition-transform cursor-pointer border-t-4 border-t-blue-500" onClick={() => startTest(cat)}>
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${cat.bg} ${cat.color}`}>
-                    <Icon className="w-8 h-8" />
+                <div key={cat.id} className="card p-5 sm:p-6 flex flex-col items-center text-center hover:-translate-y-2 transition-transform cursor-pointer border-t-4 border-t-blue-500 bg-white dark:bg-slate-800" onClick={() => startTest(cat)}>
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mb-4 ${cat.bg} ${cat.color}`}>
+                    <Icon className="w-7 h-7 sm:w-8 sm:h-8" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{cat.title}</h3>
-                  <p className="text-slate-500 text-sm mb-6">20 Questions • 20s per Question</p>
-                  <button className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold rounded-xl transition-colors border border-slate-200">Start Assessment</button>
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">{cat.title}</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-5 sm:mb-6">20 Questions • 20s per Question</p>
+                  <button className="w-full py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-xl transition-colors border border-slate-200 dark:border-slate-600 text-xs sm:text-sm">Start Assessment</button>
                 </div>
               );
             })}
@@ -138,34 +138,34 @@ const TestPage = () => {
   const currentQ = selectedCategory.qBank[currentQIndex];
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex flex-col py-10 px-4">
+    <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] flex flex-col py-6 sm:py-10 px-4 transition-colors duration-300">
       <div className="max-w-3xl mx-auto w-full flex-1 flex flex-col">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6 sm:mb-8 gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">{selectedCategory.title}</h1>
-            <p className="text-slate-500 font-medium">Question {currentQIndex + 1} of {selectedCategory.qBank.length}</p>
+            <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white">{selectedCategory.title}</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium">Question {currentQIndex + 1} of {selectedCategory.qBank.length}</p>
           </div>
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-lg ${timeLeft <= 5 ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
-            <Clock className="w-5 h-5" />
+          <div className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-sm sm:text-lg whitespace-nowrap ${timeLeft <= 5 ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'}`}>
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
             00:{timeLeft < 10 ? `0${timeLeft}` : timeLeft}
           </div>
         </div>
 
-        <div className="w-full bg-slate-200 h-2 rounded-full mb-8 overflow-hidden">
+        <div className="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full mb-6 sm:mb-8 overflow-hidden">
           <div className="bg-blue-600 h-full transition-all duration-300" style={{ width: `${((currentQIndex) / selectedCategory.qBank.length) * 100}%` }}></div>
         </div>
 
-        <div className="card p-6 md:p-8 mb-8 flex-1">
-          <h2 className="text-xl md:text-2xl font-semibold text-slate-900 mb-8">{currentQ.q}</h2>
-          <div className="space-y-4">
+        <div className="card p-5 sm:p-8 mb-6 sm:mb-8 flex-1 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+          <h2 className="text-lg sm:text-2xl font-semibold text-slate-900 dark:text-white mb-6 sm:mb-8 leading-snug">{currentQ.q}</h2>
+          <div className="space-y-3 sm:space-y-4">
             {currentQ.options.map((opt, idx) => (
               <button
                 key={idx}
                 onClick={() => handleNextQuestion(idx)}
-                className="w-full text-left p-4 rounded-xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50 font-medium text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 active:scale-[0.99]"
+                className="w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-slate-100 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-slate-750 font-medium text-slate-700 dark:text-slate-200 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 active:scale-[0.99] text-sm sm:text-base flex items-center"
               >
-                <span className="inline-block w-8 h-8 rounded-lg bg-slate-100 text-slate-500 text-center leading-8 mr-3 font-bold">{String.fromCharCode(65 + idx)}</span>
-                {opt}
+                <span className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 mr-3 font-bold text-xs sm:text-sm shrink-0">{String.fromCharCode(65 + idx)}</span>
+                <span>{opt}</span>
               </button>
             ))}
           </div>

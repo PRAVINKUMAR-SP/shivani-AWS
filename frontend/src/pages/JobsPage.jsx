@@ -14,10 +14,10 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, poste
   };
 
   return (
-    <div className="card p-6 flex flex-col h-full">
-      <div className="flex justify-between items-start mb-5">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-slate-50 border border-slate-100 text-slate-700 rounded-2xl flex items-center justify-center font-bold text-2xl uppercase shadow-sm overflow-hidden flex-shrink-0">
+    <div className="card p-4 sm:p-6 flex flex-col h-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+      <div className="flex justify-between items-start mb-4 sm:mb-5">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-2xl flex items-center justify-center font-bold text-xl sm:text-2xl uppercase shadow-sm overflow-hidden flex-shrink-0">
             {employer?.profilePicUrl ? (
               <img src={employer.profilePicUrl.replace(/^https?:\/\/localhost:\d+/, '').replace(/^\/uploads\//, '/api/uploads/')} alt="Company Logo" className="w-full h-full object-cover" />
             ) : (
@@ -25,34 +25,34 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, poste
             )}
           </div>
           <div>
-            <h3 className="font-bold text-slate-900 text-lg line-clamp-1">{title}</h3>
-            <p className="text-slate-500 text-sm line-clamp-1 flex items-center gap-1 mt-0.5">
+            <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg line-clamp-1">{title}</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm line-clamp-1 flex items-center gap-1 mt-0.5">
               <span className="capitalize">{company}</span>
             </p>
           </div>
         </div>
-        <button className="text-slate-400 hover:text-blue-600 transition-colors">
+        <button className="text-slate-400 hover:text-blue-600 transition-colors p-1">
           <BookmarkIcon className="w-5 h-5" />
         </button>
       </div>
       
-      <div className="flex flex-wrap gap-4 text-sm text-slate-600 mb-5 pb-5 border-b border-slate-50">
-        <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-slate-400" /> {location}</div>
-        <div className="flex items-center gap-1.5 font-medium text-slate-700">{salary}</div>
-        <div className="flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-slate-400" /> {type}</div>
+      <div className="flex flex-wrap gap-2.5 sm:gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4 sm:mb-5 pb-4 sm:pb-5 border-b border-slate-100 dark:border-slate-700">
+        <div className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-slate-400" /> {location}</div>
+        <div className="flex items-center gap-1.5 font-semibold text-slate-800 dark:text-slate-200">{salary}</div>
+        <div className="flex items-center gap-1.5"><Briefcase className="w-3.5 h-3.5 text-slate-400" /> {type}</div>
       </div>
       
-      <div className="flex flex-wrap gap-2 mb-6 mt-1">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-5 sm:mb-6 mt-1">
         {tags && tags.map((tag, i) => (
-          <span key={i} className="px-3 py-1.5 bg-slate-50 text-slate-600 border border-slate-100 text-xs font-medium rounded-lg">
+          <span key={i} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-600 text-xs font-medium rounded-lg">
             {tag}
           </span>
         ))}
       </div>
       
       <div className="flex justify-between items-center mt-auto pt-2">
-        <span className="text-slate-400 text-sm font-medium">{getRelativeTime()}</span>
-        <button className="btn-primary py-2 px-5 text-sm">
+        <span className="text-slate-400 text-xs sm:text-sm font-medium">{getRelativeTime()}</span>
+        <button className="btn-primary py-1.5 sm:py-2 px-4 sm:px-5 text-xs sm:text-sm">
           View Job
         </button>
       </div>
@@ -108,49 +108,49 @@ const JobsPage = () => {
   });
 
   return (
-    <div className="bg-slate-50 pt-8 pb-20 px-4">
+    <div className="bg-slate-50 dark:bg-[#0f172a] pt-8 sm:pt-12 pb-20 px-4 min-h-[calc(100vh-80px)] transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center space-y-4 mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Explore Open Roles</h1>
-          <p className="text-slate-500 text-lg">Find the perfect job that matches your skills and career goals.</p>
+        <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white">Explore Open Roles</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-base sm:text-lg max-w-xl mx-auto">Find the perfect job that matches your skills and career goals.</p>
         </div>
 
         {/* Search Bar Area */}
-        <div className="max-w-5xl mx-auto mb-12 flex flex-col md:flex-row gap-4">
-          <div className="flex-1 flex items-center bg-white border border-slate-200 rounded-2xl px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
-            <Search className="w-5 h-5 text-slate-400 mr-3" />
+        <div className="max-w-5xl mx-auto mb-8 sm:mb-12 flex flex-col md:flex-row gap-3 sm:gap-4">
+          <div className="flex-1 flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 sm:px-6 py-3.5 sm:py-4 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+            <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
             <input 
               type="text" 
               placeholder="Job title, keywords, or company" 
-              className="flex-1 outline-none text-slate-700 bg-transparent"
+              className="flex-1 min-w-0 outline-none text-slate-800 dark:text-white placeholder:text-slate-400 bg-transparent text-sm sm:text-base"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="flex-1 flex items-center bg-white border border-slate-200 rounded-2xl px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent hidden md:flex">
-            <MapPin className="w-5 h-5 text-slate-400 mr-3" />
+          <div className="flex-1 flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 sm:px-6 py-3.5 sm:py-4 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+            <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
             <input 
               type="text" 
-              placeholder="City, state, zip code, or 'remote'" 
-              className="flex-1 outline-none text-slate-700 bg-transparent"
+              placeholder="Location or 'remote'" 
+              className="flex-1 min-w-0 outline-none text-slate-800 dark:text-white placeholder:text-slate-400 bg-transparent text-sm sm:text-base"
               value={locationTerm}
               onChange={(e) => setLocationTerm(e.target.value)}
             />
           </div>
-          <div className="flex items-center bg-white border border-slate-200 rounded-2xl px-4 py-4 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+          <div className="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3.5 sm:py-4 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
             <select 
               value={freshnessFilter}
               onChange={(e) => setFreshnessFilter(e.target.value)}
-              className="outline-none text-slate-700 bg-transparent cursor-pointer font-medium"
+              className="outline-none text-slate-700 dark:text-slate-200 bg-transparent cursor-pointer font-medium text-sm sm:text-base w-full"
             >
-              <option value="all">Any time</option>
-              <option value="1">Past 24 hours</option>
-              <option value="3">Past 3 days</option>
-              <option value="7">Past 7 days</option>
-              <option value="14">Past 14 days</option>
+              <option value="all" className="dark:bg-slate-800">Any time</option>
+              <option value="1" className="dark:bg-slate-800">Past 24 hours</option>
+              <option value="3" className="dark:bg-slate-800">Past 3 days</option>
+              <option value="7" className="dark:bg-slate-800">Past 7 days</option>
+              <option value="14" className="dark:bg-slate-800">Past 14 days</option>
             </select>
           </div>
-          <button className="btn-primary py-4 px-10 whitespace-nowrap shadow-md text-lg">
+          <button className="btn-primary py-3.5 sm:py-4 px-8 sm:px-10 whitespace-nowrap shadow-md text-base sm:text-lg w-full md:w-auto">
             Search
           </button>
         </div>

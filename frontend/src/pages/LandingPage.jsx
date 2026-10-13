@@ -85,21 +85,21 @@ const LandingPage = ({ onLoginClick }) => {
   return (
     <div className="bg-slate-50 dark:bg-[#0f172a] flex flex-col transition-colors duration-300">
       {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
-        <div className="max-w-6xl mx-auto text-center space-y-8">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+      <section className="pt-12 sm:pt-20 pb-12 sm:pb-16 px-4 bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+        <div className="max-w-6xl mx-auto text-center space-y-6 sm:space-y-8">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
             Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">dream job</span> <br className="hidden md:block"/>with Shivani Technologies
           </h1>
-          <p className="text-slate-600 dark:text-slate-300 text-lg md:text-xl max-w-2xl mx-auto">
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
             Connect with top employers and discover opportunities that match your skills and aspirations.
           </p>
-          <div className="pt-4 flex flex-col sm:flex-row justify-center gap-4">
-            <button onClick={onLoginClick} className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+          <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+            <button onClick={onLoginClick} className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-colors">
               Get Started
               <ArrowRight className="w-5 h-5 ml-2 font-bold" />
             </button>
             {!Capacitor.isNativePlatform() && (
-              <a href="/shivani-app.apk" download className="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+              <a href="/shivani-app.apk" download className="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-xl transition-colors">
                 Get App
                 <Download className="w-5 h-5 ml-2 font-bold" />
               </a>
@@ -108,8 +108,8 @@ const LandingPage = ({ onLoginClick }) => {
         </div>
 
         {/* Categories Grid */}
-        <div className="max-w-[1000px] mx-auto mt-16">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="max-w-[1000px] mx-auto mt-10 sm:mt-16">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
             {categories.map((category, index) => (
               <CategoryChip key={index} icon={category.icon} label={category.label} />
             ))}
@@ -118,22 +118,22 @@ const LandingPage = ({ onLoginClick }) => {
       </section>
 
       {/* Services Section */}
-      <section className="py-24 bg-slate-50 dark:bg-[#0f172a] px-4 transition-colors duration-300 relative overflow-hidden">
+      <section className="py-14 sm:py-24 bg-slate-50 dark:bg-[#0f172a] px-4 transition-colors duration-300 relative overflow-hidden">
         {/* Decorative background elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] opacity-30 dark:opacity-20 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 dark:from-blue-600/20 dark:to-purple-600/20 blur-[100px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-bold text-sm border border-indigo-200 dark:border-indigo-800/50 uppercase tracking-wider">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-20 space-y-4 sm:space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-bold text-xs sm:text-sm border border-indigo-200 dark:border-indigo-800/50 uppercase tracking-wider">
               Our Services
             </div>
-            <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
               Transforming Ideas into <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">Digital Reality</span>
             </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg md:text-xl leading-relaxed">
               We offer end-to-end development and digital solutions to scale your business and establish a powerful online presence.
             </p>
           </div>

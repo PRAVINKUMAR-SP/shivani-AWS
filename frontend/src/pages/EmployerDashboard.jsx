@@ -72,6 +72,12 @@ const EmployerDashboard = () => {
   }, []);
 
   useEffect(() => {
+    const handleToggle = () => setIsSidebarOpen(prev => !prev);
+    window.addEventListener('toggle-dashboard-sidebar', handleToggle);
+    return () => window.removeEventListener('toggle-dashboard-sidebar', handleToggle);
+  }, []);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeTab]);
 
@@ -239,43 +245,32 @@ const EmployerDashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 min-w-0 w-full p-4 md:p-8 overflow-x-hidden">
-        {/* Mobile Navigation Header */}
-        <div className="lg:hidden mb-6 flex items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-          <button 
-            onClick={() => setIsSidebarOpen(true)}
-            className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
-          >
-             <Menu className="w-6 h-6" />
-          </button>
-          <span className="font-bold text-lg text-slate-800 dark:text-white">{activeTab}</span>
-        </div>
-
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-600"></div>
           </div>
         ) : (
           <>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-blue-600 shrink-0" />
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Employer Dashboard</h1>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-blue-600 shrink-0" />
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Employer Dashboard</h1>
+                </div>
+                <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">Welcome back, <span className="capitalize">{user?.name || user?.email?.split('@')[0]}</span>. Manage your job listings.</p>
+              </div>
+              <button 
+                onClick={() => {
+                  setEditingJobId(null);
+                  setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' });
+                  setActiveTab('Post a Job');
+                }}
+                className="btn-primary whitespace-nowrap text-sm px-4 py-2.5 md:px-6 md:py-3 w-full sm:w-auto"
+              >
+                <Plus className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
+                Post Job
+              </button>
             </div>
-            <p className="text-slate-500 text-sm md:text-base">Welcome back, <span className="capitalize">{user?.name || user?.email?.split('@')[0]}</span>. Manage your job listings.</p>
-          </div>
-          <button 
-            onClick={() => {
-              setEditingJobId(null);
-              setNewJob({ title: '', company: user?.companyName || '', location: 'Chennai', salaryAmount: '', salaryType: 'LPA', type: 'Full-time', tags: '' });
-              setActiveTab('Post a Job');
-            }}
-            className="btn-primary whitespace-nowrap text-sm px-4 py-2 md:px-6 md:py-3 mt-4 sm:mt-0"
-          >
-            <Plus className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
-            Post Job
-          </button>
-        </div>
 
         {activeTab === 'Dashboard' && (
           <>
@@ -534,8 +529,8 @@ const EmployerDashboard = () => {
                       )}
                     </div>
                   </div>
-                  <div className="text-right flex flex-col items-end">
-                    <div className="w-[160px] inline-block mb-2">
+                  <div className="w-full sm:w-auto flex flex-col sm:items-end items-stretch pt-3 sm:pt-0 border-t sm:border-0 border-slate-100 dark:border-slate-800">
+                    <div className="w-full sm:w-[160px] inline-block mb-2">
                       <CustomDropdown
                         options={[
                           { value: 'PENDING', label: 'PENDING' },
