@@ -113,15 +113,15 @@ const Header = ({ onLoginClick }) => {
         
         {/* Right Section */}
         <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 ml-auto lg:ml-0">
-          {/* Admin View Switcher (Visible on both mobile & desktop) */}
+          {/* Admin View Switcher (Desktop only) */}
           {user && user.role === 'ADMIN' && (
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative hidden lg:block" ref={dropdownRef}>
               <button 
                 onClick={() => setRoleMenuOpen(!roleMenuOpen)} 
-                className="flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg font-semibold text-xs sm:text-sm shadow-sm transition-all duration-300"
+                className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white px-4 py-1.5 rounded-lg font-semibold text-sm shadow-sm transition-all duration-300"
                 title="Switch Portal"
               >
-                <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 
+                <Shield className="w-4 h-4" /> 
                 <span>{getAdminViewText()}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform ${roleMenuOpen ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
               </button>
