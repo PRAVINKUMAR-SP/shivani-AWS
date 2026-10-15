@@ -34,7 +34,7 @@ const ServicesPage = () => {
       description: "Practice with AI and expert coaches to nail your next interview.", 
       icon: Users, 
       colorClass: "bg-emerald-100/80 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
-      price: "₹49/session",
+      price: "Free",
       actionText: "Book a Coach",
       linkTo: "/contact?subject=Interview+Preparation"
     },
@@ -43,7 +43,7 @@ const ServicesPage = () => {
       description: "Earn certificates to prove your skills and stand out to top employers.", 
       icon: Award, 
       colorClass: "bg-purple-100/80 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
-      price: "From ₹19",
+      price: "Free",
       actionText: "Explore Courses",
       linkTo: "/contact?subject=Skill+Certifications"
     },
@@ -52,7 +52,7 @@ const ServicesPage = () => {
       description: "Get personalized 1-on-1 advice from industry veterans and recruiters.", 
       icon: BookOpen, 
       colorClass: "bg-orange-100/80 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",
-      price: "₹79/session",
+      price: "Free",
       actionText: "Find a Mentor",
       linkTo: "/contact?subject=Career+Counseling"
     },

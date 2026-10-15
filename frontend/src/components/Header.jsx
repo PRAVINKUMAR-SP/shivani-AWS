@@ -66,33 +66,32 @@ const Header = ({ onLoginClick }) => {
   return (
     <header className="glass-header sticky top-0 z-[60] w-full transition-all duration-200 border-b border-slate-200/50 dark:border-slate-800/50">
       <div className="px-4 sm:px-6 lg:px-8 w-full h-16 lg:h-20 flex justify-between items-center relative">
-        {/* Mobile Menu Button (Left on mobile) */}
-        <div className="flex items-center lg:hidden">
-          <button 
-            onClick={() => {
-              if (location.pathname.includes('-dashboard')) {
-                window.dispatchEvent(new CustomEvent('toggle-dashboard-sidebar'));
-              } else {
-                setMobileMenuOpen(!mobileMenuOpen);
-              }
-            }}
-            className="text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white p-2 -ml-2 rounded-full transition-colors"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
+        {/* Left Section: Mobile Menu Button & Brand Logo & Nav */}
+        <div className="flex items-center gap-3 sm:gap-4 lg:gap-8">
+          {/* Mobile Menu Button (Left on mobile) */}
+          <div className="flex items-center lg:hidden">
+            <button 
+              onClick={() => {
+                if (location.pathname.includes('-dashboard')) {
+                  window.dispatchEvent(new CustomEvent('toggle-dashboard-sidebar'));
+                } else {
+                  setMobileMenuOpen(!mobileMenuOpen);
+                }
+              }}
+              className="text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white p-2 -ml-2 rounded-full transition-colors"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
 
-        {/* Logo (Center on mobile, Left on desktop) */}
-        <div className="flex items-center lg:flex-1 justify-center absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="Shivani Technologies Logo" className="h-9 lg:h-10 w-auto rounded-full" />
-              <span className="text-xl font-bold text-blue-700 dark:text-blue-400 uppercase tracking-tight hidden sm:block transition-colors">Shivani Technologies</span>
-            </div>
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            <img src="/logo.png" alt="Shivani Technologies Logo" className="h-9 lg:h-10 w-auto rounded-full shrink-0" />
+            <span className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 uppercase tracking-tight hidden sm:block transition-colors whitespace-nowrap">Shivani Technologies</span>
           </Link>
           
           {/* Desktop Nav */}
-          <nav className="hidden lg:ml-10 lg:flex lg:space-x-8">
+          <nav className="hidden lg:flex lg:items-center lg:space-x-6 xl:space-x-8">
             <Link to="/companies" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-base font-semibold transition-colors">
               Companies
             </Link>
