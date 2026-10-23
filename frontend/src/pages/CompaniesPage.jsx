@@ -59,8 +59,12 @@ const CompaniesPage = () => {
     <div className="bg-slate-50 dark:bg-[#0f172a] pt-8 sm:pt-12 pb-16 sm:pb-20 px-4 min-h-[calc(100vh-80px)] transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">Top Companies Hiring Now</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">Discover great places to work. Explore company cultures and open roles at the world's best companies.</p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">
+            Top Companies Hiring on <span className="text-blue-600 dark:text-blue-400">Shivani Technologies</span>
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
+            Discover verified employers and open job opportunities on the Shivani Technologies job portal (shivanitech.in).
+          </p>
         </div>
         
         {loading ? (

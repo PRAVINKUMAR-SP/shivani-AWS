@@ -79,9 +79,13 @@ const ServicesPage = () => {
   return (
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] pt-8 sm:pt-16 pb-16 sm:pb-24 px-4 transition-colors duration-300">
       <div className="max-w-[1200px] mx-auto">
-        <div className="text-center max-w-2xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">Accelerate Your Career</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-[17px]">We offer a premium suite of tools and services designed to help you land your dream job faster.</p>
+        <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">
+            Career &amp; IT Services by <span className="text-blue-600 dark:text-blue-400">Shivani Technologies</span>
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-[17px]">
+            Empowering professionals and enterprises on the Shivani Technologies job portal (shivanitech.in) with interview preparation, skill assessments, and business solutions.
+          </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
