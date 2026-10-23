@@ -33,8 +33,7 @@ function ScrollToTop() {
     // Also try scrolling after a tiny delay in case rendering is slightly delayed
     setTimeout(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      // Fallback for custom scrolling containers if any
-      const mainContent = document.querySelector('.min-h-\[100dvh\]');
+      const mainContent = document.getElementById('main-container');
       if (mainContent) {
         mainContent.scrollTo(0, 0);
       }
@@ -168,7 +167,7 @@ function App() {
           theme="colored"
         />
         {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-        <div className="min-h-[100dvh] bg-slate-50 flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] w-full relative">
+        <div id="main-container" className="min-h-[100dvh] bg-slate-50 flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] w-full relative">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
           
           <div className="flex-1 w-full max-w-full">

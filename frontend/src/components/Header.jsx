@@ -67,7 +67,7 @@ const Header = ({ onLoginClick }) => {
     <header className="glass-header sticky top-0 z-[60] w-full transition-all duration-200 border-b border-slate-200/50 dark:border-slate-800/50">
       <div className="px-4 sm:px-6 lg:px-8 w-full h-16 lg:h-20 flex justify-between items-center relative">
         {/* Left Section: Mobile Menu Button & Brand Logo & Nav */}
-        <div className="flex items-center gap-3 sm:gap-4 lg:gap-8">
+        <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 xl:gap-8 shrink-0">
           {/* Mobile Menu Button (Left on mobile) */}
           <div className="flex items-center lg:hidden">
             <button 
@@ -91,20 +91,20 @@ const Header = ({ onLoginClick }) => {
           </Link>
           
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex lg:items-center lg:space-x-6 xl:space-x-8">
-            <Link to="/companies" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-base font-semibold transition-colors">
+          <nav className="hidden lg:flex lg:items-center lg:space-x-4 xl:space-x-8 shrink-0">
+            <Link to="/companies" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-sm xl:text-base font-semibold transition-colors whitespace-nowrap">
               Companies
             </Link>
-            <Link to="/services" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-base font-semibold transition-colors">
+            <Link to="/services" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-sm xl:text-base font-semibold transition-colors whitespace-nowrap">
               Services
             </Link>
-            <Link to="/financial" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-base font-semibold transition-colors">
+            <Link to="/financial" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-sm xl:text-base font-semibold transition-colors whitespace-nowrap">
               Financial
             </Link>
-            <Link to="/contact" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-base font-semibold transition-colors">
+            <Link to="/contact" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center text-sm xl:text-base font-semibold transition-colors whitespace-nowrap">
               Contact Us
             </Link>
-            <Link to="/test" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center gap-1 text-base font-semibold transition-colors">
+            <Link to="/test" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white inline-flex items-center gap-1 text-sm xl:text-base font-semibold transition-colors whitespace-nowrap">
               Skill Assessments {user && user.role === 'SEEKER' && testCompleted && <CheckCircle className="w-4 h-4 text-green-500" title="Completed"/>}
             </Link>
           </nav>
