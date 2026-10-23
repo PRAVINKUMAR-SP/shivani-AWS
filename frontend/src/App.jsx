@@ -17,7 +17,6 @@ import ContactPage from './pages/ContactPage';
 import { AuthProvider } from './context/AuthContext';
 import TestPage from './pages/TestPage';
 import MobileAuth from './pages/MobileAuth';
-import SplashScreen from './components/SplashScreen';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
@@ -45,13 +44,7 @@ function ScrollToTop() {
 
 function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('splash_shown'));
   const [updateInfo, setUpdateInfo] = useState(null);
-
-  const handleSplashFinish = () => {
-    sessionStorage.setItem('splash_shown', 'true');
-    setShowSplash(false);
-  };
 
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
@@ -166,7 +159,6 @@ function App() {
           pauseOnHover
           theme="colored"
         />
-        {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
         <div id="main-container" className="min-h-[100dvh] bg-slate-50 flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] w-full relative">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
           
