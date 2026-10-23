@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin-dashboard
+Disallow: /employer-dashboard
+Disallow: /seeker-dashboard
+Disallow: /mobile-auth
+Disallow: /api/
+
+Sitemap: https://shivanitech.in/sitemap.xml
