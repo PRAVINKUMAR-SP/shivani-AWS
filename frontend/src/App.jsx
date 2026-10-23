@@ -10,6 +10,8 @@ import JobSeekerDashboard from './pages/JobSeekerDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import JobsPage from './pages/JobsPage';
+import JobDetails from './pages/JobDetails';
+import JobCategory from './pages/JobCategory';
 import CompaniesPage from './pages/CompaniesPage';
 import ServicesPage from './pages/ServicesPage';
 import FinancialPage from './pages/FinancialPage';
@@ -169,6 +171,13 @@ function App() {
               <Route path="/employer-dashboard" element={<EmployerDashboard />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/jobs" element={<JobsPage />} />
+              <Route path="/jobs/chennai" element={<JobCategory />} />
+              <Route path="/jobs/fresher" element={<JobCategory />} />
+              <Route path="/jobs/software-developer" element={<JobCategory />} />
+              <Route path="/jobs/java-developer" element={<JobCategory />} />
+              <Route path="/jobs/category/:category" element={<JobCategory />} />
+              <Route path="/jobs/:id" element={<JobDetails onLoginClick={() => setIsAuthModalOpen(true)} />} />
+              <Route path="/jobs/:id/:slug" element={<JobDetails onLoginClick={() => setIsAuthModalOpen(true)} />} />
               <Route path="/companies" element={<CompaniesPage />} />
               <Route path="/services" element={<ServicesPage />} />
               <Route path="/financial" element={<FinancialPage />} />

@@ -49,6 +49,13 @@ public class JobController {
         return jobRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getJobById(@PathVariable Long id) {
+        return jobRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/employer")
     public ResponseEntity<?> getEmployerJobs(Principal principal) {
         if (principal == null) return ResponseEntity.status(401).body("Unauthorized");
@@ -116,6 +123,7 @@ public class JobController {
         existingJob.setSalary(updatedJob.getSalary());
         existingJob.setType(updatedJob.getType());
         existingJob.setTags(updatedJob.getTags());
+        existingJob.setDescription(updatedJob.getDescription());
 
         return ResponseEntity.ok(jobRepository.save(existingJob));
     }

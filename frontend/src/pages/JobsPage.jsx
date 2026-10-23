@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getInitials } from '../utils/helpers';
 import { Search, MapPin, Briefcase, Bookmark as BookmarkIcon } from 'lucide-react';
 import axios from 'axios';
+import Seo from '../components/Seo';
 
 const JobCard = ({ id, title, company, location, salary, type, tags, time, postedAt, employer }) => {
   const getRelativeTime = () => {
@@ -25,7 +27,9 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, poste
             )}
           </div>
           <div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg line-clamp-1">{title}</h3>
+            <Link to={`/jobs/${id}`} className="hover:text-blue-600 transition-colors">
+              <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg line-clamp-1">{title}</h3>
+            </Link>
             <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm line-clamp-1 flex items-center gap-1 mt-0.5">
               <span className="capitalize">{company}</span>
             </p>
@@ -52,9 +56,9 @@ const JobCard = ({ id, title, company, location, salary, type, tags, time, poste
       
       <div className="flex justify-between items-center mt-auto pt-2">
         <span className="text-slate-400 text-xs sm:text-sm font-medium">{getRelativeTime()}</span>
-        <button className="btn-primary py-1.5 sm:py-2 px-4 sm:px-5 text-xs sm:text-sm">
+        <Link to={`/jobs/${id}`} className="btn-primary py-1.5 sm:py-2 px-4 sm:px-5 text-xs sm:text-sm">
           View Job
-        </button>
+        </Link>
       </div>
     </div>
   );
@@ -109,6 +113,11 @@ const JobsPage = () => {
 
   return (
     <div className="bg-slate-50 dark:bg-[#0f172a] pt-8 sm:pt-12 pb-20 px-4 min-h-[calc(100vh-80px)] transition-colors duration-300">
+      <Seo 
+        title="Latest IT & Tech Jobs in Chennai & India | Shivani Technologies"
+        description="Browse all verified active job vacancies, fresher opportunities, and software engineering roles on Shivani Technologies Job Portal."
+        path="/jobs"
+      />
       <div className="max-w-7xl mx-auto">
         <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white">

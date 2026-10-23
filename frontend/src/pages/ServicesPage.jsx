@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Award, BookOpen, FileText, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Seo from '../components/Seo';
 
 const ServiceCard = ({ title, description, icon: Icon, colorClass, price, actionText, linkTo }) => (
   <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 flex flex-col items-start text-left border border-slate-100 dark:border-slate-700 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
@@ -78,6 +79,11 @@ const ServicesPage = () => {
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-slate-50 dark:bg-[#0f172a] pt-8 sm:pt-16 pb-16 sm:pb-24 px-4 transition-colors duration-300">
+      <Seo 
+        title="Professional Career & IT Services | Shivani Technologies"
+        description="Explore resume building, interview preparation, skill certifications, and IT consulting services on Shivani Technologies."
+        path="/services"
+      />
       <div className="max-w-[1200px] mx-auto">
         <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">

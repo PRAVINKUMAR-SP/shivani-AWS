@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
+Allow: /jobs
+Allow: /jobs/*
+Allow: /companies
+Allow: /services
+Allow: /financial
+Allow: /contact
 Disallow: /admin-dashboard
 Disallow: /employer-dashboard
 Disallow: /seeker-dashboard
@@ -7,3 +13,4 @@ Disallow: /mobile-auth
 Disallow: /api/
 
 Sitemap: https://shivanitech.in/sitemap.xml
+Sitemap: https://www.shivanitech.in/sitemap.xml

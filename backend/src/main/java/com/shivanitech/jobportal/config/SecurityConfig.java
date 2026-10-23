@@ -65,10 +65,11 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/jobs").permitAll()
+                .requestMatchers("/api/jobs", "/api/jobs/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/api/contact").permitAll()
                 .requestMatchers("/api/uploads/**").permitAll()
+                .requestMatchers("/sitemap.xml", "/api/sitemap.xml").permitAll()
                 .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
             );

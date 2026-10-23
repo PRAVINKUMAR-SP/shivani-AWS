@@ -3,6 +3,7 @@ import { Star, Building2, MapPin, Users } from 'lucide-react';
 import { getInitials } from '../utils/helpers';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Seo from '../components/Seo';
 
 const CompanyCard = ({ company, onClick }) => (
   <div onClick={onClick} className="card p-5 sm:p-6 flex flex-col hover:-translate-y-1 transition-transform cursor-pointer bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
@@ -57,6 +58,11 @@ const CompaniesPage = () => {
 
   return (
     <div className="bg-slate-50 dark:bg-[#0f172a] pt-8 sm:pt-12 pb-16 sm:pb-20 px-4 min-h-[calc(100vh-80px)] transition-colors duration-300">
+      <Seo 
+        title="Top Hiring Companies & Employers in India | Shivani Technologies"
+        description="Explore verified companies, startup culture, and top corporate employers hiring talent on Shivani Technologies Job Portal."
+        path="/companies"
+      />
       <div className="max-w-7xl mx-auto">
         <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">

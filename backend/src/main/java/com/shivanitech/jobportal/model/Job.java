@@ -26,6 +26,9 @@ public class Job {
     private String salary;
     private String type;
     
+    @Column(columnDefinition = "TEXT")
+    private String description;
+    
     @ElementCollection
     private List<String> tags;
     

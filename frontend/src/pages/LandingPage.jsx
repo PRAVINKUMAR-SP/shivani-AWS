@@ -4,6 +4,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
+import Seo from '../components/Seo';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -84,6 +85,11 @@ const LandingPage = ({ onLoginClick }) => {
 
   return (
     <div className="bg-slate-50 dark:bg-[#0f172a] flex flex-col transition-colors duration-300">
+      <Seo 
+        title="Shivani Technologies | Leading Job Portal & Career Platform"
+        description="Connect with top employers and find high-growth careers in IT, Software Engineering, Data Science, and Management on Shivani Technologies Job Portal."
+        path="/"
+      />
       {/* Hero Section */}
       <section className="pt-12 sm:pt-20 pb-12 sm:pb-16 px-4 bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
         <div className="max-w-6xl mx-auto text-center space-y-6 sm:space-y-8">
