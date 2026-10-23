@@ -88,10 +88,10 @@ const LandingPage = ({ onLoginClick }) => {
       <section className="pt-12 sm:pt-20 pb-12 sm:pb-16 px-4 bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
         <div className="max-w-6xl mx-auto text-center space-y-6 sm:space-y-8">
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-            Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">dream job</span> <br className="hidden md:block"/>with Shivani Technologies
+            Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">dream job</span> <br className="hidden md:block"/>with Shivani Technologies Job Portal
           </h1>
-          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-            Connect with top employers and discover opportunities that match your skills and aspirations.
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            Welcome to Shivani Technologies (shivanitech.in) — your trusted job portal connecting job seekers and top employers with career opportunities, skill assessments, and IT solutions.
           </p>
           <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <button onClick={onLoginClick} className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-colors">
